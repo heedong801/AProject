@@ -31,18 +31,7 @@ APlayerCharacter::APlayerCharacter()
 		m_AttackMontageArray = Attack1Asset.Object;
 
 	//변수 초기화
-	m_PlayerInfo.Name = TEXT("Greystone");
-	m_PlayerInfo.Job = EPlayerJob::Knight;
-	m_PlayerInfo.Attack = 100;
-	m_PlayerInfo.Armor = 20;
-	m_PlayerInfo.HP = 500;
-	m_PlayerInfo.HPMax = 500;
-	m_PlayerInfo.MP = 100;
-	m_PlayerInfo.MPMax = 100;
-	m_PlayerInfo.AttackDistance = 200.f;
-	m_PlayerInfo.AttackSpeed = 1.f;
-	m_PlayerInfo.AttackAngle = 22.5f;
-	m_PlayerInfo.MoveSpeed = 600.f;
+
 }
 
 void APlayerCharacter::PostInitializeComponents()
