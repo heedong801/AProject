@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "CoreMinimal.h"
+#include "EngineMinimal.h"
 #include "MonsterInfo.h"
 #include "../Etc/PatrolPointSpline.h"
 #include "GameFramework/Character.h"
@@ -34,7 +34,11 @@ protected:
 	class APatrolPointSpline* m_PatrolSpline;
 	float m_PatrolLength;
 
+	FString m_MonsterInfoName;
 
+	class UMonsterAnimInstance* m_AnimInstance;
+
+	FTimerHandle m_MonsterDeathTimer;
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
@@ -44,7 +48,7 @@ public:
 
 	virtual float TakeDamage(float Damage, struct FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
 	virtual void NormalAttack() {}
-
+	virtual void Death() {}
 	FVector GetPatrolPoint();
 	void SetPatrolPointSpline(class APatrolPointSpline* Spline){		m_PatrolSpline = Spline;	}
 	void NextPatrolPoint();
@@ -57,4 +61,5 @@ public:
 	void SetPatrolEnable(bool Enable)	{		m_PatrolEnable = Enable;	}
 	bool GetAttackEnd()	{		return m_AttackEnd;		}
 	void SetAttackEnd(bool AttackEnd)	{m_AttackEnd = AttackEnd;	}
+
 };

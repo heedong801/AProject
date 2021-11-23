@@ -38,7 +38,20 @@ EBTNodeResult::Type UBTTask_NormalAttack::ExecuteTask(UBehaviorTreeComponent& Ow
 		return EBTNodeResult::Failed;
 	}
 
-	Monster->ChangeAnimType(EMonsterAnimType::Attack);
+	int randomAttack = FMath::RandRange(0, 2);
+	switch (randomAttack)
+	{
+	case 0:
+		Monster->ChangeAnimType(EMonsterAnimType::Attack1);
+		break;
+	case 1:
+		Monster->ChangeAnimType(EMonsterAnimType::Attack2);
+		break;
+	case 2:
+		Monster->ChangeAnimType(EMonsterAnimType::Attack3);
+		break;
+	}
+
 
 	return EBTNodeResult::InProgress;
 

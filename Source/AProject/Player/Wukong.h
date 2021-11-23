@@ -32,5 +32,4 @@ public:
 private:
 	int32 m_MaxCombo;
 	int32 m_CurrentCombo;
-
 };

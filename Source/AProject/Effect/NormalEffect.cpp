@@ -3,6 +3,7 @@
 
 #include "NormalEffect.h"
 #include "../AssetManager/AssetPathMain.h"
+#include "../DebugClass.h"
 // Sets default values
 ANormalEffect::ANormalEffect()
 {
@@ -37,16 +38,19 @@ void ANormalEffect::LoadParticle(const FString& Path)
 	UParticleSystem* Particle = LoadObject<UParticleSystem>(nullptr, *Path);
 
 	if (Particle)
+	{
+
 		m_ParticleSystem->SetTemplate(Particle);
+	}
 }
 
 void ANormalEffect::LoadSound(const FString& Path)
 {
 	USoundBase* Sound = LoadObject<USoundBase>(nullptr, *Path);
-	//LOG(TEXT("A"));
+
 	if (Sound)
 	{
-		//LOG(TEXT("B"));
+
 		UGameplayStatics::PlaySoundAtLocation(GetWorld(), Sound, GetActorLocation());
 	}
 }

@@ -13,6 +13,7 @@ AShoebill::AShoebill()
 	if (MeshAsset.Succeeded())
 		GetMesh()->SetSkeletalMesh(MeshAsset.Object);
 
+	m_MonsterInfoName = TEXT("Shoebill");
 	/*static ConstructorHelpers::FClassFinder<UAnimInstance> AnimAsset(TEXT("AnimBlueprint'/Game/Monster/BP_MinionWarriorAnim.BP_MinionWarriorAnim_C'"));
 
 	if (AnimAsset.Succeeded())
@@ -50,4 +51,11 @@ void AShoebill::NormalAttack()
 
 	Bullet->SetAttack(m_MonsterInfo.Attack);
 	Bullet->SetMonster(this);*/
+}
+
+void AShoebill::Death()
+{
+	GetWorldTimerManager().ClearTimer(m_MonsterDeathTimer);
+
+	Destroy();
 }

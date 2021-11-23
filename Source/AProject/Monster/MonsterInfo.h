@@ -66,7 +66,9 @@ enum class EMonsterAnimType : uint8
 	Idle,
 	Walk,
 	Run,
-	Attack,
+	Attack1,
+	Attack2,
+	Attack3,
 	Death,
 	Skill
 };

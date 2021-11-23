@@ -2,7 +2,11 @@
 
 
 #include "Monster.h"
+#include "MonsterAnimInstance.h"
+#include "MonsterAIController.h"
+#include "../AProjectGameInstance.h"
 #include "../AProjectGameModeBase.h"
+#include "../DebugClass.h"
 // Sets default values
 AMonster::AMonster()
 {
@@ -15,6 +19,35 @@ AMonster::AMonster()
 void AMonster::BeginPlay()
 {
 	Super::BeginPlay();
+
+	UAProjectGameInstance* GameInst = Cast<UAProjectGameInstance>(GetWorld()->GetGameInstance());
+
+	if (GameInst)
+	{
+
+		const FMonsterInfo* Info = GameInst->FindMonsterInfo(m_MonsterInfoName);
+		if (Info)
+		{
+			m_MonsterInfo.Name = Info->Name;
+			m_MonsterInfo.Attack = Info->Attack;
+			m_MonsterInfo.Armor = Info->Armor;
+			m_MonsterInfo.HP = Info->HP;
+			m_MonsterInfo.HPMax = Info->HPMax;
+			m_MonsterInfo.MP = Info->MP;
+			m_MonsterInfo.MPMax = Info->MPMax;
+			m_MonsterInfo.Level = Info->Level;
+			m_MonsterInfo.Exp = Info->Exp;
+			m_MonsterInfo.Gold = Info->Gold;
+			m_MonsterInfo.AttackDistance = Info->AttackDistance;
+			m_MonsterInfo.AttackSpeed = Info->AttackSpeed;
+			m_MonsterInfo.AttackAngle = Info->AttackAngle;
+			m_MonsterInfo.MoveSpeed = Info->MoveSpeed;
+			m_MonsterInfo.TraceDistance = Info->TraceDistance;
+
+		}
+	}
+
+	m_AnimInstance = Cast<UMonsterAnimInstance>(GetMesh()->GetAnimInstance());
 	
 }
 
@@ -23,43 +56,93 @@ void AMonster::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+
+	//if (!m_Monster)
+	//{
+	//	m_AccTime += DeltaTime;
+
+	//	if (m_AccTime >= m_SpawnTime)
+	//	{
+	//		m_AccTime = 0.f;
+
+	//		FActorSpawnParameters	param;
+	//		param.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
+
+	//		AMonster* Monster = GetWorld()->SpawnActor<AMonster>(m_MonsterClass,
+	//			GetActorLocation(), GetActorRotation(), param);
+
+	//		Monster->SetSpawnPoint(this);
+
+	//		if (m_PatrolPointSpline)
+	//		{
+	//			Monster->SetPatrolPointSpline(m_PatrolPointSpline);
+	//			Monster->SetPatrolLength(m_PatrolPointSpline->GetSplineLength());
+
+	//			//Monster->AddPatrolPoint(GetActorLocation());
+
+	//			const TArray<FVector>& PatrolPointArray = m_PatrolPointSpline->GetPointArray();
+
+	//			for (auto& Point : PatrolPointArray)
+	//			{
+	//				Monster->AddPatrolPoint(Point);
+	//			}
+	//		}
+
+	//		else
+	//		{
+	//			Monster->AddPatrolPoint(GetActorLocation());
+
+	//			for (auto& Point : m_PatrolPointArray)
+	//			{
+	//				Monster->AddPatrolPoint(Point->GetActorLocation());
+	//			}
+	//		}
+
+
+	//		m_Monster = Monster;
+	//	}
+	}
+
 }
 
 float AMonster::TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
 {
-	//float Damage = Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
+	float Damage = Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
 
-	//if (Damage == 0.f)
-	//	return 0.f;
+	if (Damage == 0.f)
+		return 0.f;
 
-	//Damage = Damage - m_MonsterInfo.Armor;
-	//Damage = Damage < 1.f ? 1.f : Damage;
+	Damage = Damage - m_MonsterInfo.Armor;
+	Damage = Damage < 1.f ? 1.f : Damage;
 
-	//m_MonsterInfo.HP -= Damage;
+	m_MonsterInfo.HP -= Damage;
 
-	////죽은경우
-	//if (m_MonsterInfo.HP <= 0)
-	//{
-	//	ChangeAnimType(EMonsterAnimType::Death);
+	//죽은경우
+	if (m_MonsterInfo.HP <= 0)
+	{
+		//Death();
+		ChangeAnimType(EMonsterAnimType::Death);
+		GetWorldTimerManager().SetTimer(m_MonsterDeathTimer,
+			this, &AMonster::Death, 2.f, true);
 
-	//	AMonsterAIController* MonsterController = Cast<AMonsterAIController>(GetController());
-	//	if (MonsterController)
-	//		MonsterController->BrainComponent->StopLogic(TEXT("Dead"));
+		//AMonsterAIController* MonsterController = Cast<AMonsterAIController>(GetController());
+		//if (MonsterController)
+		//	MonsterController->BrainComponent->StopLogic(TEXT("Dead"));
 
-	//	// 몬스터가 죽었을 경우 퀘스트에 해당 몬스터를 잡는 퀘스트가 있는지 판단한다.
-	//	AAProjectGameModeBase* GameMode = Cast<AAProjectGameModeBase>(GetWorld()->GetAuthGameMode());
+		//// 몬스터가 죽었을 경우 퀘스트에 해당 몬스터를 잡는 퀘스트가 있는지 판단한다.
+		//AAProjectGameModeBase* GameMode = Cast<AAProjectGameModeBase>(GetWorld()->GetAuthGameMode());
 
-	//	if (GameMode)
-	//	{
+		//if (GameMode)
+		//{
 
-	//		UQuestWidget* QuestWidget = GameMode->GetMainHUD()->GetQuestWidget();
+		//	UQuestWidget* QuestWidget = GameMode->GetMainHUD()->GetQuestWidget();
 
-	//		if (QuestWidget)
-	//		{
+		//	if (QuestWidget)
+		//	{
 
-	//			QuestWidget->QuestCheck(EQuestType::Hunt, m_MonsterInfo.Name);
-	//		}
-	//	}
+		//		QuestWidget->QuestCheck(EQuestType::Hunt, m_MonsterInfo.Name);
+		//	}
+		}
 
 	//	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
@@ -119,7 +202,7 @@ float AMonster::TakeDamage(float DamageAmount, struct FDamageEvent const& Damage
 
 void AMonster::ChangeAnimType(EMonsterAnimType Type)
 {
-	//m_AnimInstance->ChangeAnimType(Type);
+	m_AnimInstance->ChangeAnimType(Type);
 }
 
 FVector AMonster::GetPatrolPoint()
