@@ -4,68 +4,70 @@
 
 #include "CoreMinimal.h"
 #include "Engine/DataTable.h"
-#include "PlayerInfo.generated.h"
-/**
- * 
- */
-UENUM(BlueprintType)
-enum class EPlayerJob : uint8
-{
-	Knight,
-	Archer,
-	Magicion,
-	End
-};
+#include "MonsterInfo.generated.h"
 
 
 USTRUCT(BlueprintType)
-struct FPlayerInfo : public FTableRowBase
+struct FMonsterInfo : public FTableRowBase
 {
 	GENERATED_BODY()
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-		FString			Name;
+		FString Name;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-		EPlayerJob		Job;
+		int32 Attack;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-		int32			Attack;
+		int32 Armor;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-		int32			Armor;
+		int32 HP;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-		int32			HP;
+		int32 HPMax;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-		int32			HPMax;
+		int32 MP;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-		int32			MP;
+		int32 MPMax;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-		int32			MPMax;
+		int32 Level;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-		int32			Level;
+		int32 Gold;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-		int32			Exp;
+		int32 Exp;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-		int32			Gold;
+		float AttackDistance;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-		float			AttackDistance;
+		float AttackSpeed;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-		float			AttackSpeed;
+		float AttackAngle;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-		float			AttackAngle;
+		float MoveSpeed;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-		float			MoveSpeed;
+		float TraceDistance;
+
 };
+
+UENUM(BlueprintType)
+enum class EMonsterAnimType : uint8
+{
+	Idle,
+	Walk,
+	Run,
+	Attack,
+	Death,
+	Skill
+};
+
