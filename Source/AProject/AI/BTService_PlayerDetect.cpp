@@ -5,6 +5,8 @@
 #include "../Player/PlayerCharacter.h"
 #include "../Monster/Monster.h"
 #include "../Monster/MonsterAIController.h"
+#include "../DebugClass.h"
+
 UBTService_PlayerDetect::UBTService_PlayerDetect()
 {
 	NodeName = TEXT("Detect");
@@ -36,6 +38,7 @@ void UBTService_PlayerDetect::TickNode(UBehaviorTreeComponent& OwnerComp, uint8*
 	FHitResult HitResult;
 	bool Sweep = GetWorld()->SweepSingleByChannel(HitResult, Monster->GetActorLocation(), Monster->GetActorLocation(), FQuat::Identity, ECollisionChannel::ECC_GameTraceChannel6
 		, FCollisionShape::MakeSphere(MonsterInfo.TraceDistance), params);
+	//LOG(TEXT("%f"), MonsterInfo.TraceDistance);
 
 #if ENABLE_DRAW_DEBUG
 	FColor DrawColor = Sweep ? FColor::Red : FColor::Green;

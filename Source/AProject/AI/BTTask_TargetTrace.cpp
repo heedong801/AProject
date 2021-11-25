@@ -5,7 +5,7 @@
 #include "../Player/PlayerCharacter.h"
 #include "../Monster/Monster.h"
 #include "../Monster/MonsterAIController.h"
-
+#include "../DebugClass.h"
 UBTTask_TargetTrace::UBTTask_TargetTrace()
 {
 	NodeName = TEXT("TargetTrace");
@@ -45,9 +45,9 @@ EBTNodeResult::Type UBTTask_TargetTrace::ExecuteTask(UBehaviorTreeComponent& Own
 	}
 	Monster->GetCharacterMovement()->MaxWalkSpeed = Monster->GetMonsterInfo().MoveSpeed;
 
-	UAIBlueprintHelperLibrary::SimpleMoveToActor(Controller, Target);
+	//UAIBlueprintHelperLibrary::SimpleMoveToActor(Controller, Target);
 
-	Monster->ChangeAnimType(EMonsterAnimType::Run);
+	Monster->ChangeAnimType(EMonsterAnimType::Walk);
 	return EBTNodeResult::InProgress;
 
 }
@@ -102,6 +102,15 @@ void UBTTask_TargetTrace::TickTask(UBehaviorTreeComponent& OwnerComp, uint8* Nod
 
 	const FMonsterInfo& MonsterInfo = Monster->GetMonsterInfo();
 
+	if (Target->GetActorLocation().Z < 200.f)
+		UAIBlueprintHelperLibrary::SimpleMoveToActor(Controller, Target);
+	else
+	{
+		FVector TargetLoc = Target->GetActorLocation();
+
+		TargetLoc.Z = Monster->GetActorLocation().Z;
+		Controller->MoveToLocation(TargetLoc);
+	}
 	// 타겟과의 거리
 	FVector MonsterLoc = Monster->GetActorLocation();
 	FVector TargetLoc = Target->GetActorLocation();
@@ -109,7 +118,7 @@ void UBTTask_TargetTrace::TickTask(UBehaviorTreeComponent& OwnerComp, uint8* Nod
 	MonsterLoc.Z = TargetLoc.Z;
 
 	float Distance = FVector::Distance(MonsterLoc, TargetLoc);
-	
+
 	if (Distance <= MonsterInfo.AttackDistance)
 	{
 		Controller->StopMovement();

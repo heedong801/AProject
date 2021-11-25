@@ -4,6 +4,7 @@
 #include "PlayerCharacter.h"
 #include "PlayerAnim.h"
 #include "../DebugClass.h"
+//#include "../Effect/HitCameraShake.h"
 
 // Sets default values
 APlayerCharacter::APlayerCharacter()
@@ -30,8 +31,8 @@ APlayerCharacter::APlayerCharacter()
 	if (Attack1Asset.Succeeded())
 		m_AttackMontageArray = Attack1Asset.Object;
 
-	//변수 초기화
-
+	GetCharacterMovement()->JumpZVelocity = 600.f;
+	GetCapsuleComponent()->SetCollisionProfileName(TEXT("Player"));
 }
 
 void APlayerCharacter::PostInitializeComponents()
@@ -52,6 +53,8 @@ void APlayerCharacter::BeginPlay()
 void APlayerCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+	JumpMaxCount = 2;
+	
 	SetDirection();
 	m_AnimInst->SetFullbody(m_AnimInst->GetCurveValue("FullBody"));
 	//GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Blue, TEXT("Can you see this message?"));
@@ -73,7 +76,7 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 	PlayerInputComponent->BindAction(TEXT("Attack"), EInputEvent::IE_Pressed, this, &APlayerCharacter::AttackKey);
 
 
-
+	
 }
 void APlayerCharacter::SetDirection()
 {
@@ -121,6 +124,7 @@ void APlayerCharacter::ZoomInKey(float Scale)
 }
 void APlayerCharacter::AttackKey()
 {
+	
 
 	if (m_AnimInst->GetCanAttack())
 	{	
@@ -138,7 +142,20 @@ void APlayerCharacter::AttackKey()
 
 void APlayerCharacter::JumpKey()
 {
-	Jump();
+	//LOG(TEXT("%d"), JumpCurrentCount);
+	if (m_AnimInst->GetAnimType() == EPlayerAnimType::Ground || JumpCurrentCount == 1)
+	{
+		Jump();
+		//LOG(TEXT(" GetDoubleJump : %d"), m_AnimInst->GetDoubleJump());
+		
+		if(JumpCurrentCount == 1)
+			m_AnimInst->SetDoubleJump(true);
+		//LOG(TEXT(" DDDDDDDDDDDD : %d"), m_AnimInst->GetDoubleJump());
+
+		
+
+		m_AnimInst->ChangeAnimType(EPlayerAnimType::Sky);
+	}
 }
 
 void APlayerCharacter::OnAttackMontageEnded(UAnimMontage* Montage, bool bInterrupted)

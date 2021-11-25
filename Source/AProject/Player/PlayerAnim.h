@@ -13,9 +13,7 @@ UENUM(BlueprintType)
 enum class EPlayerAnimType : uint8
 {
 	Ground,
-	Jump,
-	Fall,
-	Death
+	Sky
 };
 
 UCLASS()
@@ -44,6 +42,15 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	bool m_UseFullbody;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+		EPlayerAnimType m_AnimType;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	bool m_OnSky;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	bool m_DoubleJump;
 	// UFUNCTION	///////////////////////////////////////////////////////////////////
 	UFUNCTION()
 		void AnimNotify_AttackCombo();
@@ -58,9 +65,17 @@ public:
 
 	void SetIsAttack(bool Attack) { m_Attack = Attack; }
 	bool IsAttack()	const{return m_Attack;}
+
+	void SetDoubleJump(bool jump) { m_DoubleJump = jump; }
+	bool GetDoubleJump()	const { return m_DoubleJump; }
+
 	
 	void SetFullbody(float useFullbody);
 	float GetFullbody() { return m_UseFullbody; }
+
+	void ChangeAnimType(EPlayerAnimType Type){	m_AnimType = Type;	}
+
+	EPlayerAnimType GetAnimType()	{	return m_AnimType;	}
 };
 
 //UFUNCTION()

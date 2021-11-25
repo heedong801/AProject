@@ -27,6 +27,8 @@ AWukong::AWukong()
 	m_PlayerInfo.AttackSpeed = 1.f;
 	m_PlayerInfo.MoveSpeed = 600.f;
 	m_PlayerInfo.AttackAngle = 60.f;
+
+
 }
 
 // Called when the game starts or when spawned

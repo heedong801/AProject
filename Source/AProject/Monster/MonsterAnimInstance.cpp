@@ -19,23 +19,10 @@ void UMonsterAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 {
 	Super::NativeUpdateAnimation(DeltaSeconds);
 
-	AMonster* Monster = Cast<AMonster>(TryGetPawnOwner());
-
-	if (Monster)
-	{
-		UCharacterMovementComponent* Movement = Monster->GetCharacterMovement();
-
-		if (Movement)
-		{
-			bool OnGround = Movement->IsMovingOnGround();
-
-			m_OnGround = OnGround;
-		}
-	}
 
 }
 
-void UMonsterAnimInstance::AnimNotify_Attack()
+void UMonsterAnimInstance::AnimNotify_HitAttack()
 {
 	AMonster* Monster = Cast<AMonster>(TryGetPawnOwner());
 
@@ -51,13 +38,7 @@ void UMonsterAnimInstance::AnimNotify_AttackEnd()
 		Monster->SetAttackEnd(true);
 }
 
-void UMonsterAnimInstance::AnimNotify_DeathEnd()
-{
-	AMonster* Monster = Cast<AMonster>(TryGetPawnOwner());
 
-	if (Monster)
-		Monster->Death();
-}
 
 void UMonsterAnimInstance::AnimNotify_HitEnd()
 {

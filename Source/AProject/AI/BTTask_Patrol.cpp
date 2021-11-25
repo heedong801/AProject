@@ -5,13 +5,15 @@
 #include "../Player/PlayerCharacter.h"
 #include "../Monster/Monster.h"
 #include "../Monster/MonsterAIController.h"
+#include "../DebugClass.h"
 
 UBTTask_Patrol::UBTTask_Patrol()
 {
 	NodeName = TEXT("Patrol");
 	bNotifyTick = true;
 
-
+	m_AccTime = 0.f;
+	m_WaitTime = 5.f;
 }
 
 
@@ -35,7 +37,7 @@ EBTNodeResult::Type UBTTask_Patrol::ExecuteTask(UBehaviorTreeComponent& OwnerCom
 	Monster->ChangeAnimType(EMonsterAnimType::Walk);
 	Monster->GetCharacterMovement()->MaxWalkSpeed = Monster->GetMonsterInfo().MoveSpeed * 0.7f;
 	//UAIBlueprintHelperLibrary::SimpleMoveToLocation(Controller, Monster->GetPatrolPoint());
-	Monster->SetPatrolEnable(true);
+	//Monster->SetPatrolEnable(true);
 	
 	
 	return EBTNodeResult::InProgress;
@@ -82,39 +84,38 @@ void UBTTask_Patrol::TickTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemo
 
 	if (Target)
 	{
-		Monster->SetPatrolEnable(false);
-
 		FinishLatentTask(OwnerComp, EBTNodeResult::Succeeded);
 		return;
 	}
 
-	UAIBlueprintHelperLibrary::SimpleMoveToLocation(Controller, Monster->GetPatrolPointSpline());
-		
-	if (Monster->GetPatrolWait())
-	{
-		Monster->SetPatrolEnable(false);
-		Monster->NextPatrolPoint();
-		FinishLatentTask(OwnerComp, EBTNodeResult::Succeeded);
+	UAIBlueprintHelperLibrary::SimpleMoveToLocation(Controller, Monster->GetPatrolPoint());
+	//FinishLatentTask(OwnerComp, EBTNodeResult::Succeeded);
 
-	}
+	
 	// µµÂøÇß´Ù¸é.
-	/*FVector	PatrolPoint = Monster->GetPatrolPoint();
+	FVector	PatrolPoint = Monster->GetPatrolPoint();
+
 	FVector	MonsterLoc = Monster->GetActorLocation();
 
 	float	CapsuleHalfHeight = Monster->GetCapsuleComponent()->GetUnscaledCapsuleHalfHeight();
 	float	CapsuleRadius = Monster->GetCapsuleComponent()->GetUnscaledCapsuleRadius();
-
-	MonsterLoc.Z -= CapsuleHalfHeight;
+	//LOG(TEXT("Capsule  hf, Rad : %f %f"), CapsuleHalfHeight, CapsuleRadius);
 
 	float	Distance = FVector::Distance(MonsterLoc, PatrolPoint);
+	//LOG(TEXT("PatrolPoint : %f %f %f"), PatrolPoint.X, PatrolPoint.Y, PatrolPoint.Z);
+	//LOG(TEXT("MonsterLoc : %f %f %f"), MonsterLoc.X, MonsterLoc.Y, MonsterLoc.Z);
+	//LOG(TEXT("%f %f"), Distance, CapsuleRadius + 5);
 
-	if (Distance <= CapsuleRadius)
+	m_AccTime += DeltaSeconds;
+
+	if (Distance <= CapsuleRadius + 7 || m_AccTime >= m_WaitTime)
 	{
-		Monster->SetPatrolEnable(false);
+		//LOG(TEXT("AAAAAAAAAAAAAAAAAAAAAAAAAA"), Distance);
 
+		m_AccTime = 0.f;
 		Monster->NextPatrolPoint();
 		FinishLatentTask(OwnerComp, EBTNodeResult::Succeeded);
-	}*/
+	}
 
 }
 

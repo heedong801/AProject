@@ -12,7 +12,7 @@ UBTTask_PatrolWait::UBTTask_PatrolWait()
 	bNotifyTick = true;
 
 	m_AccTime = 0.f;
-	m_WaitTime = 1.f;
+	m_WaitTime = 2.f;
 }
 
 

@@ -7,11 +7,32 @@
 #include "../AProjectGameInstance.h"
 #include "../AProjectGameModeBase.h"
 #include "../DebugClass.h"
+#include "../UI/HPBar.h"
+#include "../Effect/HitCameraShake.h"
 // Sets default values
 AMonster::AMonster()
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+
+	m_HPBar = CreateDefaultSubobject<UWidgetComponent>(TEXT("HPBar"));
+	m_HPBar->SetupAttachment(GetMesh());
+
+	static ConstructorHelpers::FClassFinder<UUserWidget>	HPBarAsset(TEXT("WidgetBlueprint'/Game/UI/UI_HPBar.UI_HPBar_C'"));
+
+	if (HPBarAsset.Succeeded())
+		m_HPBar->SetWidgetClass(HPBarAsset.Class);
+
+	m_HPBar->SetWidgetSpace(EWidgetSpace::Screen);
+	m_HPBar->SetDrawSize(FVector2D(200.f, 60.f));
+	m_HPBar->SetRelativeLocation(FVector(0.f, 0.f, 230.f));
+	m_HPBar->SetBlendMode(EWidgetBlendMode::Transparent);
+
+	GetCapsuleComponent()->SetCollisionProfileName(TEXT("Enemy"));
+	GetMesh()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	
+	//FBox spawnBox;
+	//spawnBox.BuildAABB(GetActorLocation(), FVector(1500.f, 1500.f, 1));
 
 }
 
@@ -19,6 +40,15 @@ AMonster::AMonster()
 void AMonster::BeginPlay()
 {
 	Super::BeginPlay();
+
+	//LOG(TEXT("%f %f %f"), GetActorLocation().X, GetActorLocation().Y, GetActorLocation().Z);
+
+	for (int32 i = 0; i < 4; ++i)
+	{
+		FVector ranVec = GetActorLocation() + FVector(FMath::RandPointInCircle(1500.f), 0.f);
+		m_PatrolArray.Add(ranVec);
+		//LOG(TEXT("%f %f %f"), ranVec.X, ranVec.Y, ranVec.Z);
+	}
 
 	UAProjectGameInstance* GameInst = Cast<UAProjectGameInstance>(GetWorld()->GetGameInstance());
 
@@ -48,7 +78,9 @@ void AMonster::BeginPlay()
 	}
 
 	m_AnimInstance = Cast<UMonsterAnimInstance>(GetMesh()->GetAnimInstance());
-	
+	m_HPBarWidget = Cast<UHPBar>(m_HPBar->GetWidget());
+
+	m_HPBarWidget->SetName(m_MonsterInfoName);
 }
 
 // Called every frame
@@ -56,6 +88,7 @@ void AMonster::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	//LOG(TEXT("%f %f %f"), GetActorLocation().X, GetActorLocation().Y, GetActorLocation().Z);
 
 	//if (!m_Monster)
 	//{
@@ -101,7 +134,7 @@ void AMonster::Tick(float DeltaTime)
 
 	//		m_Monster = Monster;
 	//	}
-	}
+	//}
 
 }
 
@@ -111,17 +144,29 @@ float AMonster::TakeDamage(float DamageAmount, struct FDamageEvent const& Damage
 
 	if (Damage == 0.f)
 		return 0.f;
+	//AttackedDir.Z = 0.f;
+
+	GetWorld()->GetFirstPlayerController()->ClientPlayCameraShake(
+		UHitCameraShake::StaticClass());
+
+	if (m_HPBarWidget->GetVisibility() == ESlateVisibility::Collapsed)
+		m_HPBarWidget->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 
 	Damage = Damage - m_MonsterInfo.Armor;
 	Damage = Damage < 1.f ? 1.f : Damage;
 
 	m_MonsterInfo.HP -= Damage;
 
+	
 	//죽은경우
 	if (m_MonsterInfo.HP <= 0)
 	{
 		//Death();
+		if (m_HPBarWidget->GetVisibility() == ESlateVisibility::SelfHitTestInvisible)
+			m_HPBarWidget->SetVisibility(ESlateVisibility::Collapsed);
+
 		ChangeAnimType(EMonsterAnimType::Death);
+		GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 		GetWorldTimerManager().SetTimer(m_MonsterDeathTimer,
 			this, &AMonster::Death, 2.f, true);
 
@@ -142,8 +187,16 @@ float AMonster::TakeDamage(float DamageAmount, struct FDamageEvent const& Damage
 
 		//		QuestWidget->QuestCheck(EQuestType::Hunt, m_MonsterInfo.Name);
 		//	}
-		}
+	}
+	else
+	{
+		FVector  PlayerLoc = DamageCauser->GetActorLocation();
+		FVector AttackedDir = GetActorLocation() - PlayerLoc;
+		//AttackedDir.Normalize();
+		AttackedDir *= 10.f;
 
+		LaunchCharacter(AttackedDir, false, false);
+	}
 	//	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
 	//	// 아이템이 나와야 할지 말아야 할지 결정한다.
@@ -192,12 +245,13 @@ float AMonster::TakeDamage(float DamageAmount, struct FDamageEvent const& Damage
 	//	m_AnimInstance->SetHit();
 	//}
 
-	//if (IsValid(m_HPBarWidget))
-	//{
 
-	//	m_HPBarWidget->SetHPPercent(m_MonsterInfo.HP / (float)m_MonsterInfo.HPMax);
-	//}
-	return 0.f;
+	if (IsValid(m_HPBarWidget))
+	{
+
+		m_HPBarWidget->SetHPPercent(m_MonsterInfo.HP / (float)m_MonsterInfo.HPMax);
+	}
+	return Damage;
 }
 
 void AMonster::ChangeAnimType(EMonsterAnimType Type)
@@ -205,22 +259,25 @@ void AMonster::ChangeAnimType(EMonsterAnimType Type)
 	m_AnimInstance->ChangeAnimType(Type);
 }
 
-FVector AMonster::GetPatrolPoint()
+FVector AMonster::NextPatrolPoint()
 {
-	if (m_PatrolIdx >= m_PatrolArray.Num())
-		m_PatrolIdx = 0;
+	while (true)
+	{
+		int random = FMath::RandRange(0, 3);
+		if (random == m_PatrolIdx)
+			continue;
+		else
+		{
+			m_PatrolIdx = random;
+			break;
+		}
+	}
 
 	return m_PatrolArray[m_PatrolIdx];
 }
 
-void AMonster::NextPatrolPoint()
+FVector AMonster::GetPatrolPoint()
 {
-	++m_PatrolIdx;
-	++m_CurrentPatrolIndex;
-
-	if (m_PatrolIdx >= m_PatrolArray.Num())
-		m_PatrolIdx = 0;
-
-	if (m_CurrentPatrolIndex >= 3)
-		m_CurrentPatrolIndex = 0;
+	return m_PatrolArray[m_PatrolIdx];
 }
+

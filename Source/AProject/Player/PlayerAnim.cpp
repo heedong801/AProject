@@ -3,7 +3,7 @@
 #include"PlayerCharacter.h"
 #include "../DebugClass.h"
 UPlayerAnim::UPlayerAnim()
-	: m_Dir(0), m_Speed(0), m_CanAttack(true)
+	: m_Dir(0), m_Speed(0), m_CanAttack(true), m_OnSky(false)
 {
 
 }
@@ -19,6 +19,7 @@ void UPlayerAnim::NativeUpdateAnimation(float DeltaSeconds)
 
 	APlayerCharacter* Player = Cast<APlayerCharacter>(TryGetPawnOwner());
 	
+	//LOG(TEXT("%f"), Player->GetActorScale3D().Size());
 	if (Player)
 	{
 		UCharacterMovementComponent* Movement = Player->GetCharacterMovement();
@@ -27,16 +28,14 @@ void UPlayerAnim::NativeUpdateAnimation(float DeltaSeconds)
 		{
 			m_Speed = Movement->Velocity.Size();
 
-			bool OnGround = Movement->IsMovingOnGround();
-			//땅 안밟고 있다가 지금은 땅위에 있을때
-			/*if (!m_OnGround && OnGround && Player->IsMoveKey())
-				m_AnimType = EPlayerAnimType::Ground;*/
-
-			//m_OnGround = OnGround;
-			//땅 안밟고 있고, 점프가 아닌경우 = 떨어지는 경우
-			/*if (!m_OnGround && m_AnimType != EPlayerAnimType::Jump)
-				m_AnimType = EPlayerAnimType::Fall;*/
-			//m_OnGround = Movement->IsMovingOnGround();
+			m_OnSky = Movement->IsFalling();
+			if (!m_OnSky)
+			{
+				m_DoubleJump = false;
+				ChangeAnimType(EPlayerAnimType::Ground);
+			}
+			else
+				ChangeAnimType(EPlayerAnimType::Sky);
 
 		}
 	}
@@ -67,3 +66,4 @@ void UPlayerAnim::SetFullbody(float useFullbody)
 	else
 		m_UseFullbody = false;
 }
+

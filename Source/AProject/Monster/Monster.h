@@ -6,6 +6,7 @@
 #include "MonsterInfo.h"
 #include "../Etc/PatrolPointSpline.h"
 #include "GameFramework/Character.h"
+#include "Components/WidgetComponent.h"
 #include "Monster.generated.h"
 
 UCLASS()
@@ -27,14 +28,11 @@ protected:
 		TArray<FVector> m_PatrolArray;
 	int32 m_PatrolIdx;
 
-	float m_CurrentPatrolLength;
-	int32 m_CurrentPatrolIndex;
-
-	bool m_PatrolEnable;
-	class APatrolPointSpline* m_PatrolSpline;
-	float m_PatrolLength;
-
 	FString m_MonsterInfoName;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+		UWidgetComponent* m_HPBar;
+	class UHPBar* m_HPBarWidget;
 
 	class UMonsterAnimInstance* m_AnimInstance;
 
@@ -49,17 +47,15 @@ public:
 	virtual float TakeDamage(float Damage, struct FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
 	virtual void NormalAttack() {}
 	virtual void Death() {}
+	FVector NextPatrolPoint();
 	FVector GetPatrolPoint();
-	void SetPatrolPointSpline(class APatrolPointSpline* Spline){		m_PatrolSpline = Spline;	}
-	void NextPatrolPoint();
-	FVector GetPatrolPointSpline() {		return m_PatrolSpline->GetSplinePoint(m_CurrentPatrolLength);	}
-	bool GetPatrolWait() {		return m_PatrolLength / 3.f * (m_CurrentPatrolIndex + 1) <= m_CurrentPatrolLength;	}
+
+	
 
 	void ChangeAnimType(EMonsterAnimType Type);
 	FMonsterInfo& GetMonsterInfo(){		return m_MonsterInfo;	}
 
-	void SetPatrolEnable(bool Enable)	{		m_PatrolEnable = Enable;	}
+	//void SetPatrolEnable(bool Enable)	{		m_PatrolEnable = Enable;	}
 	bool GetAttackEnd()	{		return m_AttackEnd;		}
 	void SetAttackEnd(bool AttackEnd)	{m_AttackEnd = AttackEnd;	}
-
 };

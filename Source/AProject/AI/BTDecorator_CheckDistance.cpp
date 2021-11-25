@@ -48,7 +48,6 @@ bool UBTDecorator_CheckDistance::CalculateRawConditionValue(UBehaviorTreeCompone
 		break;
 	case ECheckDistanceType::Attack:
 		CheckDist = MonsterInfo.AttackDistance;
-
 		break;
 	}
 

@@ -2,7 +2,7 @@
 
 
 #include "Shoebill.h"
-
+#include "MonsterAIController.h"
 AShoebill::AShoebill()
 {
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
@@ -14,10 +14,13 @@ AShoebill::AShoebill()
 		GetMesh()->SetSkeletalMesh(MeshAsset.Object);
 
 	m_MonsterInfoName = TEXT("Shoebill");
-	/*static ConstructorHelpers::FClassFinder<UAnimInstance> AnimAsset(TEXT("AnimBlueprint'/Game/Monster/BP_MinionWarriorAnim.BP_MinionWarriorAnim_C'"));
+
+	static ConstructorHelpers::FClassFinder<UAnimInstance> AnimAsset(TEXT("AnimBlueprint'/Game/Monster/Shoebill/AB_Shoebill.AB_Shoebill_C'"));
 
 	if (AnimAsset.Succeeded())
-		GetMesh()->SetAnimInstanceClass(AnimAsset.Class);*/
+		GetMesh()->SetAnimInstanceClass(AnimAsset.Class);
+
+	AIControllerClass = AMonsterAIController::StaticClass();
 
 	/*m_MonsterInfoName = TEXT("MinionWorrior");
 

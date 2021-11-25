@@ -40,13 +40,10 @@ public:
 
 public:
 	UFUNCTION()
-		void AnimNotify_Attack();
+		void AnimNotify_HitAttack();
 
 	UFUNCTION()
 		void AnimNotify_AttackEnd();
-
-	UFUNCTION()
-		void AnimNotify_DeathEnd();
 
 	UFUNCTION()
 		void AnimNotify_HitEnd();
