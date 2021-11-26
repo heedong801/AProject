@@ -69,3 +69,13 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 		float			MoveSpeed;
 };
+
+
+
+struct FPlayerFPlayerTraceInfo
+{
+
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+		int32	Option;
+};

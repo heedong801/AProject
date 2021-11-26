@@ -52,12 +52,16 @@ void AMonster::BeginPlay()
 
 	UAProjectGameInstance* GameInst = Cast<UAProjectGameInstance>(GetWorld()->GetGameInstance());
 
+
 	if (GameInst)
 	{
+
 
 		const FMonsterInfo* Info = GameInst->FindMonsterInfo(m_MonsterInfoName);
 		if (Info)
 		{
+			
+
 			m_MonsterInfo.Name = Info->Name;
 			m_MonsterInfo.Attack = Info->Attack;
 			m_MonsterInfo.Armor = Info->Armor;
@@ -73,7 +77,7 @@ void AMonster::BeginPlay()
 			m_MonsterInfo.AttackAngle = Info->AttackAngle;
 			m_MonsterInfo.MoveSpeed = Info->MoveSpeed;
 			m_MonsterInfo.TraceDistance = Info->TraceDistance;
-
+			m_MonsterInfo.weight = Info->weight;
 		}
 	}
 
@@ -193,7 +197,8 @@ float AMonster::TakeDamage(float DamageAmount, struct FDamageEvent const& Damage
 		FVector  PlayerLoc = DamageCauser->GetActorLocation();
 		FVector AttackedDir = GetActorLocation() - PlayerLoc;
 		//AttackedDir.Normalize();
-		AttackedDir *= 10.f;
+		
+		AttackedDir *= ( 1000.f / m_MonsterInfo.weight);
 
 		LaunchCharacter(AttackedDir, false, false);
 	}

@@ -5,15 +5,7 @@
 #include "../DebugClass.h"
 AMonsterAIController::AMonsterAIController()
 {
-	static ConstructorHelpers::FObjectFinder<UBehaviorTree> AITreeAsset(TEXT("BehaviorTree'/Game/Monster/BT_Shoebill.BT_Shoebill'"));
 
-	if (AITreeAsset.Succeeded())
-		m_AITree = AITreeAsset.Object;
-
-	static ConstructorHelpers::FObjectFinder<UBlackboardData> BlackboardAsset(TEXT("BlackboardData'/Game/Monster/BB_Monster.BB_Monster'"));
-
-	if (BlackboardAsset.Succeeded())
-		m_AIBlackboard = BlackboardAsset.Object;
 }
 void AMonsterAIController::OnPossess(APawn* InPawn)
 {

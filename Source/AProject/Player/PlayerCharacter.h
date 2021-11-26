@@ -52,12 +52,15 @@ public:
 	void ZoomInKey(float Scale);
 	void JumpKey();
 	void AttackKey();
-
+	void Sprint();
+	void StopSprint();
 	const FPlayerInfo& GetPlayerInfo()	const { return m_PlayerInfo;}
 
 	virtual int32 GetCurrentCombo() { return 0; } 
 	virtual void SetCurrentCombo(int32 curCombo) { } 
 	virtual void HitDamage() { }
+
+	//struct FPlayerTraceInfo APlayerCharacter::FootTrace(float fTraceDistance, FName sSocket);
 
 	UFUNCTION()
 	void OnAttackMontageEnded(UAnimMontage* Montage, bool bInterrupted);

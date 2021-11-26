@@ -1,26 +1,27 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Shoebill.h"
-#include "ShoebillAIController.h"
-AShoebill::AShoebill()
+#include "Golem.h"
+#include "GolemAIController.h"
+
+AGolem::AGolem()
 {
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	static ConstructorHelpers::FObjectFinder<USkeletalMesh> MeshAsset(TEXT("SkeletalMesh'/Game/ParagonMinions/Characters/Buff/Buff_Black/Meshes/Buff_Black.Buff_Black'"));
+	static ConstructorHelpers::FObjectFinder<USkeletalMesh> MeshAsset(TEXT("SkeletalMesh'/Game/ParagonMinions/Characters/Buff/Buff_Red/Meshes/Buff_Red.Buff_Red'"));
 
 	if (MeshAsset.Succeeded())
 		GetMesh()->SetSkeletalMesh(MeshAsset.Object);
 
-	m_MonsterInfoName = TEXT("Shoebill");
+	m_MonsterInfoName = TEXT("Golem");
 
-	static ConstructorHelpers::FClassFinder<UAnimInstance> AnimAsset(TEXT("AnimBlueprint'/Game/Monster/Shoebill/AB_Shoebill.AB_Shoebill_C'"));
+	static ConstructorHelpers::FClassFinder<UAnimInstance> AnimAsset(TEXT("AnimBlueprint'/Game/Monster/Golem/AB_Golem.AB_Golem_C'"));
 
 	if (AnimAsset.Succeeded())
 		GetMesh()->SetAnimInstanceClass(AnimAsset.Class);
 
-	AIControllerClass = AShoebillAIController::StaticClass();
+	AIControllerClass = AGolemAIController::StaticClass();
 
 	/*m_MonsterInfoName = TEXT("MinionWorrior");
 
@@ -29,20 +30,20 @@ AShoebill::AShoebill()
 }
 
 // Called when the game starts or when spawned
-void AShoebill::BeginPlay()
+void AGolem::BeginPlay()
 {
 	Super::BeginPlay();
 
 }
 
 // Called every frame
-void AShoebill::Tick(float DeltaTime)
+void AGolem::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
 }
 
-void AShoebill::NormalAttack()
+void AGolem::NormalAttack()
 {
 	/*FVector MuzzleLoc = GetMesh()->GetSocketLocation(TEXT("Muzzle_Front"));
 
@@ -56,7 +57,7 @@ void AShoebill::NormalAttack()
 	Bullet->SetMonster(this);*/
 }
 
-void AShoebill::Death()
+void AGolem::Death()
 {
 	GetWorldTimerManager().ClearTimer(m_MonsterDeathTimer);
 

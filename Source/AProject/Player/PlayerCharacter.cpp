@@ -32,6 +32,7 @@ APlayerCharacter::APlayerCharacter()
 		m_AttackMontageArray = Attack1Asset.Object;
 
 	GetCharacterMovement()->JumpZVelocity = 600.f;
+	
 	GetCapsuleComponent()->SetCollisionProfileName(TEXT("Player"));
 }
 
@@ -74,6 +75,9 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 
 	PlayerInputComponent->BindAction(TEXT("Jump"), EInputEvent::IE_Pressed, this, &APlayerCharacter::JumpKey);
 	PlayerInputComponent->BindAction(TEXT("Attack"), EInputEvent::IE_Pressed, this, &APlayerCharacter::AttackKey);
+	PlayerInputComponent->BindAction(TEXT("Sprint"), EInputEvent::IE_Pressed, this, &APlayerCharacter::Sprint);
+	PlayerInputComponent->BindAction(TEXT("Sprint"), EInputEvent::IE_Released, this, &APlayerCharacter::StopSprint);
+
 
 
 	
@@ -164,3 +168,49 @@ void APlayerCharacter::OnAttackMontageEnded(UAnimMontage* Montage, bool bInterru
 	m_AnimInst->SetIsAttack(false);
 	SetCurrentCombo(0);
 }
+
+void APlayerCharacter::Sprint()
+{
+	GetCharacterMovement()->MaxWalkSpeed *= 2;
+}
+void APlayerCharacter::StopSprint()
+{
+	GetCharacterMovement()->MaxWalkSpeed /= 2;
+}
+
+//struct FPlayerTraceInfo APlayerCharacter::FootTrace(float fTraceDistance, FName sSocket)
+//{
+//	struct FPlayerTraceInfo pFPlayerTraceInfo;
+//
+//	//! Set Linetraces startpoint and end point
+//	FVector pSocketLocation = GetMesh()->GetSocketLocation(sSocket);
+//	FVector pLine_Start = FVector(pSocketLocation.X, pSocketLocation.Y, GetActorLocation().Z);
+//	FVector pLine_End = FVector(pSocketLocation.X, pSocketLocation.Y
+//		, (GetActorLocation().Z - m_fIKCapsuleHalkHeight) - fTraceDistance);
+//
+//	//! Process Line Trace
+//	FHitResult pHitResult;
+//	TArray<AActor*> pIgnore;
+//	pIgnore.Add(GetOwner());
+//
+//	bool bDebug = true;
+//	EDrawDebugTrace::Type eDebug = EDrawDebugTrace::None;
+//	if (bDebug == true) eDebug = EDrawDebugTrace::ForOneFrame;
+//
+//	bool bResult = UKismetSystemLibrary::LineTraceSingle(GetWorld(), pLine_Start, pLine_End,
+//		UEngineTypes::ConvertToTraceType(ECC_Visibility), true, pIgnore, eDebug, pHitResult, true);
+//
+//	//! Set ImpactNormal and Offset from HitResult
+//	pFPlayerTraceInfo.pImpactLocation = pHitResult.ImpactNormal;
+//	if (pHitResult.IsValidBlockingHit() == true)
+//	{
+//		float fImpactLegth = (pHitResult.ImpactPoint - pHitResult.TraceEnd).Size();
+//		pFPlayerTraceInfo.fOffset = 5.0f + (fImpactLegth - fTraceDistance);
+//	}
+//	else
+//	{
+//		pFPlayerTraceInfo.fOffset = 0.0f;
+//	}
+//
+//	return pFPlayerTraceInfo;
+//}
