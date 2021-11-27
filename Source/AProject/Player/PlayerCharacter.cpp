@@ -40,14 +40,16 @@ void APlayerCharacter::PostInitializeComponents()
 {
 	Super::PostInitializeComponents();
 
-	m_AnimInst = Cast<UPlayerAnim>(GetMesh()->GetAnimInstance());
-	m_AnimInst->OnMontageEnded.AddDynamic(this, &APlayerCharacter::OnAttackMontageEnded);
+	
 
 }
 // Called when the game starts or when spawned
 void APlayerCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+
+	m_AnimInst = Cast<UPlayerAnim>(GetMesh()->GetAnimInstance());
+	m_AnimInst->OnMontageEnded.AddDynamic(this, &APlayerCharacter::OnAttackMontageEnded);
 }
 
 // Called every frame
