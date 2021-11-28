@@ -15,6 +15,16 @@ AWukong::AWukong()
 	if (WukongMesh.Succeeded())
 		GetMesh()->SetSkeletalMesh((WukongMesh.Object));
 
+	static ConstructorHelpers::FClassFinder<UAnimInstance>	WukongAnimAsset(TEXT("AnimBlueprint'/Game/Player/Wukong/Anim/AB_Wukong.AB_Wukong_C'"));
+
+	if (WukongAnimAsset.Succeeded())
+		GetMesh()->SetAnimInstanceClass(WukongAnimAsset.Class);
+
+	static ConstructorHelpers::FObjectFinder<UAnimMontage>	Attack1Asset(TEXT("AnimMontage'/Game/Player/Wukong/Anim/AM_AttackA.AM_AttackA'"));
+
+	if (Attack1Asset.Succeeded())
+		m_AttackMontageArray = Attack1Asset.Object;
+
 	m_PlayerInfo.Name = TEXT("Wukong");
 	m_PlayerInfo.Job = EPlayerJob::Knight;
 	m_PlayerInfo.Attack = 40;

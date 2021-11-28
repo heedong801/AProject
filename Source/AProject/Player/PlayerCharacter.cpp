@@ -26,10 +26,6 @@ APlayerCharacter::APlayerCharacter()
 	if (WukongAsset.Succeeded())
 		GetMesh()->SetAnimInstanceClass(WukongAsset.Class);
 
-	static ConstructorHelpers::FObjectFinder<UAnimMontage>	Attack1Asset(TEXT("AnimMontage'/Game/Player/Wukong/Anim/AM_AttackA.AM_AttackA'"));
-
-	if (Attack1Asset.Succeeded())
-		m_AttackMontageArray = Attack1Asset.Object;
 
 	GetCharacterMovement()->JumpZVelocity = 600.f;
 	
