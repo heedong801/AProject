@@ -38,6 +38,7 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 		bool m_Attack;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	bool m_CanAttack;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
@@ -51,11 +52,20 @@ protected:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	bool m_DoubleJump;
+
+
 	// UFUNCTION	///////////////////////////////////////////////////////////////////
 	UFUNCTION()
 		void AnimNotify_AttackCombo();
 	UFUNCTION()
 		void AnimNotify_HitDamage();
+	UFUNCTION()
+		void AnimNotify_SlamEnd();
+	UFUNCTION()
+		void AnimNotify_AddGravity();
+	UFUNCTION()
+		void AnimNotify_AttackEnd();
+
 
 public:
 	void SetDirection(float Dir){m_Dir = Dir;}
@@ -69,13 +79,15 @@ public:
 	void SetDoubleJump(bool jump) { m_DoubleJump = jump; }
 	bool GetDoubleJump()	const { return m_DoubleJump; }
 
-	
 	void SetFullbody(float useFullbody);
 	float GetFullbody() { return m_UseFullbody; }
 
 	void ChangeAnimType(EPlayerAnimType Type){	m_AnimType = Type;	}
 
 	EPlayerAnimType GetAnimType()	{	return m_AnimType;	}
+
+	bool GetOnSky() { return m_OnSky; }
+
 };
 
 //UFUNCTION()

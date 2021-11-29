@@ -26,10 +26,14 @@ protected:
 	class UPlayerAnim* m_AnimInst;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-		UAnimMontage* m_AttackMontageArray;
+		UAnimMontage* m_AttackMontage;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+		UAnimMontage* m_SkyAttackMontage;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 		FPlayerInfo	m_PlayerInfo;
+
+	FTimerHandle TimeDillationHandle;
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -54,15 +58,20 @@ public:
 	void AttackKey();
 	void Sprint();
 	void StopSprint();
+	void SetTimeDillation();
 	const FPlayerInfo& GetPlayerInfo()	const { return m_PlayerInfo;}
 
 	virtual int32 GetCurrentCombo() { return 0; } 
 	virtual void SetCurrentCombo(int32 curCombo) { } 
 	virtual void HitDamage() { }
 
-	//struct FPlayerTraceInfo APlayerCharacter::FootTrace(float fTraceDistance, FName sSocket);
+	UAnimMontage* GetSkyAttackMontage() { return m_SkyAttackMontage; }
 
 	UFUNCTION()
-	void OnAttackMontageEnded(UAnimMontage* Montage, bool bInterrupted);
+	void SetTimeDefaultTimeDilation();
+	//struct FPlayerTraceInfo APlayerCharacter::FootTrace(float fTraceDistance, FName sSocket);
+
+	//UFUNCTION()
+	//void OnAttackMontageEnded(UAnimMontage* Montage, bool bInterrupted);
 };
 

@@ -11,6 +11,8 @@ UAssetPathMain::UAssetPathMain()
 
 void UAssetPathMain::ConvertPath()
 {
+	LOG(TEXT("LOAD"));
+
 	for (auto& result : MaterialPathArray)
 	{
 		m_mapMaterialPath.Add(result.Name, result.Path);

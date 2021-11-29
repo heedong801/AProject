@@ -27,9 +27,10 @@ APlayerCharacter::APlayerCharacter()
 		GetMesh()->SetAnimInstanceClass(WukongAsset.Class);
 
 
-	GetCharacterMovement()->JumpZVelocity = 600.f;
+	GetCharacterMovement()->JumpZVelocity = 800.f;
 	
 	GetCapsuleComponent()->SetCollisionProfileName(TEXT("Player"));
+
 }
 
 void APlayerCharacter::PostInitializeComponents()
@@ -45,7 +46,7 @@ void APlayerCharacter::BeginPlay()
 	Super::BeginPlay();
 
 	m_AnimInst = Cast<UPlayerAnim>(GetMesh()->GetAnimInstance());
-	m_AnimInst->OnMontageEnded.AddDynamic(this, &APlayerCharacter::OnAttackMontageEnded);
+	//m_AnimInst->OnMontageEnded.AddDynamic(this, &APlayerCharacter::OnAttackMontageEnded);
 }
 
 // Called every frame
@@ -56,6 +57,7 @@ void APlayerCharacter::Tick(float DeltaTime)
 	
 	SetDirection();
 	m_AnimInst->SetFullbody(m_AnimInst->GetCurveValue("FullBody"));
+	//LOG(TEXT(" GetDoubleJump : %d"), m_AnimInst->GetDoubleJump());
 	//GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Blue, TEXT("Can you see this message?"));
 
 }
@@ -93,6 +95,7 @@ void APlayerCharacter::SetDirection()
 }
 void APlayerCharacter::MoveForward(float Scale)
 {
+
 	AddMovementInput(GetActorForwardVector(), Scale);
 }
 
@@ -126,20 +129,33 @@ void APlayerCharacter::ZoomInKey(float Scale)
 }
 void APlayerCharacter::AttackKey()
 {
-	
-
 	if (m_AnimInst->GetCanAttack())
 	{	
-		if (GetCurrentCombo() == 0)
-			m_AnimInst->Montage_Play(m_AttackMontageArray);
-		else
-			m_AnimInst->Montage_JumpToSection(m_AnimInst->GetAttackMontageSectionName(GetCurrentCombo() + 1));
+		if (!m_AnimInst->GetOnSky())			//하늘에 있으면 땅에서 하는 콤보 공격 불가
+		{
+			if (GetCurrentCombo() == 0)
+				m_AnimInst->Montage_Play(m_AttackMontage);
+			else
+				m_AnimInst->Montage_JumpToSection(m_AnimInst->GetAttackMontageSectionName(GetCurrentCombo() + 1 % 5));
 
-		
-		SetCurrentCombo(GetCurrentCombo() + 1);
-		m_AnimInst->SetIsAttack(true);
-		m_AnimInst->SetCanAttack(false);
+
+			SetCurrentCombo(GetCurrentCombo() + 1);
+			m_AnimInst->SetIsAttack(true);
+			m_AnimInst->SetCanAttack(false);
+		}
+		else 
+		{
+			
+			//LOG(TEXT("SKY ATTACK"));
+			if (!m_AnimInst->GetDoubleJump())
+			{
+				m_AnimInst->Montage_Play(m_SkyAttackMontage);
+			}
+			m_AnimInst->SetIsAttack(true);
+			m_AnimInst->SetCanAttack(false);
+		}
 	}
+
 }
 
 void APlayerCharacter::JumpKey()
@@ -148,24 +164,24 @@ void APlayerCharacter::JumpKey()
 	if (m_AnimInst->GetAnimType() == EPlayerAnimType::Ground || JumpCurrentCount == 1)
 	{
 		Jump();
-		//LOG(TEXT(" GetDoubleJump : %d"), m_AnimInst->GetDoubleJump());
 		
-		if(JumpCurrentCount == 1)
+		if (JumpCurrentCount == 1)
+		{
 			m_AnimInst->SetDoubleJump(true);
-		//LOG(TEXT(" DDDDDDDDDDDD : %d"), m_AnimInst->GetDoubleJump());
+		}
 
-		
-
+	
 		m_AnimInst->ChangeAnimType(EPlayerAnimType::Sky);
 	}
 }
 
-void APlayerCharacter::OnAttackMontageEnded(UAnimMontage* Montage, bool bInterrupted)
-{
-	m_AnimInst->SetCanAttack(true);
-	m_AnimInst->SetIsAttack(false);
-	SetCurrentCombo(0);
-}
+//void APlayerCharacter::OnAttackMontageEnded(UAnimMontage* Montage, bool bInterrupted)
+//{
+//	LOG(TEXT("END"));
+//	m_AnimInst->SetCanAttack(true);
+//	m_AnimInst->SetIsAttack(false);
+//	SetCurrentCombo(0);
+//}
 
 void APlayerCharacter::Sprint()
 {
@@ -176,6 +192,18 @@ void APlayerCharacter::StopSprint()
 	GetCharacterMovement()->MaxWalkSpeed /= 2;
 }
 
+void APlayerCharacter::SetTimeDefaultTimeDilation()
+{
+	GetWorld()->GetWorldSettings()->SetTimeDilation(1.f);
+
+}
+
+void APlayerCharacter::SetTimeDillation()
+{
+	GetWorld()->GetWorldSettings()->SetTimeDilation(0.5f);
+	GetWorld()->GetTimerManager().SetTimer(TimeDillationHandle,
+		this, &APlayerCharacter::SetTimeDefaultTimeDilation, 0.25f, false);
+}
 //struct FPlayerTraceInfo APlayerCharacter::FootTrace(float fTraceDistance, FName sSocket)
 //{
 //	struct FPlayerTraceInfo pFPlayerTraceInfo;

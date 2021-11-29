@@ -79,12 +79,13 @@ void ANormalEffect::LoadSoundAsync(const FString& Name)
 }
 void ANormalEffect::LoadParticleAsync(const FString& Name)
 {
-	UAssetPathMain* AssetPath = UAssetPathMain::StaticClass()->GetDefaultObject< UAssetPathMain>();
+	UAssetPathMain* AssetPath = UAssetPathMain::StaticClass()->GetDefaultObject<UAssetPathMain>();
 	
 	const FSoftObjectPath* Path = AssetPath->FindParticlePath(Name);
 
 	if (!Path)
 		return;
+
 
 	m_AsyncParticlePath = *Path;
 

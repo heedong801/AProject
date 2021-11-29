@@ -161,22 +161,20 @@ float AMonster::TakeDamage(float DamageAmount, struct FDamageEvent const& Damage
 
 	m_MonsterInfo.HP -= Damage;
 
-	
 	//죽은경우
 	if (m_MonsterInfo.HP <= 0)
 	{
-		//Death();
-		if (m_HPBarWidget->GetVisibility() == ESlateVisibility::SelfHitTestInvisible)
-			m_HPBarWidget->SetVisibility(ESlateVisibility::Collapsed);
-
 		ChangeAnimType(EMonsterAnimType::Death);
 		GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 		GetWorldTimerManager().SetTimer(m_MonsterDeathTimer,
-			this, &AMonster::Death, 2.f, true);
+			this, &AMonster::Death, 2.f, false);
 
-		//AMonsterAIController* MonsterController = Cast<AMonsterAIController>(GetController());
-		//if (MonsterController)
-		//	MonsterController->BrainComponent->StopLogic(TEXT("Dead"));
+		if (m_HPBarWidget->GetVisibility() == ESlateVisibility::SelfHitTestInvisible)
+			m_HPBarWidget->SetVisibility(ESlateVisibility::Collapsed);
+
+		AMonsterAIController* MonsterController = Cast<AMonsterAIController>(GetController());
+		if (MonsterController)
+			MonsterController->BrainComponent->StopLogic(TEXT("Dead"));
 
 		//// 몬스터가 죽었을 경우 퀘스트에 해당 몬스터를 잡는 퀘스트가 있는지 판단한다.
 		//AAProjectGameModeBase* GameMode = Cast<AAProjectGameModeBase>(GetWorld()->GetAuthGameMode());

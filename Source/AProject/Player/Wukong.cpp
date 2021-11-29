@@ -23,7 +23,12 @@ AWukong::AWukong()
 	static ConstructorHelpers::FObjectFinder<UAnimMontage>	Attack1Asset(TEXT("AnimMontage'/Game/Player/Wukong/Anim/AM_AttackA.AM_AttackA'"));
 
 	if (Attack1Asset.Succeeded())
-		m_AttackMontageArray = Attack1Asset.Object;
+		m_AttackMontage = Attack1Asset.Object;
+
+	static ConstructorHelpers::FObjectFinder<UAnimMontage>	SkyAttackAsset(TEXT("AnimMontage'/Game/Player/Wukong/Anim/AM_SkyAttack.AM_SkyAttack'"));
+
+	if (SkyAttackAsset.Succeeded())
+		m_SkyAttackMontage = SkyAttackAsset.Object;
 
 	m_PlayerInfo.Name = TEXT("Wukong");
 	m_PlayerInfo.Job = EPlayerJob::Knight;
@@ -137,9 +142,9 @@ void AWukong::HitDamage()
 			result.ImpactPoint, result.ImpactNormal.Rotation(), param);
 
 		//에셋 로딩
-		//Effect->LoadParticle(TEXT("ParticleSystem'/Game/AdvancedMagicFX13/Particles/P_ky_impact.P_ky_impact'"));
+		Effect->LoadParticle(TEXT("ParticleSystem'/Game/ParagonSunWukong/FX/Particles/Wukong/Abilities/Primary/FX/P_Wukong_Impact_Empowered.P_Wukong_Impact_Empowered'"));
 		//Effect->LoadSound(TEXT("SoundWave'/Game/Sound/Fire4.Fire4'"));
-		Effect->LoadParticleAsync(TEXT("HitNormal"));
+		//Effect->LoadParticleAsync(TEXT("tmp"));
 		//Effect->LoadSoundAsync(TEXT("HitNormal"));
 
 		//데미지 전달
