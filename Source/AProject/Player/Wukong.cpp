@@ -30,18 +30,19 @@ AWukong::AWukong()
 	if (SkyAttackAsset.Succeeded())
 		m_SkyAttackMontage = SkyAttackAsset.Object;
 
-	m_PlayerInfo.Name = TEXT("Wukong");
-	m_PlayerInfo.Job = EPlayerJob::Knight;
-	m_PlayerInfo.Attack = 40;
-	m_PlayerInfo.Armor = 20;
-	m_PlayerInfo.HP = 500;
-	m_PlayerInfo.HPMax = 500;
-	m_PlayerInfo.MP = 100;
-	m_PlayerInfo.MPMax = 100;
-	m_PlayerInfo.AttackDistance = 200.f;
-	m_PlayerInfo.AttackSpeed = 1.f;
-	m_PlayerInfo.MoveSpeed = 600.f;
-	m_PlayerInfo.AttackAngle = 60.f;
+	m_PlayerInfoName = TEXT("Wukong");
+	//m_PlayerInfo.Name = TEXT("Wukong");
+	//m_PlayerInfo.Job = EPlayerJob::Knight;
+	//m_PlayerInfo.Attack = 40;
+	//m_PlayerInfo.Armor = 20;
+	//m_PlayerInfo.HP = 500;
+	//m_PlayerInfo.HPMax = 500;
+	//m_PlayerInfo.MP = 100;
+	//m_PlayerInfo.MPMax = 100;
+	//m_PlayerInfo.AttackDistance = 200.f;
+	//m_PlayerInfo.AttackSpeed = 1.f;
+	//m_PlayerInfo.MoveSpeed = 600.f;
+	//m_PlayerInfo.AttackAngle = 60.f;
 
 
 }

@@ -26,7 +26,10 @@ protected:
 	UMainHUD* m_MainHUD;
 
 	UAssetPathMain* m_MainAssetPath;
+
 public:
+	UMainHUD* GetMainHUD()	{		return m_MainHUD;	}
+
 	virtual void InitGame(const FString& MapName, const FString& Options, FString& ErrorMessage);
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaTime) override;

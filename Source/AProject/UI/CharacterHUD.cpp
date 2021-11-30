@@ -3,7 +3,7 @@
 
 #include "CharacterHUD.h"
 #include "../Player/PlayerCharacter.h"
-
+#include "../DebugClass.h"
 void UCharacterHUD::NativeConstruct()
 {
 	Super::NativeConstruct();
@@ -18,6 +18,7 @@ void UCharacterHUD::NativeConstruct()
 	if (Player)
 	{
 		SetLevelText(Player->GetPlayerInfo().Level);
+		SetEXPPercent(0.f);
 	}
 }
 

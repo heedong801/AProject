@@ -4,6 +4,11 @@
 #include "PlayerCharacter.h"
 #include "PlayerAnim.h"
 #include "../DebugClass.h"
+#include "../AProjectGameInstance.h"
+#include "../UI/CharacterHUD.h"
+#include "../UI/MainHUD.h"
+#include "../AProjectGameModeBase.h"
+
 //#include "../Effect/HitCameraShake.h"
 
 // Sets default values
@@ -37,7 +42,29 @@ void APlayerCharacter::PostInitializeComponents()
 {
 	Super::PostInitializeComponents();
 
-	
+	UAProjectGameInstance* GameInst = Cast<UAProjectGameInstance>(GetWorld()->GetGameInstance());
+
+	if (GameInst)
+	{
+		const FPlayerInfo* Info = GameInst->FindPlayerInfo(m_PlayerInfoName);
+		if (Info)
+		{
+			m_PlayerInfo.Name = Info->Name;
+			m_PlayerInfo.Attack = Info->Attack;
+			m_PlayerInfo.Armor = Info->Armor;
+			m_PlayerInfo.HP = Info->HP;
+			m_PlayerInfo.HPMax = Info->HPMax;
+			m_PlayerInfo.MP = Info->MP;
+			m_PlayerInfo.MPMax = Info->MPMax;
+			m_PlayerInfo.Level = Info->Level;
+			m_PlayerInfo.Exp = Info->Exp;
+			m_PlayerInfo.Gold = Info->Gold;
+			m_PlayerInfo.AttackDistance = Info->AttackDistance;
+			m_PlayerInfo.AttackSpeed = Info->AttackSpeed;
+			m_PlayerInfo.AttackAngle = Info->AttackAngle;
+			m_PlayerInfo.MoveSpeed = Info->MoveSpeed;
+		}
+	}
 
 }
 // Called when the game starts or when spawned
@@ -46,6 +73,10 @@ void APlayerCharacter::BeginPlay()
 	Super::BeginPlay();
 
 	m_AnimInst = Cast<UPlayerAnim>(GetMesh()->GetAnimInstance());
+
+	
+
+
 	//m_AnimInst->OnMontageEnded.AddDynamic(this, &APlayerCharacter::OnAttackMontageEnded);
 }
 
@@ -203,6 +234,43 @@ void APlayerCharacter::SetTimeDillation()
 	GetWorld()->GetWorldSettings()->SetTimeDilation(0.5f);
 	GetWorld()->GetTimerManager().SetTimer(TimeDillationHandle,
 		this, &APlayerCharacter::SetTimeDefaultTimeDilation, 0.25f, false);
+}
+
+void APlayerCharacter::AddExp(int32 Exp)
+{
+	m_PlayerInfo.Exp += Exp;
+
+	AAProjectGameModeBase* GameMode = Cast<AAProjectGameModeBase>(GetWorld()->GetAuthGameMode());
+
+	if (IsValid(GameMode))
+	{
+		UMainHUD* MainHUD = GameMode->GetMainHUD();
+
+		if (IsValid(MainHUD))
+		{
+			UCharacterHUD* CharacterHUD = MainHUD->GetCharacterHUD();
+
+			if (IsValid(CharacterHUD))
+			{
+				if (m_PlayerInfo.Exp >= 100)
+				{
+					m_PlayerInfo.Exp = 0;
+					m_PlayerInfo.Level++;
+
+					CharacterHUD->SetLevelText(m_PlayerInfo.Level);
+
+				}
+				
+				CharacterHUD->SetEXPPercent(m_PlayerInfo.Exp / (float)100.f);
+			}
+		}
+	}
+
+}
+void APlayerCharacter::AddGold(int32 Gold)
+{
+	m_PlayerInfo.Gold += Gold;
+
 }
 //struct FPlayerTraceInfo APlayerCharacter::FootTrace(float fTraceDistance, FName sSocket)
 //{

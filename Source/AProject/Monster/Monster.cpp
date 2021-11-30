@@ -9,6 +9,7 @@
 #include "../DebugClass.h"
 #include "../UI/HPBar.h"
 #include "../Effect/HitCameraShake.h"
+#include "../Player/PlayerCharacter.h"
 // Sets default values
 AMonster::AMonster()
 {
@@ -55,13 +56,9 @@ void AMonster::BeginPlay()
 
 	if (GameInst)
 	{
-
-
 		const FMonsterInfo* Info = GameInst->FindMonsterInfo(m_MonsterInfoName);
 		if (Info)
 		{
-			
-
 			m_MonsterInfo.Name = Info->Name;
 			m_MonsterInfo.Attack = Info->Attack;
 			m_MonsterInfo.Armor = Info->Armor;
@@ -176,6 +173,12 @@ float AMonster::TakeDamage(float DamageAmount, struct FDamageEvent const& Damage
 		if (MonsterController)
 			MonsterController->BrainComponent->StopLogic(TEXT("Dead"));
 
+		APlayerCharacter* Player = Cast<APlayerCharacter>(DamageCauser);
+		if (Player)
+		{
+			Player->AddExp(m_MonsterInfo.Exp);
+			Player->AddGold(m_MonsterInfo.Gold);
+		}
 		//// 몬스터가 죽었을 경우 퀘스트에 해당 몬스터를 잡는 퀘스트가 있는지 판단한다.
 		//AAProjectGameModeBase* GameMode = Cast<AAProjectGameModeBase>(GetWorld()->GetAuthGameMode());
 

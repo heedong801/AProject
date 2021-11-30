@@ -33,6 +33,7 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 		FPlayerInfo	m_PlayerInfo;
 
+	FString m_PlayerInfoName;
 	FTimerHandle TimeDillationHandle;
 protected:
 	// Called when the game starts or when spawned
@@ -60,6 +61,9 @@ public:
 	void StopSprint();
 	void SetTimeDillation();
 	const FPlayerInfo& GetPlayerInfo()	const { return m_PlayerInfo;}
+
+	void AddExp(int32 Exp);
+	void AddGold(int32 Gold);
 
 	virtual int32 GetCurrentCombo() { return 0; } 
 	virtual void SetCurrentCombo(int32 curCombo) { } 

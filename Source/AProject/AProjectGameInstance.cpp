@@ -8,6 +8,10 @@ UAProjectGameInstance::UAProjectGameInstance()
 	static ConstructorHelpers::FObjectFinder<UDataTable> MonsterInfoTableAsset(TEXT("DataTable'/Game/Monster/DT_MonsterInfo.DT_MonsterInfo'"));
 	if (MonsterInfoTableAsset.Succeeded())
 		m_MonsterInfoTable = MonsterInfoTableAsset.Object;
+
+	static ConstructorHelpers::FObjectFinder<UDataTable> PlayerInfoTableAsset(TEXT("DataTable'/Game/Player/DT_PlayerInfo.DT_PlayerInfo'"));
+	if (PlayerInfoTableAsset.Succeeded())
+		m_PlayerInfoTable = PlayerInfoTableAsset.Object;
 }
 
 UAProjectGameInstance::~UAProjectGameInstance()

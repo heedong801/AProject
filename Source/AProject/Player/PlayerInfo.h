@@ -5,18 +5,6 @@
 #include "CoreMinimal.h"
 #include "Engine/DataTable.h"
 #include "PlayerInfo.generated.h"
-/**
- * 
- */
-UENUM(BlueprintType)
-enum class EPlayerJob : uint8
-{
-	Knight,
-	Archer,
-	Magicion,
-	End
-};
-
 
 USTRUCT(BlueprintType)
 struct FPlayerInfo : public FTableRowBase
@@ -26,9 +14,6 @@ struct FPlayerInfo : public FTableRowBase
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 		FString			Name;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-		EPlayerJob		Job;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 		int32			Attack;
@@ -72,7 +57,7 @@ public:
 
 
 
-struct FPlayerFPlayerTraceInfo
+struct FPlayerTraceInfo
 {
 
 

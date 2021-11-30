@@ -56,10 +56,10 @@ void AAProjectGameModeBase::BeginPlay()
 {
 	Super::BeginPlay();
 
-	LOG(TEXT("AAAAAAA"));
+	//LOG(TEXT("AAAAAAA"));
 	if (IsValid(m_MainHUDClass))
 	{
-		LOG(TEXT("BBBBBB"));
+		//LOG(TEXT("BBBBBB"));
 
 		m_MainHUD = Cast<UMainHUD>(CreateWidget(GetWorld(),
 			m_MainHUDClass));
