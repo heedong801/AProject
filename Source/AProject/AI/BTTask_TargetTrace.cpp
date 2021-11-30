@@ -87,7 +87,6 @@ void UBTTask_TargetTrace::TickTask(UBehaviorTreeComponent& OwnerComp, uint8* Nod
 		return;
 	}
 	
-
 	APlayerCharacter* Target = Cast<APlayerCharacter>(Controller->GetBlackboardComponent()->GetValueAsObject(TEXT("Target")));
 
 	if (!Target)
@@ -101,7 +100,7 @@ void UBTTask_TargetTrace::TickTask(UBehaviorTreeComponent& OwnerComp, uint8* Nod
 	}
 
 	const FMonsterInfo& MonsterInfo = Monster->GetMonsterInfo();
-
+	
 	if (Target->GetActorLocation().Z < 200.f)
 		UAIBlueprintHelperLibrary::SimpleMoveToActor(Controller, Target);
 	else

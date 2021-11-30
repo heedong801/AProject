@@ -162,6 +162,13 @@ float AMonster::TakeDamage(float DamageAmount, struct FDamageEvent const& Damage
 	if (m_MonsterInfo.HP <= 0)
 	{
 		ChangeAnimType(EMonsterAnimType::Death);
+		AMonsterAIController* MonsterController = Cast<AMonsterAIController>(GetController());
+		if (MonsterController)
+		{
+			
+			MonsterController->BrainComponent->StopLogic(TEXT("Dead"));
+			MonsterController->StopMovement();
+		}
 		GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 		GetWorldTimerManager().SetTimer(m_MonsterDeathTimer,
 			this, &AMonster::Death, 2.f, false);
@@ -169,9 +176,7 @@ float AMonster::TakeDamage(float DamageAmount, struct FDamageEvent const& Damage
 		if (m_HPBarWidget->GetVisibility() == ESlateVisibility::SelfHitTestInvisible)
 			m_HPBarWidget->SetVisibility(ESlateVisibility::Collapsed);
 
-		AMonsterAIController* MonsterController = Cast<AMonsterAIController>(GetController());
-		if (MonsterController)
-			MonsterController->BrainComponent->StopLogic(TEXT("Dead"));
+
 
 		APlayerCharacter* Player = Cast<APlayerCharacter>(DamageCauser);
 		if (Player)
