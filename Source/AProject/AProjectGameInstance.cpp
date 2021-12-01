@@ -2,7 +2,7 @@
 
 
 #include "AProjectGameInstance.h"
-
+#include "DebugClass.h"
 UAProjectGameInstance::UAProjectGameInstance()
 {
 	static ConstructorHelpers::FObjectFinder<UDataTable> MonsterInfoTableAsset(TEXT("DataTable'/Game/Monster/DT_MonsterInfo.DT_MonsterInfo'"));
@@ -17,6 +17,51 @@ UAProjectGameInstance::UAProjectGameInstance()
 UAProjectGameInstance::~UAProjectGameInstance()
 {
 
+}
+
+void UAProjectGameInstance::Init()
+{
+	Super::Init();
+}
+
+void UAProjectGameInstance::StartGameInstance()
+{
+	Super::StartGameInstance();
+}
+
+void UAProjectGameInstance::SetParticlePool( UParticlePool* pParticlePool)
+{
+	/*LOG(TEXT("%s"), *pP->GetName());
+	if(pP->GetSize() == 0 )
+		pP->MakePool();
+
+	LOG(TEXT("%d"), pP->GetSize());*/
+
+	m_ParticlePool = pParticlePool;
+	if (m_ParticlePool->GetSize() == 0)
+		m_ParticlePool->MakePool();
+	
+}
+
+int UAProjectGameInstance::GetPoolSize()
+{
+	return m_ParticlePool->GetSize();
+}
+
+//void UAProjectGameInstance::SetParticlePool()
+//{
+//	LOG(TEXT("%s"), *m_ParticlePool->GetName());
+//	if (m_ParticlePool->GetSize() == 0)
+//		m_ParticlePool->MakePool();
+//
+//	LOG(TEXT("%d"), m_ParticlePool->GetSize());
+//}
+
+bool UAProjectGameInstance::StartPIEGameInstance(ULocalPlayer* LocalPlayer, bool bInSimulateInEditor, bool bAnyBlueprintErrors, bool bStartInSpectatorMode)
+{
+	bool result = Super::StartPIEGameInstance(LocalPlayer, bInSimulateInEditor, bAnyBlueprintErrors, bStartInSpectatorMode);
+
+	return result;
 }
 const FMonsterInfo* UAProjectGameInstance::FindMonsterInfo(const FString& Name)
 {

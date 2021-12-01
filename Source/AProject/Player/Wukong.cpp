@@ -4,6 +4,7 @@
 #include "Wukong.h"
 #include "../Effect/NormalEffect.h"
 #include "../DebugClass.h"
+#include "../AProjectGameInstance.h"
 AWukong::AWukong()
 	: m_MaxCombo(5), m_CurrentCombo(0)
 {
@@ -44,14 +45,22 @@ AWukong::AWukong()
 	//m_PlayerInfo.MoveSpeed = 600.f;
 	//m_PlayerInfo.AttackAngle = 60.f;
 
-
+	//m_ParticlePool = CreateDefaultSubobject<UParticlePool>(TEXT("ParticlePool"));
+	
+	
 }
 
 // Called when the game starts or when spawned
 void AWukong::BeginPlay()
 {
 	Super::BeginPlay();
-	
+	/*LOG(TEXT("%s"), *m_ParticlePool->GetName());
+	if (m_ParticlePool->GetSize() == 0)
+		m_ParticlePool->MakePool();
+
+	LOG(TEXT("%d"), m_ParticlePool->GetSize());*/
+
+
 }
 
 // Called every frame
@@ -139,13 +148,17 @@ void AWukong::HitDamage()
 		FActorSpawnParameters param;
 		param.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 
-		ANormalEffect* Effect = GetWorld()->SpawnActor<ANormalEffect>(ANormalEffect::StaticClass(),
-			result.ImpactPoint, result.ImpactNormal.Rotation(), param);
+	/*	ANormalEffect* Effect = GetWorld()->SpawnActor<ANormalEffect>(ANormalEffect::StaticClass(),
+			result.ImpactPoint, result.ImpactNormal.Rotation(), param);*/
 
+		UAProjectGameInstance* GameInst = Cast<UAProjectGameInstance>(GetWorld()->GetGameInstance());
+		ANormalEffect* Effect = GameInst->GetParticlePool()->Pop(result.ImpactPoint, result.ImpactNormal.Rotation());
+		 if( Effect != nullptr )
+			 Effect->LoadParticleAsync(TEXT("HitFire"));
 		//에셋 로딩
-		Effect->LoadParticle(TEXT("ParticleSystem'/Game/ParagonSunWukong/FX/Particles/Wukong/Abilities/Primary/FX/P_Wukong_Impact_Empowered.P_Wukong_Impact_Empowered'"));
+		//Effect->LoadParticle(TEXT("ParticleSystem'/Game/ParagonSunWukong/FX/Particles/Wukong/Abilities/Primary/FX/P_Wukong_Impact_Empowered.P_Wukong_Impact_Empowered'"));
 		//Effect->LoadSound(TEXT("SoundWave'/Game/Sound/Fire4.Fire4'"));
-		//Effect->LoadParticleAsync(TEXT("tmp"));
+		
 		//Effect->LoadSoundAsync(TEXT("HitNormal"));
 
 		//데미지 전달

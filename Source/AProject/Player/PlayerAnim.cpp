@@ -5,12 +5,10 @@
 #include "../Effect/NormalEffect.h"
 #include "Engine/EngineTypes.h"
 #include "TimerManager.h"
-
+#include "../AProjectGameInstance.h"
 UPlayerAnim::UPlayerAnim()
 	: m_Dir(0), m_Speed(0), m_CanAttack(true), m_OnSky(false)
 {
-
-
 }
 
 void UPlayerAnim::NativeInitializeAnimation()
@@ -111,8 +109,6 @@ void UPlayerAnim::AnimNotify_SlamEnd()
 		m_Attack = false;
 		m_CanAttack = true;
 
-		
-
 		FCollisionQueryParams params(NAME_None, false, Player); 
 	
 		TArray<FHitResult> HitResultArray;
@@ -127,36 +123,34 @@ void UPlayerAnim::AnimNotify_SlamEnd()
 			, 0.3f);
 
 #endif
-		FVector impactPoint = FVector(Player->GetActorLocation().X, Player->GetActorLocation().Y, 0.f);
+		FVector impactPoint = FVector(Player->GetActorLocation().X, Player->GetActorLocation().Y, Player->GetActorLocation().Z - 80.f);
+
 
 		FActorSpawnParameters param;
 		param.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 
-		ANormalEffect* Effect = GetWorld()->SpawnActor<ANormalEffect>(ANormalEffect::StaticClass(),
+	/*	ANormalEffect* Effect = GetWorld()->SpawnActor<ANormalEffect>(ANormalEffect::StaticClass(),
 			impactPoint, FRotator::ZeroRotator, param);
-
-		Effect->LoadParticleAsync(TEXT("Slam1"));
+		Effect->LoadParticleAsync(TEXT("Slam1"));*/
 		
-		ANormalEffect* Effect1 = GetWorld()->SpawnActor<ANormalEffect>(ANormalEffect::StaticClass(),
-			impactPoint, FRotator::ZeroRotator, param);
-		Effect1->LoadParticleAsync(TEXT("Slam2"));
+		UAProjectGameInstance* GameInst = Cast<UAProjectGameInstance>(GetWorld()->GetGameInstance());
+		ANormalEffect* Effect = GameInst->GetParticlePool()->Pop(impactPoint, FRotator::ZeroRotator);
+		Effect->LoadParticleAsync(TEXT("Slam2"));
 		
-		ANormalEffect* Effect2 = GetWorld()->SpawnActor<ANormalEffect>(ANormalEffect::StaticClass(),
-			impactPoint, FRotator::ZeroRotator, param);
-		Effect2->LoadParticleAsync(TEXT("Slam3"));
+		ANormalEffect* Effect1 = GameInst->GetParticlePool()->Pop(impactPoint, FRotator::ZeroRotator);
+		Effect1->LoadParticleAsync(TEXT("Slam3"));
 
 
 		for (auto result : HitResultArray)
 		{
 			if (Sweep)
 			{
-				ANormalEffect* Effect3 = GetWorld()->SpawnActor<ANormalEffect>(ANormalEffect::StaticClass(),
-					result.ImpactPoint, result.ImpactNormal.Rotation(), param);
-				
+				ANormalEffect* Effect3 = GameInst->GetParticlePool()->Pop(result.ImpactPoint, result.ImpactNormal.Rotation());
+
 				//에셋 로딩
 				//Effect3->LoadParticle(TEXT("ParticleSystem'/Game/AdvancedMagicFX13/Particles/P_ky_impact.P_ky_impact'"));
 				//Effect->LoadSound(TEXT("SoundWave'/Game/Sound/Fire4.Fire4'"));
-				Effect->LoadParticleAsync(TEXT("HitNormal"));
+				Effect3->LoadParticleAsync(TEXT("HitNormal"));
 				//Effect->LoadSoundAsync(TEXT("HitNormal"));
 
 				//데미지 전달

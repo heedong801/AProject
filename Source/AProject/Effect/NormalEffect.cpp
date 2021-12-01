@@ -15,6 +15,7 @@ ANormalEffect::ANormalEffect()
 	SetRootComponent(m_ParticleSystem);
 
 	m_AssetLoop = false;
+	m_Active = false;
 }
 
 // Called when the game starts or when spawned
@@ -57,7 +58,7 @@ void ANormalEffect::LoadSound(const FString& Path)
 
 void ANormalEffect::ParticleFinish(UParticleSystemComponent* Particle)
 {
-	Destroy();
+	m_Active = false;
 }
 
 void ANormalEffect::LoadSoundAsync(const FString& Name)

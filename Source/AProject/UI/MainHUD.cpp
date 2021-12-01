@@ -8,5 +8,7 @@ void UMainHUD::NativeConstruct()
 	Super::NativeConstruct();
 
 	m_CharacterHUD = Cast<UCharacterHUD>(GetWidgetFromName(TEXT("UI_CharacterHUD")));
+	m_Loading = Cast<ULoading>(GetWidgetFromName(TEXT("UI_Loading")));
+
 }
 

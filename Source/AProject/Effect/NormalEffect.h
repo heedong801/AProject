@@ -28,14 +28,13 @@ protected:
 	TSharedPtr<FStreamableHandle>	m_AsyncParticleLoadHandle;
 	TSharedPtr<FStreamableHandle>	m_AsyncSoundLoadHandle;
 
-
+	bool m_Active;
 	bool m_AssetLoop;
 
 public:
-	void AssetLoop()
-	{
-		m_AssetLoop = true;
-	}
+	void SetActive(bool flag)	{		m_Active = flag;	}
+	bool GetActive() { return m_Active; }
+	void AssetLoop()	{		m_AssetLoop = true;	}
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

@@ -6,6 +6,7 @@
 #include "UI/MainHUD.h"
 #include "GameFramework/GameModeBase.h"
 #include "AssetManager/AssetPathMain.h"
+#include "Effect/ParticlePool.h"
 #include "AProjectGameModeBase.generated.h"
 
 /**
@@ -26,7 +27,8 @@ protected:
 	UMainHUD* m_MainHUD;
 
 	UAssetPathMain* m_MainAssetPath;
-
+	
+	UParticlePool* m_ParticlePool;
 public:
 	UMainHUD* GetMainHUD()	{		return m_MainHUD;	}
 

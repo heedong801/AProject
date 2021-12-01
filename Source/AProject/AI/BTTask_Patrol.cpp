@@ -88,6 +88,7 @@ void UBTTask_Patrol::TickTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemo
 		return;
 	}
 
+
 	UAIBlueprintHelperLibrary::SimpleMoveToLocation(Controller, Monster->GetPatrolPoint());
 	//FinishLatentTask(OwnerComp, EBTNodeResult::Succeeded);
 

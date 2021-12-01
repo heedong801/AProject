@@ -10,6 +10,8 @@
 #include "../UI/HPBar.h"
 #include "../Effect/HitCameraShake.h"
 #include "../Player/PlayerCharacter.h"
+#include "NavigationSystem.h"
+
 // Sets default values
 AMonster::AMonster()
 {
@@ -43,11 +45,17 @@ void AMonster::BeginPlay()
 	Super::BeginPlay();
 
 	//LOG(TEXT("%f %f %f"), GetActorLocation().X, GetActorLocation().Y, GetActorLocation().Z);
+	UNavigationSystemV1* NavSystem = UNavigationSystemV1::GetNavigationSystem(GetWorld());
 
-	for (int32 i = 0; i < 4; ++i)
+	while( m_PatrolArray.Num() < 4 )
 	{
-		FVector ranVec = GetActorLocation() + FVector(FMath::RandPointInCircle(1500.f), 0.f);
-		m_PatrolArray.Add(ranVec);
+		FNavLocation NextPatrol;
+		if (NavSystem->GetRandomPointInNavigableRadius(GetActorLocation(), 100.0f, NextPatrol))
+		{
+			//LOG(TEXT("%f %f %f"), NextPatrol.Location.X, NextPatrol.Location.Y, NextPatrol.Location.Z);
+			m_PatrolArray.Add(NextPatrol);
+		}
+		
 		//LOG(TEXT("%f %f %f"), ranVec.X, ranVec.Y, ranVec.Z);
 	}
 

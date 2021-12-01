@@ -6,6 +6,7 @@
 #include "Player/PlayerInfo.h"
 #include "Monster/MonsterInfo.h"
 #include "Engine/GameInstance.h"
+#include "Effect/ParticlePool.h"
 #include "AProjectGameInstance.generated.h"
 
 /**
@@ -26,6 +27,8 @@ private:
 
 	UPROPERTY()
 		UDataTable* m_PlayerInfoTable;
+
+	UParticlePool* m_ParticlePool;
 
 	/*UPROPERTY()
 		UDataTable* m_UIItemInfoTable;
@@ -56,9 +59,17 @@ public:
 		return m_SelectJob;
 	}
 	virtual void Init();*/
-
+	virtual void Init();
+	virtual void StartGameInstance();
+	virtual bool StartPIEGameInstance(ULocalPlayer* LocalPlayer, bool bInSimulateInEditor, bool bAnyBlueprintErrors, bool bStartInSpectatorMode);
+	
+	bool GetParticlePoolIsSet();
+	void SetParticlePool(UParticlePool* pP);
+	int GetPoolSize();
+	UParticlePool* GetParticlePool() { return m_ParticlePool; }
 	const FMonsterInfo* FindMonsterInfo(const FString& Name);
 	const FPlayerInfo* FindPlayerInfo(const FString& Name);
+
 	//const FUIItemTableInfo* FindUIItemInfo(const FString& Name);
 	//const FQuestTableInfo* FindQuestInfo(const FString& Name);
 
