@@ -3,7 +3,8 @@
 
 #include "Omnik.h"
 #include "OmnikAIController.h"
-
+#include "../AProjectGameInstance.h"
+#include "../Effect/NormalEffect.h"
 AOmnik::AOmnik()
 {
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
@@ -45,16 +46,52 @@ void AOmnik::Tick(float DeltaTime)
 
 void AOmnik::NormalAttack()
 {
-	/*FVector MuzzleLoc = GetMesh()->GetSocketLocation(TEXT("Muzzle_Front"));
+	FVector MinionLoc = GetActorLocation();
+	FVector Forward = GetActorForwardVector();
 
-	FActorSpawnParameters param;
-	param.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+	FCollisionQueryParams params(NAME_None, false, this);
+	// 근접 공격으로 이 타이밍에 충돌처리를 해주도록 한다. 
+	FHitResult HitResult;
+	bool Sweep = GetWorld()->SweepSingleByChannel(HitResult,
+		MinionLoc, MinionLoc + Forward * m_MonsterInfo.AttackDistance, FQuat::Identity,
+		ECollisionChannel::ECC_GameTraceChannel4
+		, FCollisionShape::MakeSphere(30.f),
+		params);
 
-	AMinionGunnerBullet* Bullet = GetWorld()->SpawnActor<AMinionGunnerBullet>(
-		AMinionGunnerBullet::StaticClass(), MuzzleLoc, GetActorRotation(), param);
+	//PrintViewport(1.0f, FColor::Red, TEXT("ASDASD"));
+#if ENABLE_DRAW_DEBUG
+	FColor DrawColor = Sweep ? FColor::Red : FColor::Green;
 
-	Bullet->SetAttack(m_MonsterInfo.Attack);
-	Bullet->SetMonster(this);*/
+	FVector Center = MinionLoc + Forward * m_MonsterInfo.AttackDistance * 0.5f;
+	DrawDebugCapsule(GetWorld(), Center, m_MonsterInfo.AttackDistance * 0.5f, 30.f,
+		FRotationMatrix::MakeFromZ(Forward).ToQuat(), DrawColor,
+		false, 0.5f);
+	//DrawDebugCone(GetWorld(), MinionLoc, GetActorForwardVector(), m_PlayerInfo.AttackDistance, FMath::DegreesToRadians(m_PlayerInfo.AttackAngle), FMath::DegreesToRadians(m_PlayerInfo.AttackAngle), 20, DrawColor, false, 1.f);
+	//DrawDebugSphere(GetWorld(), MinionLoc, m_PlayerInfo.AttackDistance, 20, DrawColor, false, 1.f);
+#endif
+
+	if (Sweep)
+	{
+		//PrintViewport(1.0f, FColor::Red, TEXT("ZZZZZZZZZZZZZZZ"));
+
+		FActorSpawnParameters param;
+		param.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+
+
+		UAProjectGameInstance* GameInst = Cast<UAProjectGameInstance>(GetWorld()->GetGameInstance());
+		ANormalEffect* Effect = GameInst->GetParticlePool()->Pop(HitResult.ImpactPoint, HitResult.ImpactNormal.Rotation());
+		if (Effect != nullptr)
+			Effect->LoadParticleAsync(TEXT("Buff_White"));
+
+		//에셋 로딩
+		//Effect->LoadParticle(TEXT("ParticleSystem'/Game/AdvancedMagicFX13/Particles/P_ky_flash1.P_ky_flash1'"));
+		//Effect->LoadSound(TEXT("SoundWave'/Game/Sound/Fire4.Fire4'"));
+
+		//데미지 전달
+		FDamageEvent DmgEvent;
+		float Damage = HitResult.GetActor()->TakeDamage(m_MonsterInfo.Attack, DmgEvent, GetController(), this);
+
+	}
 }
 
 void AOmnik::Death()

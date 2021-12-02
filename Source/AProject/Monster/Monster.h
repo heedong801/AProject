@@ -37,6 +37,8 @@ protected:
 	class UMonsterAnimInstance* m_AnimInstance;
 
 	FTimerHandle m_MonsterDeathTimer;
+
+	bool m_IsSpawned;
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
@@ -50,12 +52,14 @@ public:
 	FVector NextPatrolPoint();
 	FVector GetPatrolPoint();
 
-	
-
 	void ChangeAnimType(EMonsterAnimType Type);
 	FMonsterInfo& GetMonsterInfo(){		return m_MonsterInfo;	}
 
 	//void SetPatrolEnable(bool Enable)	{		m_PatrolEnable = Enable;	}
 	bool GetAttackEnd()	{		return m_AttackEnd;		}
 	void SetAttackEnd(bool AttackEnd)	{m_AttackEnd = AttackEnd;	}
+	TArray<FVector> GetPatrolArray() { return m_PatrolArray; }
+
+	bool GetIsSpawned() { return m_IsSpawned; }
+	void SetIsSpawned(bool Spawned) {		m_IsSpawned = Spawned;	}
 };

@@ -4,7 +4,7 @@
 #include "ParticlePool.h"
 #include "../DebugClass.h"
 UParticlePool::UParticlePool()
-	: m_NormalEffectArrayMaxIdx(20)
+	: m_NormalEffectArrayMaxIdx(10)
 {
 	
 }
@@ -39,6 +39,7 @@ int UParticlePool::GetSize()
 
 ANormalEffect* UParticlePool::Pop(FVector Pos, FRotator Rot)
 {
+
 	for (int i = 0; i < m_NormalEffectArray.Num(); ++i)
 	{
 		if (m_NormalEffectArray[i]->GetActive() == false)
@@ -46,6 +47,8 @@ ANormalEffect* UParticlePool::Pop(FVector Pos, FRotator Rot)
 			m_NormalEffectArray[i]->SetActive(true);
 			m_NormalEffectArray[i]->SetActorLocation(Pos);
 			m_NormalEffectArray[i]->SetActorRotation(Rot);
+
+			//LOG(TEXT("%d"), i);
 			return m_NormalEffectArray[i];
 		}
 	}

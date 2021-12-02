@@ -135,6 +135,7 @@ void UPlayerAnim::AnimNotify_SlamEnd()
 		
 		UAProjectGameInstance* GameInst = Cast<UAProjectGameInstance>(GetWorld()->GetGameInstance());
 		ANormalEffect* Effect = GameInst->GetParticlePool()->Pop(impactPoint, FRotator::ZeroRotator);
+		
 		Effect->LoadParticleAsync(TEXT("Slam2"));
 		
 		ANormalEffect* Effect1 = GameInst->GetParticlePool()->Pop(impactPoint, FRotator::ZeroRotator);
@@ -145,12 +146,12 @@ void UPlayerAnim::AnimNotify_SlamEnd()
 		{
 			if (Sweep)
 			{
-				ANormalEffect* Effect3 = GameInst->GetParticlePool()->Pop(result.ImpactPoint, result.ImpactNormal.Rotation());
+				//ANormalEffect* Effect3 = GameInst->GetParticlePool()->Pop(result.ImpactPoint, result.ImpactNormal.Rotation());
 
 				//에셋 로딩
 				//Effect3->LoadParticle(TEXT("ParticleSystem'/Game/AdvancedMagicFX13/Particles/P_ky_impact.P_ky_impact'"));
 				//Effect->LoadSound(TEXT("SoundWave'/Game/Sound/Fire4.Fire4'"));
-				Effect3->LoadParticleAsync(TEXT("HitNormal"));
+				//Effect3->LoadParticleAsync(TEXT("HitNormal"));
 				//Effect->LoadSoundAsync(TEXT("HitNormal"));
 
 				//데미지 전달

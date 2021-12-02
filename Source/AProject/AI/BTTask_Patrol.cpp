@@ -6,7 +6,7 @@
 #include "../Monster/Monster.h"
 #include "../Monster/MonsterAIController.h"
 #include "../DebugClass.h"
-
+#include "../Buliding/Nexus.h"
 UBTTask_Patrol::UBTTask_Patrol()
 {
 	NodeName = TEXT("Patrol");
@@ -79,10 +79,17 @@ void UBTTask_Patrol::TickTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemo
 		return;
 	}
 
-	APlayerCharacter* Target = Cast<APlayerCharacter>(Controller->GetBlackboardComponent()->GetValueAsObject(TEXT("Target")));
-
-
-	if (Target)
+	AActor* Target = Cast<APlayerCharacter>(Controller->GetBlackboardComponent()->GetValueAsObject(TEXT("Target")));
+	if (!Target)
+	{
+		Target = Cast<ANexus>(Controller->GetBlackboardComponent()->GetValueAsObject(TEXT("TargetBuliding")));
+		if (!Target)
+		{
+			FinishLatentTask(OwnerComp, EBTNodeResult::Succeeded);
+			return;
+		}
+	}
+	else
 	{
 		FinishLatentTask(OwnerComp, EBTNodeResult::Succeeded);
 		return;
@@ -102,6 +109,7 @@ void UBTTask_Patrol::TickTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemo
 	float	CapsuleRadius = Monster->GetCapsuleComponent()->GetUnscaledCapsuleRadius();
 	//LOG(TEXT("Capsule  hf, Rad : %f %f"), CapsuleHalfHeight, CapsuleRadius);
 
+	MonsterLoc.Z = PatrolPoint.Z;
 	float	Distance = FVector::Distance(MonsterLoc, PatrolPoint);
 	//LOG(TEXT("PatrolPoint : %f %f %f"), PatrolPoint.X, PatrolPoint.Y, PatrolPoint.Z);
 	//LOG(TEXT("MonsterLoc : %f %f %f"), MonsterLoc.X, MonsterLoc.Y, MonsterLoc.Z);
@@ -109,6 +117,8 @@ void UBTTask_Patrol::TickTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemo
 
 	m_AccTime += DeltaSeconds;
 
+
+			 
 	if (Distance <= CapsuleRadius + 7 || m_AccTime >= m_WaitTime)
 	{
 		//LOG(TEXT("AAAAAAAAAAAAAAAAAAAAAAAAAA"), Distance);

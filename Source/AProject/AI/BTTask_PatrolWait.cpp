@@ -5,7 +5,7 @@
 #include "../Monster/Monster.h"
 #include "../Player/PlayerCharacter.h"
 #include "../Monster/MonsterAIController.h"
-
+#include "../Buliding/Nexus.h"
 UBTTask_PatrolWait::UBTTask_PatrolWait()
 {
 	NodeName = TEXT("PatrolWait");
@@ -76,10 +76,18 @@ void UBTTask_PatrolWait::TickTask(UBehaviorTreeComponent& OwnerComp, uint8* Node
 	}
 	//LOG(TEXT("%.5f %.5f %.5f"), Monster->GetVelocity().X, Monster->GetVelocity().Y, Monster->GetVelocity().Z);
 
-	APlayerCharacter* Target = Cast<APlayerCharacter>(Controller->GetBlackboardComponent()->GetValueAsObject(TEXT("Target")));
 
-
-	if (Target)
+	AActor* Target = Cast<APlayerCharacter>(Controller->GetBlackboardComponent()->GetValueAsObject(TEXT("Target")));
+	if (!Target)
+	{
+		Target = Cast<ANexus>(Controller->GetBlackboardComponent()->GetValueAsObject(TEXT("TargetBuliding")));
+		if (Target)
+		{
+			FinishLatentTask(OwnerComp, EBTNodeResult::Succeeded);
+			return;
+		}
+	}
+	else
 	{
 		FinishLatentTask(OwnerComp, EBTNodeResult::Succeeded);
 		return;

@@ -36,8 +36,22 @@ void UBTService_PlayerDetect::TickNode(UBehaviorTreeComponent& OwnerComp, uint8*
 	FCollisionQueryParams params(NAME_None, false, Monster); //몬스터제외
 	// 근접 공격으로 이 타이밍에 충돌처리를 해주도록 한다. 
 	FHitResult HitResult;
-	bool Sweep = GetWorld()->SweepSingleByChannel(HitResult, Monster->GetActorLocation(), Monster->GetActorLocation(), FQuat::Identity, ECollisionChannel::ECC_GameTraceChannel6
-		, FCollisionShape::MakeSphere(MonsterInfo.TraceDistance), params);
+	TArray<FHitResult> HitResultArray;
+
+	bool Sweep = false;
+	if (Monster->GetIsSpawned())
+	{
+		Sweep = GetWorld()->SweepMultiByChannel(HitResultArray, Monster->GetActorLocation(), Monster->GetActorLocation(), FQuat::Identity, ECollisionChannel::ECC_GameTraceChannel6
+			, FCollisionShape::MakeSphere(5000.f), params);
+
+		int random = FMath::RandRange(0, HitResultArray.Num());
+		HitResult = HitResultArray[random];
+	}
+	else
+	{
+		Sweep = GetWorld()->SweepSingleByChannel(HitResult, Monster->GetActorLocation(), Monster->GetActorLocation(), FQuat::Identity, ECollisionChannel::ECC_GameTraceChannel6
+			, FCollisionShape::MakeSphere(MonsterInfo.TraceDistance), params);
+	}
 	//LOG(TEXT("%f"), MonsterInfo.TraceDistance);
 
 #if ENABLE_DRAW_DEBUG

@@ -38,6 +38,56 @@ APlayerCharacter::APlayerCharacter()
 
 }
 
+float APlayerCharacter::TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
+{
+	float Damage = Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
+	if (Damage == 0.f)
+		return 0.f;
+
+	Damage = Damage - m_PlayerInfo.Armor;
+	Damage = Damage < 1.f ? 1.f : Damage;
+
+	m_PlayerInfo.HP -= Damage;
+
+	/*GetWorld()->GetFirstPlayerController()->ClientPlayCameraShake(
+		UHitCameraShake::StaticClass());*/
+
+	//Á×Àº°æ¿ì
+	if (m_PlayerInfo.HP <= 0)
+	{
+		//ChangeAnimType(EPlayerAnimType::Death);
+
+		//AMonsterAIController* MonsterController = Cast<AMonsterAIController>(GetController());
+		//if (MonsterController)
+		//{
+		//	/*MonsterController->RunBehaviorTree(nullptr);
+		//	Destroy();*/
+
+		//	MonsterController->BrainComponent->StopLogic(TEXT("DEAD"));
+		//}
+		LOG(TEXT("DIE"));
+	}
+
+	AAProjectGameModeBase* GameMode = Cast<AAProjectGameModeBase>(GetWorld()->GetAuthGameMode());
+
+	if (IsValid(GameMode))
+	{
+		UMainHUD* MainHUD = GameMode->GetMainHUD();
+
+		if (IsValid(MainHUD))
+		{
+			UCharacterHUD* CharacterHUD = MainHUD->GetCharacterHUD();
+
+			if (IsValid(CharacterHUD))
+			{
+				CharacterHUD->SetHPPercent(m_PlayerInfo.HP / (float)m_PlayerInfo.HPMax);
+			}
+		}
+	}
+	return Damage;
+}
+
+
 void APlayerCharacter::PostInitializeComponents()
 {
 	Super::PostInitializeComponents();

@@ -5,7 +5,8 @@
 #include "../Player/PlayerCharacter.h"
 #include "../Monster/Monster.h"
 #include "../Monster/MonsterAIController.h"
-
+#include "../DebugClass.h"
+#include "../Buliding/Nexus.h"
 UBTDecorator_CheckDistance::UBTDecorator_CheckDistance()
 {
 	NodeName = TEXT("CheckDistance");
@@ -25,10 +26,14 @@ bool UBTDecorator_CheckDistance::CalculateRawConditionValue(UBehaviorTreeCompone
 	if (!Monster)
 		return false;
 
-	APlayerCharacter* Target = Cast<APlayerCharacter>(Controller->GetBlackboardComponent()->GetValueAsObject(TEXT("Target")));
-
+	AActor* Target = Cast<APlayerCharacter>(Controller->GetBlackboardComponent()->GetValueAsObject(TEXT("Target")));
 	if (!Target)
-		return false;
+	{
+		Target = Cast<ANexus>(Controller->GetBlackboardComponent()->GetValueAsObject(TEXT("TargetBuliding")));
+		if( !Target )
+			return false;
+	}
+		
 
 	const FMonsterInfo& MonsterInfo = Monster->GetMonsterInfo();
 
@@ -40,6 +45,9 @@ bool UBTDecorator_CheckDistance::CalculateRawConditionValue(UBehaviorTreeCompone
 
 	float Distance = FVector::Distance(MonsterLoc, TargetLoc);
 	float CheckDist = 0.f;
+
+	LOG(TEXT("%f"), Distance);
+	LOG(TEXT("%f"), CheckDist);
 
 	switch (m_CheckType)
 	{

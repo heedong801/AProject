@@ -6,6 +6,7 @@
 #include "../Monster/Monster.h"
 #include "../Monster/MonsterAIController.h"
 #include "../DebugClass.h"
+#include "../Buliding/Nexus.h"
 UBTTask_TargetTrace::UBTTask_TargetTrace()
 {
 	NodeName = TEXT("TargetTrace");
@@ -34,15 +35,19 @@ EBTNodeResult::Type UBTTask_TargetTrace::ExecuteTask(UBehaviorTreeComponent& Own
 	if (!Monster)
 		return EBTNodeResult::Failed;
 
-	APlayerCharacter* Target = Cast<APlayerCharacter>(Controller->GetBlackboardComponent()->GetValueAsObject(TEXT("Target")));
-
+	AActor* Target = Cast<APlayerCharacter>(Controller->GetBlackboardComponent()->GetValueAsObject(TEXT("Target")));
 	if (!Target)
 	{
-		Monster->ChangeAnimType(EMonsterAnimType::Idle);
+		Target = Cast<ANexus>(Controller->GetBlackboardComponent()->GetValueAsObject(TEXT("TargetBuliding")));
+		if (!Target)
+		{
+			Monster->ChangeAnimType(EMonsterAnimType::Idle);
 
-		Controller->StopMovement();
-		return EBTNodeResult::Failed;
+			Controller->StopMovement();
+			return EBTNodeResult::Failed;
+		}
 	}
+
 	Monster->GetCharacterMovement()->MaxWalkSpeed = Monster->GetMonsterInfo().MoveSpeed;
 
 	//UAIBlueprintHelperLibrary::SimpleMoveToActor(Controller, Target);
@@ -87,17 +92,21 @@ void UBTTask_TargetTrace::TickTask(UBehaviorTreeComponent& OwnerComp, uint8* Nod
 		return;
 	}
 	
-	APlayerCharacter* Target = Cast<APlayerCharacter>(Controller->GetBlackboardComponent()->GetValueAsObject(TEXT("Target")));
-
+	AActor* Target = Cast<APlayerCharacter>(Controller->GetBlackboardComponent()->GetValueAsObject(TEXT("Target")));
 	if (!Target)
 	{
-		 
-		Monster->ChangeAnimType(EMonsterAnimType::Idle);
-		Controller->StopMovement();
+		Target = Cast<ANexus>(Controller->GetBlackboardComponent()->GetValueAsObject(TEXT("TargetBuliding")));
+		if (!Target)
+		{
 
-		FinishLatentTask(OwnerComp, EBTNodeResult::Failed);
-		return;
+			Monster->ChangeAnimType(EMonsterAnimType::Idle);
+			Controller->StopMovement();
+
+			FinishLatentTask(OwnerComp, EBTNodeResult::Failed);
+			return;
+		}
 	}
+	LOG(TEXT("TRACE"));
 
 	const FMonsterInfo& MonsterInfo = Monster->GetMonsterInfo();
 	

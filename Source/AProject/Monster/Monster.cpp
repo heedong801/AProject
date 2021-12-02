@@ -34,6 +34,9 @@ AMonster::AMonster()
 	GetCapsuleComponent()->SetCollisionProfileName(TEXT("Enemy"));
 	GetMesh()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	
+	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
+
+	m_IsSpawned = false;
 	//FBox spawnBox;
 	//spawnBox.BuildAABB(GetActorLocation(), FVector(1500.f, 1500.f, 1));
 
@@ -50,7 +53,7 @@ void AMonster::BeginPlay()
 	while( m_PatrolArray.Num() < 4 )
 	{
 		FNavLocation NextPatrol;
-		if (NavSystem->GetRandomPointInNavigableRadius(GetActorLocation(), 100.0f, NextPatrol))
+		if (NavSystem->GetRandomPointInNavigableRadius(GetActorLocation(), 500.0f, NextPatrol))
 		{
 			//LOG(TEXT("%f %f %f"), NextPatrol.Location.X, NextPatrol.Location.Y, NextPatrol.Location.Z);
 			m_PatrolArray.Add(NextPatrol);

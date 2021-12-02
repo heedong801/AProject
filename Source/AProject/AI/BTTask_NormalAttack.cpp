@@ -5,6 +5,8 @@
 #include "../Player/PlayerCharacter.h"
 #include "../Monster/Monster.h"
 #include "../Monster/MonsterAIController.h"
+#include "../DebugClass.h"
+#include "../Buliding/Nexus.h"
 
 UBTTask_NormalAttack::UBTTask_NormalAttack()
 {
@@ -29,14 +31,18 @@ EBTNodeResult::Type UBTTask_NormalAttack::ExecuteTask(UBehaviorTreeComponent& Ow
 	if (!Monster)
 		return EBTNodeResult::Failed;
 
-	APlayerCharacter* Target = Cast<APlayerCharacter>(Controller->GetBlackboardComponent()->GetValueAsObject(TEXT("Target")));
-
+	AActor* Target = Cast<APlayerCharacter>(Controller->GetBlackboardComponent()->GetValueAsObject(TEXT("Target")));
 	if (!Target)
 	{
-		Monster->ChangeAnimType(EMonsterAnimType::Idle);
-		Controller->StopMovement();
-		return EBTNodeResult::Failed;
+		Target = Cast<ANexus>(Controller->GetBlackboardComponent()->GetValueAsObject(TEXT("TargetBuliding")));
+		if (!Target)
+		{
+			Monster->ChangeAnimType(EMonsterAnimType::Idle);
+			Controller->StopMovement();
+			return EBTNodeResult::Failed;
+		}
 	}
+
 
 	int randomAttack = FMath::RandRange(0, 2);
 	switch (randomAttack)
@@ -101,6 +107,7 @@ void UBTTask_NormalAttack::TickTask(UBehaviorTreeComponent& OwnerComp, uint8* No
 		return;
 	}
 
+
 	const FMonsterInfo& MonsterInfo = Monster->GetMonsterInfo();
 
 	// 타겟과의 거리
@@ -111,7 +118,7 @@ void UBTTask_NormalAttack::TickTask(UBehaviorTreeComponent& OwnerComp, uint8* No
 
 	float Distance = FVector::Distance(MonsterLoc, TargetLoc);
 
-	//PrintViewport(1.0f, FColor::Red, TEXT("NormalAttack.cpp"));
+	LOG(TEXT("ATTACK"));
 
 
 	if (Monster->GetAttackEnd())
@@ -121,6 +128,7 @@ void UBTTask_NormalAttack::TickTask(UBehaviorTreeComponent& OwnerComp, uint8* No
 		if (Distance > MonsterInfo.AttackDistance)
 		{
 			//PrintViewport(1.0f, FColor::Red, TEXT("TraceStart.cpp"));
+			LOG(TEXT("ATTACKFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF"));
 
 			FinishLatentTask(OwnerComp, EBTNodeResult::Failed);
 			//return;
@@ -133,6 +141,20 @@ void UBTTask_NormalAttack::TickTask(UBehaviorTreeComponent& OwnerComp, uint8* No
 			FRotator TargetRot = FRotator(0.f, Dir.Rotation().Yaw, 0.f);
 			Monster->SetActorRotation(FMath::RInterpTo(Monster->GetActorRotation(),
 				TargetRot, GetWorld()->GetDeltaSeconds(), 200.0f));
+
+			int randomAttack = FMath::RandRange(0, 2);
+			switch (randomAttack)
+			{
+			case 0:
+				Monster->ChangeAnimType(EMonsterAnimType::Attack1);
+				break;
+			case 1:
+				Monster->ChangeAnimType(EMonsterAnimType::Attack2);
+				break;
+			case 2:
+				Monster->ChangeAnimType(EMonsterAnimType::Attack3);
+				break;
+			}
 		}
 		//PrintViewport(1.0f, FColor::Red, TEXT("End.cpp"));
 
