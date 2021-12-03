@@ -3,14 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Actor.h"
 #include "Engine/AssetManager.h"
+#include "../Etc/CustomActor.h"
 #include "Particles/ParticleSystemComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "NormalEffect.generated.h"
 
 UCLASS()
-class APROJECT_API ANormalEffect : public AActor
+class APROJECT_API ANormalEffect : public ACustomActor
 {
 	GENERATED_BODY()
 	
@@ -28,12 +28,10 @@ protected:
 	TSharedPtr<FStreamableHandle>	m_AsyncParticleLoadHandle;
 	TSharedPtr<FStreamableHandle>	m_AsyncSoundLoadHandle;
 
-	bool m_Active;
 	bool m_AssetLoop;
 
 public:
-	void SetActive(bool flag)	{		m_Active = flag;	}
-	bool GetActive() { return m_Active; }
+
 	void AssetLoop()	{		m_AssetLoop = true;	}
 protected:
 	// Called when the game starts or when spawned

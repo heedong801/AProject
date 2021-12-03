@@ -82,6 +82,7 @@ void AMonster::BeginPlay()
 			m_MonsterInfo.Exp = Info->Exp;
 			m_MonsterInfo.Gold = Info->Gold;
 			m_MonsterInfo.AttackDistance = Info->AttackDistance;
+			m_MonsterInfo.DamageDistance = Info->DamageDistance;
 			m_MonsterInfo.AttackSpeed = Info->AttackSpeed;
 			m_MonsterInfo.AttackAngle = Info->AttackAngle;
 			m_MonsterInfo.MoveSpeed = Info->MoveSpeed;
@@ -184,7 +185,7 @@ float AMonster::TakeDamage(float DamageAmount, struct FDamageEvent const& Damage
 		}
 		GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 		GetWorldTimerManager().SetTimer(m_MonsterDeathTimer,
-			this, &AMonster::Death, 2.f, false);
+			this, &AMonster::Death, 1.f, false, 2.0f);
 
 		if (m_HPBarWidget->GetVisibility() == ESlateVisibility::SelfHitTestInvisible)
 			m_HPBarWidget->SetVisibility(ESlateVisibility::Collapsed);

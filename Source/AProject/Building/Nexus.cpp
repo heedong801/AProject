@@ -83,6 +83,7 @@ float ANexus::TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEv
 	
 	Hp -= Damage;
 
+	LOG(TEXT("HIT"));
 	//Á×Àº°æ¿ì
 	if (Hp <= 0)
 	{

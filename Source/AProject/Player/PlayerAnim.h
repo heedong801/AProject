@@ -53,6 +53,7 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	bool m_DoubleJump;
 
+	FTimerHandle m_AddGravityTimer;
 
 	// UFUNCTION	///////////////////////////////////////////////////////////////////
 	UFUNCTION()
@@ -66,7 +67,7 @@ protected:
 	UFUNCTION()
 		void AnimNotify_AttackEnd();
 
-
+	void AddGravity();
 public:
 	void SetDirection(float Dir){m_Dir = Dir;}
 	bool GetCanAttack() { return m_CanAttack; }

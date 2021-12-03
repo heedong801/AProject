@@ -56,7 +56,7 @@ void ALevelTrigger::TriggerBegin()
 		}
 	}
 
-	GetWorld()->GetTimerManager().SetTimer(m_MapLoadTimer, this, &ALevelTrigger::LoadMap, 0.1f, false, 0.5f);
+	GetWorld()->GetTimerManager().SetTimer(m_MapLoadTimer, this, &ALevelTrigger::LoadMap, 1.f, false, 0.5f);
 
 	//FLatentActionInfo	Info;
 

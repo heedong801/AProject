@@ -5,7 +5,7 @@
 #include "../Monster/Monster.h"
 #include "../Player/PlayerCharacter.h"
 #include "../Monster/MonsterAIController.h"
-#include "../Buliding/Nexus.h"
+#include "../Building/Nexus.h"
 UBTTask_PatrolWait::UBTTask_PatrolWait()
 {
 	NodeName = TEXT("PatrolWait");

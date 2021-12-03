@@ -6,7 +6,7 @@
 #include "../Monster/Monster.h"
 #include "../Monster/MonsterAIController.h"
 #include "../DebugClass.h"
-#include "../Buliding/Nexus.h"
+#include "../Building/Nexus.h"
 UBTTask_Patrol::UBTTask_Patrol()
 {
 	NodeName = TEXT("Patrol");

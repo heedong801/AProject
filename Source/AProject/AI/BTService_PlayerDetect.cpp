@@ -39,15 +39,15 @@ void UBTService_PlayerDetect::TickNode(UBehaviorTreeComponent& OwnerComp, uint8*
 	TArray<FHitResult> HitResultArray;
 
 	bool Sweep = false;
+
 	if (Monster->GetIsSpawned())
 	{
-		Sweep = GetWorld()->SweepMultiByChannel(HitResultArray, Monster->GetActorLocation(), Monster->GetActorLocation(), FQuat::Identity, ECollisionChannel::ECC_GameTraceChannel6
+		Sweep = GetWorld()->SweepMultiByChannel(HitResultArray, Monster->GetActorLocation(), Monster->GetActorLocation() , FQuat::Identity, ECollisionChannel::ECC_GameTraceChannel6
 			, FCollisionShape::MakeSphere(5000.f), params);
 
 		if (Sweep)
 		{
-			int random = FMath::RandRange(0, HitResultArray.Num() - 1);
-			HitResult = HitResultArray[random];
+			HitResult = HitResultArray[0];
 		}
 	}
 	else
@@ -55,7 +55,19 @@ void UBTService_PlayerDetect::TickNode(UBehaviorTreeComponent& OwnerComp, uint8*
 		Sweep = GetWorld()->SweepSingleByChannel(HitResult, Monster->GetActorLocation(), Monster->GetActorLocation(), FQuat::Identity, ECollisionChannel::ECC_GameTraceChannel6
 			, FCollisionShape::MakeSphere(MonsterInfo.TraceDistance), params);
 	}
-	//LOG(TEXT("%f"), MonsterInfo.TraceDistance);
+	
+	//if (Sweep)
+	//{
+	//	FVector MonsterLoc = Monster->GetActorLocation();
+	//	FVector TargetLoc = HitResult.GetActor()->GetActorLocation();
+
+	//	float MonsterHalfCapsuleRadius = Monster->GetCapsuleComponent()->GetScaledCapsuleRadius() * 0.5f;
+	//	MonsterLoc.Z = TargetLoc.Z;
+
+	//	float Distance = FVector::Distance(MonsterLoc, TargetLoc);
+	//	float CheckDist = 0.f;
+	//	//LOG(TEXT("Distance : %f"), Distance);
+	//}
 
 #if ENABLE_DRAW_DEBUG
 	FColor DrawColor = Sweep ? FColor::Red : FColor::Green;

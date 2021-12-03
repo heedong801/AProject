@@ -283,7 +283,7 @@ void APlayerCharacter::SetTimeDillation()
 {
 	GetWorld()->GetWorldSettings()->SetTimeDilation(0.5f);
 	GetWorld()->GetTimerManager().SetTimer(TimeDillationHandle,
-		this, &APlayerCharacter::SetTimeDefaultTimeDilation, 0.25f, false);
+		this, &APlayerCharacter::SetTimeDefaultTimeDilation, 1.f, false, 0.25f);
 }
 
 void APlayerCharacter::AddExp(int32 Exp)

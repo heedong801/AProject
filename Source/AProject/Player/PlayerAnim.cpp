@@ -46,6 +46,8 @@ void UPlayerAnim::NativeUpdateAnimation(float DeltaSeconds)
 			else
 			{
 				ChangeAnimType(EPlayerAnimType::Sky);
+
+
 				//Player->GetCharacterMovement()->GravityScale = 3.f;
 			}
 
@@ -90,11 +92,26 @@ void UPlayerAnim::AnimNotify_AddGravity()
 		Player->SetTimeDillation();
 		Player->GetCharacterMovement()->Velocity.X = 0.f;
 		Player->GetCharacterMovement()->Velocity.Y = 0.f;
-		Player->GetCharacterMovement()->Velocity.Z = 0.f;
-		Player->GetCharacterMovement()->GravityScale = 200.0f;
+		//Player->SetActorLocation( FVector(Player->GetActorLocation().X, Player->GetActorLocation().Y, Player->GetActorLocation().Z + 200)) ;
+
+		GetWorld()->GetTimerManager().SetTimer(m_AddGravityTimer,
+			this, &UPlayerAnim::AddGravity, 1.f, false, 0.1f);
+		//Player->GetCharacterMovement()->Velocity.Z = 0.f;
+		//Player->GetCharacterMovement()->GravityScale = 200.0f;
 		//LOG(TEXT("%f %f %f"), Player->GetCharacterMovement()->Velocity.X, Player->GetCharacterMovement()->Velocity.Y, Player->GetCharacterMovement()->Velocity.Z);
 	}
 }
+
+void UPlayerAnim::AddGravity()
+{
+	APlayerCharacter* Player = Cast<APlayerCharacter>(TryGetPawnOwner());
+
+	LOG(TEXT("HI"));
+	if (Player)
+		Player->GetCharacterMovement()->GravityScale = 200.0f;
+
+}
+
 
 void UPlayerAnim::AnimNotify_SlamEnd()
 {

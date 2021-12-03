@@ -17,7 +17,7 @@ public:
 
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-		TSubclassOf<AMonster> m_MonsterClass;
+		TArray<TSubclassOf<AMonster>> m_MonsterClassArray;
 
 	AMonster* m_Monster;
 

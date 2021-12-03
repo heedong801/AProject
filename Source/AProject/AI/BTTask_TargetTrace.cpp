@@ -6,7 +6,7 @@
 #include "../Monster/Monster.h"
 #include "../Monster/MonsterAIController.h"
 #include "../DebugClass.h"
-#include "../Buliding/Nexus.h"
+#include "../Building/Nexus.h"
 UBTTask_TargetTrace::UBTTask_TargetTrace()
 {
 	NodeName = TEXT("TargetTrace");
@@ -34,6 +34,7 @@ EBTNodeResult::Type UBTTask_TargetTrace::ExecuteTask(UBehaviorTreeComponent& Own
 
 	if (!Monster)
 		return EBTNodeResult::Failed;
+	
 
 
 	UObject* uO = Controller->GetBlackboardComponent()->GetValueAsObject(TEXT("Target"));
@@ -49,6 +50,7 @@ EBTNodeResult::Type UBTTask_TargetTrace::ExecuteTask(UBehaviorTreeComponent& Own
 			return EBTNodeResult::Failed;
 		}
 	}
+
 
 	
 
@@ -80,6 +82,7 @@ void UBTTask_TargetTrace::TickTask(UBehaviorTreeComponent& OwnerComp, uint8* Nod
 	// 그래서 공격거리 안에 들어있는지를 여기서도 체크하여 들어갔다면
 	//Trace를 종료시킨다.
 
+
 	AMonsterAIController* Controller = Cast<AMonsterAIController>(OwnerComp.GetAIOwner());
 
 	if (!Controller)
@@ -99,58 +102,84 @@ void UBTTask_TargetTrace::TickTask(UBehaviorTreeComponent& OwnerComp, uint8* Nod
 
 	UObject* uO = Controller->GetBlackboardComponent()->GetValueAsObject(TEXT("Target"));
 	AActor* Target = Cast<APlayerCharacter>(uO);
+	float TargetHalfCapsuleRadius;
+
 	if (!Target)
 	{
 		Target = Cast<ANexus>(uO);
 		if (!Target)
 		{
 			Monster->ChangeAnimType(EMonsterAnimType::Idle);
+
 			Controller->StopMovement();
 
 			FinishLatentTask(OwnerComp, EBTNodeResult::Failed);
 			return;
 		}
-	}
-	
-
-	
-	const FMonsterInfo& MonsterInfo = Monster->GetMonsterInfo();
-	
-	//LOG(TEXT("A"));
-	float ZGapToTarget = FMath::Abs(Target->GetActorLocation().Z - Monster->GetActorLocation().Z);
-	
-	//LOG(TEXT("%f"), ZGapToTarget);
-	if (ZGapToTarget < 200.f)
-	{
-		UAIBlueprintHelperLibrary::SimpleMoveToActor(Controller, Target);
+		else
+		{
+			ANexus* TargetActor = Cast<ANexus>(uO);
+			TargetHalfCapsuleRadius = TargetActor->GetCapsuleComponent()->GetScaledCapsuleRadius() * 0.5f;
+		}
 	}
 	else
 	{
-		FVector TargetLoc = Target->GetActorLocation();
-
-		if (TargetLoc.Z >= Monster->GetActorLocation().Z)
-			TargetLoc.Z -= ZGapToTarget * 0.75f;
-		else
-			TargetLoc.Z += ZGapToTarget * 0.75f;
-
-		Controller->MoveToLocation(TargetLoc);
+		APlayerCharacter* TargetActor = Cast<APlayerCharacter>(uO);
+		TargetHalfCapsuleRadius = TargetActor->GetCapsuleComponent()->GetScaledCapsuleRadius() * 0.5f;
 	}
 
 
+	const FMonsterInfo& MonsterInfo = Monster->GetMonsterInfo();
+
+	//LOG(TEXT("A"));
+	float ZGapToTarget = FMath::Abs(Target->GetActorLocation().Z - Monster->GetActorLocation().Z);
+	FVector TargetLoc = Target->GetActorLocation();
+	//LOG(TEXT("%f"), ZGapToTarget);
+
+
+
+	//LOG(TEXT("C : %f %f %f"), TargetLoc.X, TargetLoc.Y, TargetLoc.Z);
+
+	if (TargetLoc.Z >= Monster->GetActorLocation().Z)
+		TargetLoc.Z -= ZGapToTarget * 0.75f;
+	else
+		TargetLoc.Z += ZGapToTarget * 0.75f;
+
+	EPathFollowingRequestResult::Type Result = Controller->MoveToLocation(TargetLoc);
+
+	if (Result == EPathFollowingRequestResult::AlreadyAtGoal)
+	{
+		//LOG(TEXT("AlreadyAtGoal"));
+	}
+	else if (Result == EPathFollowingRequestResult::Failed)
+	{
+		//LOG(TEXT("Failed"));
+		FinishLatentTask(OwnerComp, EBTNodeResult::Failed);
+		return;
+
+	}
+	else
+	{
+		//LOG(TEXT("RequestSuccessful"));
+	}
+
 	// 타겟과의 거리
 	FVector MonsterLoc = Monster->GetActorLocation();
-	FVector TargetLoc = Target->GetActorLocation();
+	float MonsterHalfCapsuleRadius = Monster->GetCapsuleComponent()->GetScaledCapsuleRadius() * 0.5f;
 
 	MonsterLoc.Z = TargetLoc.Z;
-
 	float Distance = FVector::Distance(MonsterLoc, TargetLoc);
-	//LOG(TEXT("%f"), Distance);
+	Distance -= (MonsterHalfCapsuleRadius + TargetHalfCapsuleRadius);
+
+	float Offset = 55;
+	Distance -= Offset;
+
+	LOG(TEXT("D : %f"), Distance);
 	if (Distance <= MonsterInfo.AttackDistance)
 	{
 		//LOG(TEXT("C"));
 
 		Controller->StopMovement();
 		FinishLatentTask(OwnerComp, EBTNodeResult::Succeeded);
-		return;
 	}
 }
