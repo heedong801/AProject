@@ -5,6 +5,7 @@
 #include "GolemAIController.h"
 #include "../AProjectGameInstance.h"
 #include "../Effect/NormalEffect.h"
+#include "../DebugClass.h"
 AGolem::AGolem()
 {
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
@@ -22,7 +23,6 @@ AGolem::AGolem()
 	if (AnimAsset.Succeeded())
 		GetMesh()->SetAnimInstanceClass(AnimAsset.Class);
 
-	
 	AIControllerClass = AGolemAIController::StaticClass();
 	
 	/*m_MonsterInfoName = TEXT("MinionWorrior");

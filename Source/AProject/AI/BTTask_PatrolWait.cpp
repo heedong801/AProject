@@ -77,21 +77,26 @@ void UBTTask_PatrolWait::TickTask(UBehaviorTreeComponent& OwnerComp, uint8* Node
 	//LOG(TEXT("%.5f %.5f %.5f"), Monster->GetVelocity().X, Monster->GetVelocity().Y, Monster->GetVelocity().Z);
 
 
-	AActor* Target = Cast<APlayerCharacter>(Controller->GetBlackboardComponent()->GetValueAsObject(TEXT("Target")));
+	UObject* uO = Controller->GetBlackboardComponent()->GetValueAsObject(TEXT("Target"));
+	AActor* Target = Cast<APlayerCharacter>(uO);
 	if (!Target)
 	{
-		Target = Cast<ANexus>(Controller->GetBlackboardComponent()->GetValueAsObject(TEXT("TargetBuliding")));
+		Target = Cast<ANexus>(uO);
 		if (Target)
 		{
+			m_AccTime = 0.f;
 			FinishLatentTask(OwnerComp, EBTNodeResult::Succeeded);
 			return;
 		}
 	}
 	else
 	{
+		m_AccTime = 0.f;
 		FinishLatentTask(OwnerComp, EBTNodeResult::Succeeded);
 		return;
 	}
+
+
 
 	m_AccTime += DeltaSeconds;
 	if (m_AccTime >= m_WaitTime)

@@ -31,10 +31,11 @@ EBTNodeResult::Type UBTTask_NormalAttack::ExecuteTask(UBehaviorTreeComponent& Ow
 	if (!Monster)
 		return EBTNodeResult::Failed;
 
-	AActor* Target = Cast<APlayerCharacter>(Controller->GetBlackboardComponent()->GetValueAsObject(TEXT("Target")));
+	UObject* uO = Controller->GetBlackboardComponent()->GetValueAsObject(TEXT("Target"));
+	AActor* Target = Cast<APlayerCharacter>(uO);
 	if (!Target)
 	{
-		Target = Cast<ANexus>(Controller->GetBlackboardComponent()->GetValueAsObject(TEXT("TargetBuliding")));
+		Target = Cast<ANexus>(uO);
 		if (!Target)
 		{
 			Monster->ChangeAnimType(EMonsterAnimType::Idle);
@@ -95,18 +96,20 @@ void UBTTask_NormalAttack::TickTask(UBehaviorTreeComponent& OwnerComp, uint8* No
 	}
 
 
-	APlayerCharacter* Target = Cast<APlayerCharacter>(Controller->GetBlackboardComponent()->GetValueAsObject(TEXT("Target")));
-
+	UObject* uO = Controller->GetBlackboardComponent()->GetValueAsObject(TEXT("Target"));
+	AActor* Target = Cast<APlayerCharacter>(uO);
 	if (!Target)
 	{
+		Target = Cast<ANexus>(uO);
+		if (!Target)
+		{
+			Monster->ChangeAnimType(EMonsterAnimType::Idle);
+			Controller->StopMovement();
 
-		Monster->ChangeAnimType(EMonsterAnimType::Idle);
-		Controller->StopMovement();
-
-		FinishLatentTask(OwnerComp, EBTNodeResult::Failed);
-		return;
+			FinishLatentTask(OwnerComp, EBTNodeResult::Failed);
+			return;
+		}
 	}
-
 
 	const FMonsterInfo& MonsterInfo = Monster->GetMonsterInfo();
 
@@ -118,7 +121,7 @@ void UBTTask_NormalAttack::TickTask(UBehaviorTreeComponent& OwnerComp, uint8* No
 
 	float Distance = FVector::Distance(MonsterLoc, TargetLoc);
 
-	LOG(TEXT("ATTACK"));
+	
 
 
 	if (Monster->GetAttackEnd())
@@ -128,7 +131,7 @@ void UBTTask_NormalAttack::TickTask(UBehaviorTreeComponent& OwnerComp, uint8* No
 		if (Distance > MonsterInfo.AttackDistance)
 		{
 			//PrintViewport(1.0f, FColor::Red, TEXT("TraceStart.cpp"));
-			LOG(TEXT("ATTACKFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF"));
+			
 
 			FinishLatentTask(OwnerComp, EBTNodeResult::Failed);
 			//return;

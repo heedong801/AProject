@@ -14,6 +14,8 @@ AMonsterSpawnPoint::AMonsterSpawnPoint()
 	m_SpawnTime = 1.f;
 	m_MonsterClass = nullptr;
 	m_Monster = nullptr;
+
+	IsActivate = false;
 }
 
 // Called when the game starts or when spawned
@@ -46,24 +48,26 @@ void AMonsterSpawnPoint::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	if (!m_Monster)
+	if (IsActivate)
 	{
-		m_AccTime += DeltaTime;
-
-		if (m_AccTime >= m_SpawnTime)
+		if (!m_Monster)
 		{
-			m_AccTime = 0.f;
+			m_AccTime += DeltaTime;
 
-			FActorSpawnParameters	param;
-			param.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
+			if (m_AccTime >= m_SpawnTime)
+			{
+				m_AccTime = 0.f;
 
-			AMonster* Monster = GetWorld()->SpawnActor<AMonster>(m_MonsterClass,
-				GetActorLocation(), GetActorRotation(), param);
-			Monster->SetIsSpawned(true);
-		
-			m_Monster = Monster;
+				FActorSpawnParameters	param;
+				param.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
+
+				AMonster* Monster = GetWorld()->SpawnActor<AMonster>(m_MonsterClass,
+					GetActorLocation(), GetActorRotation(), param);
+				Monster->SetIsSpawned(true);
+				Monster->GetMonsterInfo().TraceDistance = 5000.f;
+				m_Monster = Monster;
+			}
 		}
 	}
-
 }
 

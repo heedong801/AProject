@@ -4,7 +4,9 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "Components/CapsuleComponent.h"
 #include "Components/WidgetComponent.h"
+#include "../Effect/NormalEffect.h"
 #include "Nexus.generated.h"
 
 UCLASS()
@@ -21,6 +23,21 @@ protected:
 
 	class UHPBar* m_HPBarWidget;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+		UStaticMeshComponent* m_Top;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+		UStaticMeshComponent* m_Mid;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+		UStaticMeshComponent* m_Bottom;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+		UCapsuleComponent* m_Body;
+
+	ANormalEffect* m_Effect;
+
+	UMaterialInstanceDynamic* m_DynamicMaterial;
 	int32 MaxHp;
 	int32 Hp;
 protected:

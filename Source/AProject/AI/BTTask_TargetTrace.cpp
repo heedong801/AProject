@@ -35,10 +35,12 @@ EBTNodeResult::Type UBTTask_TargetTrace::ExecuteTask(UBehaviorTreeComponent& Own
 	if (!Monster)
 		return EBTNodeResult::Failed;
 
-	AActor* Target = Cast<APlayerCharacter>(Controller->GetBlackboardComponent()->GetValueAsObject(TEXT("Target")));
+
+	UObject* uO = Controller->GetBlackboardComponent()->GetValueAsObject(TEXT("Target"));
+	AActor* Target = Cast<APlayerCharacter>(uO);
 	if (!Target)
 	{
-		Target = Cast<ANexus>(Controller->GetBlackboardComponent()->GetValueAsObject(TEXT("TargetBuliding")));
+		Target = Cast<ANexus>(uO);
 		if (!Target)
 		{
 			Monster->ChangeAnimType(EMonsterAnimType::Idle);
@@ -47,6 +49,8 @@ EBTNodeResult::Type UBTTask_TargetTrace::ExecuteTask(UBehaviorTreeComponent& Own
 			return EBTNodeResult::Failed;
 		}
 	}
+
+	
 
 	Monster->GetCharacterMovement()->MaxWalkSpeed = Monster->GetMonsterInfo().MoveSpeed;
 
@@ -91,14 +95,15 @@ void UBTTask_TargetTrace::TickTask(UBehaviorTreeComponent& OwnerComp, uint8* Nod
 		FinishLatentTask(OwnerComp, EBTNodeResult::Failed);
 		return;
 	}
-	
-	AActor* Target = Cast<APlayerCharacter>(Controller->GetBlackboardComponent()->GetValueAsObject(TEXT("Target")));
+
+
+	UObject* uO = Controller->GetBlackboardComponent()->GetValueAsObject(TEXT("Target"));
+	AActor* Target = Cast<APlayerCharacter>(uO);
 	if (!Target)
 	{
-		Target = Cast<ANexus>(Controller->GetBlackboardComponent()->GetValueAsObject(TEXT("TargetBuliding")));
+		Target = Cast<ANexus>(uO);
 		if (!Target)
 		{
-
 			Monster->ChangeAnimType(EMonsterAnimType::Idle);
 			Controller->StopMovement();
 
@@ -106,19 +111,32 @@ void UBTTask_TargetTrace::TickTask(UBehaviorTreeComponent& OwnerComp, uint8* Nod
 			return;
 		}
 	}
-	LOG(TEXT("TRACE"));
+	
 
+	
 	const FMonsterInfo& MonsterInfo = Monster->GetMonsterInfo();
 	
-	if (Target->GetActorLocation().Z < 200.f)
+	//LOG(TEXT("A"));
+	float ZGapToTarget = FMath::Abs(Target->GetActorLocation().Z - Monster->GetActorLocation().Z);
+	
+	//LOG(TEXT("%f"), ZGapToTarget);
+	if (ZGapToTarget < 200.f)
+	{
 		UAIBlueprintHelperLibrary::SimpleMoveToActor(Controller, Target);
+	}
 	else
 	{
 		FVector TargetLoc = Target->GetActorLocation();
 
-		TargetLoc.Z = Monster->GetActorLocation().Z;
+		if (TargetLoc.Z >= Monster->GetActorLocation().Z)
+			TargetLoc.Z -= ZGapToTarget * 0.75f;
+		else
+			TargetLoc.Z += ZGapToTarget * 0.75f;
+
 		Controller->MoveToLocation(TargetLoc);
 	}
+
+
 	// 타겟과의 거리
 	FVector MonsterLoc = Monster->GetActorLocation();
 	FVector TargetLoc = Target->GetActorLocation();
@@ -126,9 +144,11 @@ void UBTTask_TargetTrace::TickTask(UBehaviorTreeComponent& OwnerComp, uint8* Nod
 	MonsterLoc.Z = TargetLoc.Z;
 
 	float Distance = FVector::Distance(MonsterLoc, TargetLoc);
-
+	//LOG(TEXT("%f"), Distance);
 	if (Distance <= MonsterInfo.AttackDistance)
 	{
+		//LOG(TEXT("C"));
+
 		Controller->StopMovement();
 		FinishLatentTask(OwnerComp, EBTNodeResult::Succeeded);
 		return;

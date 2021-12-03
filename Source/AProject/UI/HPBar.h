@@ -28,7 +28,7 @@ protected:
 public:
 	void SetHPPercent(float Percent){m_HPBar->SetPercent(Percent);	}
 	void SetName(const FString& Name) { m_MonsterName = Name; }
-
+	UProgressBar* GetHPBar() { return m_HPBar; }
 protected:
 	virtual void NativeConstruct();
 	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime);

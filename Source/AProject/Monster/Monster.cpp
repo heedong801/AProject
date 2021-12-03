@@ -39,7 +39,8 @@ AMonster::AMonster()
 	m_IsSpawned = false;
 	//FBox spawnBox;
 	//spawnBox.BuildAABB(GetActorLocation(), FVector(1500.f, 1500.f, 1));
-
+	bUseControllerRotationYaw = false;
+	GetCharacterMovement()->bOrientRotationToMovement = true;
 }
 
 // Called when the game starts or when spawned
@@ -87,6 +88,7 @@ void AMonster::BeginPlay()
 			m_MonsterInfo.TraceDistance = Info->TraceDistance;
 			m_MonsterInfo.weight = Info->weight;
 		}
+
 	}
 
 	m_AnimInstance = Cast<UMonsterAnimInstance>(GetMesh()->GetAnimInstance());

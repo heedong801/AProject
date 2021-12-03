@@ -44,8 +44,11 @@ void UBTService_PlayerDetect::TickNode(UBehaviorTreeComponent& OwnerComp, uint8*
 		Sweep = GetWorld()->SweepMultiByChannel(HitResultArray, Monster->GetActorLocation(), Monster->GetActorLocation(), FQuat::Identity, ECollisionChannel::ECC_GameTraceChannel6
 			, FCollisionShape::MakeSphere(5000.f), params);
 
-		int random = FMath::RandRange(0, HitResultArray.Num());
-		HitResult = HitResultArray[random];
+		if (Sweep)
+		{
+			int random = FMath::RandRange(0, HitResultArray.Num() - 1);
+			HitResult = HitResultArray[random];
+		}
 	}
 	else
 	{

@@ -24,7 +24,8 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 		float m_SpawnTime;
 	float m_AccTime;
-
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	bool IsActivate;
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -33,8 +34,6 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 public:
-	void Death()
-	{
-		m_Monster = nullptr;
-	}
+	void Death(){		m_Monster = nullptr;	}
+	void SetActive(bool flag) { IsActivate = flag; }
 };

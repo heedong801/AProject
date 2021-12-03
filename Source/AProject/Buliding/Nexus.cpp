@@ -4,6 +4,7 @@
 #include "Nexus.h"
 #include "../UI/HPBar.h"
 #include "../DebugClass.h"
+#include "../AProjectGameInstance.h"
 // Sets default values
 ANexus::ANexus()
 {
@@ -11,7 +12,18 @@ ANexus::ANexus()
 	PrimaryActorTick.bCanEverTick = true;
 
 	m_HPBar = CreateDefaultSubobject<UWidgetComponent>(TEXT("HPBar"));
-	m_HPBar->SetupAttachment(GetRootComponent());
+
+	m_Top = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Top"));
+	m_Mid = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mid"));
+	m_Bottom = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Bottom"));
+
+	m_Body = CreateDefaultSubobject<UCapsuleComponent>(TEXT("Capsule"));
+
+	SetRootComponent(m_Body);
+	m_Top->SetupAttachment(m_Body);
+	m_Mid->SetupAttachment(m_Body);
+	m_Bottom->SetupAttachment(m_Body);
+	m_HPBar->SetupAttachment(m_Body);
 
 	static ConstructorHelpers::FClassFinder<UUserWidget>	HPBarAsset(TEXT("WidgetBlueprint'/Game/UI/UI_HPBar.UI_HPBar_C'"));
 
@@ -22,9 +34,10 @@ ANexus::ANexus()
 	m_HPBar->SetDrawSize(FVector2D(200.f, 60.f));
 	m_HPBar->SetRelativeLocation(FVector(0.f, 0.f, 230.f));
 	m_HPBar->SetBlendMode(EWidgetBlendMode::Transparent);
+	//m_HPBar->SetTintColorAndOpacity(FLinearColor(0.0f, 1.f, 1.f, 0.8f));
 
 	MaxHp = 500;
-	Hp = 50;
+	Hp = 500;
 
 }
 
@@ -34,8 +47,19 @@ void ANexus::BeginPlay()
 	Super::BeginPlay();
 	
 	m_HPBarWidget = Cast<UHPBar>(m_HPBar->GetWidget());
-
+	//m_HPBarWidget->GetHPBar()->SetFillColorAndOpacity(FLinearColor(1.0f, 1.f, 0.f, 0.8f));
 	m_HPBarWidget->SetName(TEXT("Nexus"));
+
+	FActorSpawnParameters param;
+	param.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+
+	UAProjectGameInstance* GameInst = Cast<UAProjectGameInstance>(GetWorld()->GetGameInstance());
+	//LOG(TEXT("%f %f %f"), GetActorLocation().X, GetActorLocation().Y, GetActorLocation().Z);
+	//LOG(TEXT("%f %f %f"), m_Bottom->GetRelativeLocation().X, m_Bottom->GetRelativeLocation().Y, m_Bottom->GetRelativeLocation().Z);
+
+	m_Effect = GameInst->GetParticlePool()->Pop(GetActorLocation() + FVector(0.f, 0.f, -260.f), FRotator::ZeroRotator);
+	m_Effect->SetActorScale3D(FVector(1.f, 2.f, 1.f));
+	m_Effect->LoadParticleAsync(TEXT("Nexus"));
 }
 
 // Called every frame
@@ -56,14 +80,12 @@ float ANexus::TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEv
 		m_HPBarWidget->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 
 	Damage = Damage < 1.f ? 1.f : Damage;
-	LOG(TEXT("HIT"));
+	
 	Hp -= Damage;
 
 	//죽은경우
 	if (Hp <= 0)
 	{
-		LOG(TEXT("LOSE"));
-
 		
 		//// 몬스터가 죽었을 경우 퀘스트에 해당 몬스터를 잡는 퀘스트가 있는지 판단한다.
 		//AAProjectGameModeBase* GameMode = Cast<AAProjectGameModeBase>(GetWorld()->GetAuthGameMode());
@@ -83,7 +105,7 @@ float ANexus::TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEv
 
 	if (IsValid(m_HPBarWidget))
 	{
-		m_HPBarWidget->SetHPPercent(Hp/MaxHp);
+		m_HPBarWidget->SetHPPercent(Hp/(float)MaxHp);
 	}
 	return Damage;
 }

@@ -40,7 +40,7 @@ int UParticlePool::GetSize()
 ANormalEffect* UParticlePool::Pop(FVector Pos, FRotator Rot)
 {
 
-	for (int i = 0; i < m_NormalEffectArray.Num(); ++i)
+	for (int i = 0; i < m_NormalEffectArrayMaxIdx; ++i)
 	{
 		if (m_NormalEffectArray[i]->GetActive() == false)
 		{

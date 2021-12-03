@@ -79,10 +79,12 @@ void AOmnik::NormalAttack()
 
 
 		UAProjectGameInstance* GameInst = Cast<UAProjectGameInstance>(GetWorld()->GetGameInstance());
-		ANormalEffect* Effect = GameInst->GetParticlePool()->Pop(HitResult.ImpactPoint, HitResult.ImpactNormal.Rotation());
-		if (Effect != nullptr)
-			Effect->LoadParticleAsync(TEXT("Buff_White"));
-
+		if (GameInst)
+		{
+			ANormalEffect* Effect = GameInst->GetParticlePool()->Pop(HitResult.ImpactPoint, HitResult.ImpactNormal.Rotation());
+			if (Effect != nullptr)
+				Effect->LoadParticleAsync(TEXT("Buff_White"));
+		}
 		//에셋 로딩
 		//Effect->LoadParticle(TEXT("ParticleSystem'/Game/AdvancedMagicFX13/Particles/P_ky_flash1.P_ky_flash1'"));
 		//Effect->LoadSound(TEXT("SoundWave'/Game/Sound/Fire4.Fire4'"));

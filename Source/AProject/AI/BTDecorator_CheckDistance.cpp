@@ -26,11 +26,13 @@ bool UBTDecorator_CheckDistance::CalculateRawConditionValue(UBehaviorTreeCompone
 	if (!Monster)
 		return false;
 
-	AActor* Target = Cast<APlayerCharacter>(Controller->GetBlackboardComponent()->GetValueAsObject(TEXT("Target")));
+	UObject* uO = Controller->GetBlackboardComponent()->GetValueAsObject(TEXT("Target"));
+	AActor* Target = Cast<APlayerCharacter>(uO);
+
 	if (!Target)
 	{
-		Target = Cast<ANexus>(Controller->GetBlackboardComponent()->GetValueAsObject(TEXT("TargetBuliding")));
-		if( !Target )
+		Target = Cast<ANexus>(uO);
+		if (!Target)
 			return false;
 	}
 		
@@ -45,9 +47,6 @@ bool UBTDecorator_CheckDistance::CalculateRawConditionValue(UBehaviorTreeCompone
 
 	float Distance = FVector::Distance(MonsterLoc, TargetLoc);
 	float CheckDist = 0.f;
-
-	LOG(TEXT("%f"), Distance);
-	LOG(TEXT("%f"), CheckDist);
 
 	switch (m_CheckType)
 	{

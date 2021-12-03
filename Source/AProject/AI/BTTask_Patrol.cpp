@@ -78,12 +78,13 @@ void UBTTask_Patrol::TickTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemo
 		FinishLatentTask(OwnerComp, EBTNodeResult::Failed);
 		return;
 	}
+	UObject* uO = Controller->GetBlackboardComponent()->GetValueAsObject(TEXT("Target"));
 
-	AActor* Target = Cast<APlayerCharacter>(Controller->GetBlackboardComponent()->GetValueAsObject(TEXT("Target")));
+	AActor* Target = Cast<APlayerCharacter>(uO);
 	if (!Target)
 	{
-		Target = Cast<ANexus>(Controller->GetBlackboardComponent()->GetValueAsObject(TEXT("TargetBuliding")));
-		if (!Target)
+		Target = Cast<ANexus>(uO);
+		if (Target)
 		{
 			FinishLatentTask(OwnerComp, EBTNodeResult::Succeeded);
 			return;
