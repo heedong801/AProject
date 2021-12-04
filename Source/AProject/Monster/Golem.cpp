@@ -6,6 +6,8 @@
 #include "../AProjectGameInstance.h"
 #include "../Effect/NormalEffect.h"
 #include "../DebugClass.h"
+#include "../Building/Nexus.h"
+
 AGolem::AGolem()
 {
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
@@ -90,7 +92,12 @@ void AGolem::NormalAttack()
 
 		//데미지 전달
 		FDamageEvent DmgEvent;
-		float Damage = HitResult.GetActor()->TakeDamage(m_MonsterInfo.Attack, DmgEvent, GetController(), this);
+		ANexus* Nexus = Cast<ANexus>(HitResult.GetActor());
+
+		if (!Nexus)
+			float Damage = HitResult.GetActor()->TakeDamage(m_MonsterInfo.Attack, DmgEvent, GetController(), this);
+		else
+			float Damage = Nexus->TakeDamageForNexus(m_MonsterInfo.Attack, DmgEvent, GetController(), this, HitResult.ImpactPoint, HitResult.ImpactNormal.Rotation());
 
 	}
 }

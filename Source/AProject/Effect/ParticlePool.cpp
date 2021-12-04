@@ -4,7 +4,7 @@
 #include "ParticlePool.h"
 #include "../DebugClass.h"
 UParticlePool::UParticlePool()
-	: m_NormalEffectArrayMaxIdx(10)
+	: m_NormalEffectArrayMaxIdx(200)
 {
 	
 }

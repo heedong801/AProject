@@ -6,6 +6,7 @@
 #include "GameFramework/Actor.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/WidgetComponent.h"
+#include "Particles/ParticleSystemComponent.h"
 #include "../Effect/NormalEffect.h"
 #include "Nexus.generated.h"
 
@@ -35,11 +36,25 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 		UCapsuleComponent* m_Body;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+		UParticleSystemComponent* m_FirstDamagedParticle;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+		UParticleSystemComponent* m_SecondDamagedParticle;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+		UParticleSystemComponent* m_ThirdDamagedParticle;
+
 	ANormalEffect* m_Effect;
 
 	UMaterialInstanceDynamic* m_DynamicMaterial;
 	int32 MaxHp;
 	int32 Hp;
+
+	FTimerHandle m_ExployedTimer;
+	FTimerDelegate m_TimerDelegate;
+	int m_ExployCnt;
+	bool IsExployed;
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -47,7 +62,11 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-	virtual float TakeDamage(float Damage, struct FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
+	float TakeDamageForNexus(float Damage, struct FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser, FVector HitPos, FRotator NormalRot);
+
+	UFUNCTION()
+		void Exploy(FVector HitPos, FRotator NormalRot);
+
 
 	UCapsuleComponent* GetCapsuleComponent() {
 		return m_Body;

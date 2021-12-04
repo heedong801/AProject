@@ -141,9 +141,9 @@ void UBTTask_TargetTrace::TickTask(UBehaviorTreeComponent& OwnerComp, uint8* Nod
 	//LOG(TEXT("C : %f %f %f"), TargetLoc.X, TargetLoc.Y, TargetLoc.Z);
 
 	if (TargetLoc.Z >= Monster->GetActorLocation().Z)
-		TargetLoc.Z -= ZGapToTarget * 0.75f;
+		TargetLoc.Z -= ZGapToTarget * 0.0f;
 	else
-		TargetLoc.Z += ZGapToTarget * 0.75f;
+		TargetLoc.Z += ZGapToTarget * 0.0f;
 
 	EPathFollowingRequestResult::Type Result = Controller->MoveToLocation(TargetLoc);
 
@@ -174,7 +174,7 @@ void UBTTask_TargetTrace::TickTask(UBehaviorTreeComponent& OwnerComp, uint8* Nod
 	float Offset = 55;
 	Distance -= Offset;
 
-	LOG(TEXT("D : %f"), Distance);
+	//LOG(TEXT("D : %f"), Distance);
 	if (Distance <= MonsterInfo.AttackDistance)
 	{
 		//LOG(TEXT("C"));
