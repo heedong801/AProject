@@ -7,6 +7,7 @@
 #include "Monster/MonsterInfo.h"
 #include "Engine/GameInstance.h"
 #include "Effect/ParticlePool.h"
+#include "Quest/QuestInfo.h"
 #include "AProjectGameInstance.generated.h"
 
 /**
@@ -30,17 +31,15 @@ private:
 
 	UParticlePool* m_ParticlePool;
 
-	/*UPROPERTY()
+	UPROPERTY()
 		UDataTable* m_UIItemInfoTable;
 
 	UPROPERTY()
 		UDataTable* m_QuestInfoTable;
 
-	EPlayerJob m_SelectJob;
-
-	TMap<FString, FQuestData>	m_QuestComplete;*/
+	TMap<FString, FQuestData>	m_QuestComplete;
 public:
-	/*const TMap<FString, FQuestData>& GetQuestData()
+	const TMap<FString, FQuestData>& GetQuestData()
 	{
 		return m_QuestComplete;
 	}
@@ -49,16 +48,7 @@ public:
 	{
 		return m_QuestComplete.Find(Name);
 	}
-	void SetSelectJob(EPlayerJob Job)
-	{
-		m_SelectJob = Job;
-	}
 
-	EPlayerJob GetSelectJob()	const
-	{
-		return m_SelectJob;
-	}
-	virtual void Init();*/
 	virtual void Init();
 	virtual void StartGameInstance();
 	virtual bool StartPIEGameInstance(ULocalPlayer* LocalPlayer, bool bInSimulateInEditor, bool bAnyBlueprintErrors, bool bStartInSpectatorMode);
@@ -71,6 +61,6 @@ public:
 	const FPlayerInfo* FindPlayerInfo(const FString& Name);
 
 	//const FUIItemTableInfo* FindUIItemInfo(const FString& Name);
-	//const FQuestTableInfo* FindQuestInfo(const FString& Name);
+	const FQuestTableInfo* FindQuestInfo(const FString& Name);
 
 };

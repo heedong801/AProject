@@ -32,7 +32,7 @@ void AAProjectGameModeBase::InitGame(const FString& MapName,
 		GameInst->SetParticlePool(m_ParticlePool);
 	}
 
-	/*UUEKR2GameInstance* GameInst = Cast<UUEKR2GameInstance>(GetWorld()->GetGameInstance());
+	/*UAProjectGameInstance* GameInst = Cast<UAProjectGameInstance>(GetWorld()->GetGameInstance());
 
 	if (GameInst)
 	{

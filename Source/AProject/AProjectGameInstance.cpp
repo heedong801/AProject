@@ -79,7 +79,7 @@ const FPlayerInfo* UAProjectGameInstance::FindPlayerInfo(const FString& Name)
 //	return m_UIItemInfoTable->FindRow<FUIItemTableInfo>(*Name, "");
 //}
 //
-//const FQuestTableInfo* UAProjectGameInstance::FindQuestInfo(const FString& Name)
-//{
-//	return m_QuestInfoTable->FindRow<FQuestTableInfo>(*Name, "");
-//}
+const FQuestTableInfo* UAProjectGameInstance::FindQuestInfo(const FString& Name)
+{
+	return m_QuestInfoTable->FindRow<FQuestTableInfo>(*Name, "");
+}

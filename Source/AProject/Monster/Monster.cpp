@@ -233,7 +233,7 @@ float AMonster::TakeDamage(float DamageAmount, struct FDamageEvent const& Damage
 	//		//Percent = FMath::RandRange(0.f, 100.f);
 	//		int32	Index = FMath::RandRange(0, m_DropItemNameArray.Num() - 1);
 
-	//		UUEKR2GameInstance* GmaeInst = Cast<UUEKR2GameInstance>(GetWorld()->GetGameInstance());
+	//		UAProjectGameInstance* GmaeInst = Cast<UAProjectGameInstance>(GetWorld()->GetGameInstance());
 
 	//		if (GmaeInst)
 	//		{

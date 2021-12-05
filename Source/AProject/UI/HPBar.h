@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "../GameInfo.h"
+#include "CoreMinimal.h"
 #include "Components/ProgressBar.h"
 #include "Components/TextBlock.h"
 #include "Blueprint/UserWidget.h"
