@@ -32,6 +32,7 @@ void AAProjectGameModeBase::InitGame(const FString& MapName,
 		GameInst->SetParticlePool(m_ParticlePool);
 	}
 
+
 	/*UAProjectGameInstance* GameInst = Cast<UAProjectGameInstance>(GetWorld()->GetGameInstance());
 
 	if (GameInst)
@@ -77,6 +78,9 @@ void AAProjectGameModeBase::BeginPlay()
 			m_MainHUD->AddToViewport();
 	}
 
+	
+	APlayerController* Controller = GetWorld()->GetFirstPlayerController();
+	Controller->bShowMouseCursor = false;
 }
 
 void AAProjectGameModeBase::Tick(float DeltaTime)

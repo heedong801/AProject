@@ -12,6 +12,10 @@ UAProjectGameInstance::UAProjectGameInstance()
 	static ConstructorHelpers::FObjectFinder<UDataTable> PlayerInfoTableAsset(TEXT("DataTable'/Game/Player/DT_PlayerInfo.DT_PlayerInfo'"));
 	if (PlayerInfoTableAsset.Succeeded())
 		m_PlayerInfoTable = PlayerInfoTableAsset.Object;
+
+	static ConstructorHelpers::FObjectFinder<UDataTable> QuestInfoTableAsset(TEXT("DataTable'/Game/Quest/DT_QuestInfo.DT_QuestInfo'"));
+	if (PlayerInfoTableAsset.Succeeded())
+		m_QuestInfoTable = QuestInfoTableAsset.Object;
 }
 
 UAProjectGameInstance::~UAProjectGameInstance()

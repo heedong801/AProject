@@ -24,6 +24,12 @@ void UQuestWidget::NativeConstruct()
 
 	m_CurrentRenderQuest = nullptr;
 
+
+	m_PrevSelect = nullptr;
+}
+
+void UQuestWidget::QuestSet()
+{
 	UAProjectGameInstance* GameInst = Cast<UAProjectGameInstance>(GetWorld()->GetGameInstance());
 
 	if (GameInst)
@@ -59,10 +65,7 @@ void UQuestWidget::NativeConstruct()
 			}
 		}
 	}
-
-	m_PrevSelect = nullptr;
 }
-
 void UQuestWidget::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 {
 	Super::NativeTick(MyGeometry, InDeltaTime);

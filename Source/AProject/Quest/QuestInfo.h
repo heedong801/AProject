@@ -12,6 +12,7 @@ enum class EQuestType : uint8
 	Collection,
 	Hunt,
 	Communication,
+	Defense,
 	Max
 };
 

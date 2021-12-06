@@ -9,7 +9,7 @@ ABoxTrigger::ABoxTrigger()
 	PrimaryActorTick.bCanEverTick = true;
 
 	m_Trigger = CreateDefaultSubobject<UBoxComponent>(TEXT("Trigger"));
-	
+	m_Trigger->SetCollisionProfileName(TEXT("Trigger"));
 	SetRootComponent(m_Trigger);
 	m_ShapeType = ETriggerType::Box;
 }

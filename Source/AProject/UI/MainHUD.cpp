@@ -9,6 +9,6 @@ void UMainHUD::NativeConstruct()
 
 	m_CharacterHUD = Cast<UCharacterHUD>(GetWidgetFromName(TEXT("UI_CharacterHUD")));
 	m_Loading = Cast<ULoading>(GetWidgetFromName(TEXT("UI_Loading")));
-
+	m_QuestWidget = Cast<UQuestWidget>(GetWidgetFromName(TEXT("UI_Quest")));
 }
 

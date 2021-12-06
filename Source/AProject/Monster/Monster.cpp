@@ -199,18 +199,19 @@ float AMonster::TakeDamage(float DamageAmount, struct FDamageEvent const& Damage
 			Player->AddGold(m_MonsterInfo.Gold);
 		}
 		//// 몬스터가 죽었을 경우 퀘스트에 해당 몬스터를 잡는 퀘스트가 있는지 판단한다.
-		//AAProjectGameModeBase* GameMode = Cast<AAProjectGameModeBase>(GetWorld()->GetAuthGameMode());
+		AAProjectGameModeBase* GameMode = Cast<AAProjectGameModeBase>(GetWorld()->GetAuthGameMode());
 
-		//if (GameMode)
-		//{
+		if (GameMode)
+		{
 
-		//	UQuestWidget* QuestWidget = GameMode->GetMainHUD()->GetQuestWidget();
+			UQuestWidget* QuestWidget = GameMode->GetMainHUD()->GetQuestWidget();
 
-		//	if (QuestWidget)
-		//	{
+			if (QuestWidget)
+			{
 
-		//		QuestWidget->QuestCheck(EQuestType::Hunt, m_MonsterInfo.Name);
-		//	}
+				QuestWidget->QuestCheck(EQuestType::Hunt, m_MonsterInfo.Name);
+			}
+		}
 	}
 	else
 	{

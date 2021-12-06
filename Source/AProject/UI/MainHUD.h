@@ -6,6 +6,7 @@
 #include "Blueprint/UserWidget.h"
 #include "CharacterHUD.h"
 #include "Loading.h"
+#include "../Quest/QuestWidget.h"
 #include "MainHUD.generated.h"
 
 /**
@@ -20,6 +21,8 @@ protected:
 		UCharacterHUD* m_CharacterHUD;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 		ULoading* m_Loading;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+		UQuestWidget* m_QuestWidget;
 
 public:
 	UCharacterHUD* GetCharacterHUD()
@@ -30,6 +33,11 @@ public:
 	{
 		return m_Loading;
 	}
+	UQuestWidget* GetQuestWidget()
+	{
+		return m_QuestWidget;
+	}
+
 protected:
 	virtual void NativeConstruct();
 

@@ -159,10 +159,47 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 	PlayerInputComponent->BindAction(TEXT("Sprint"), EInputEvent::IE_Pressed, this, &APlayerCharacter::Sprint);
 	PlayerInputComponent->BindAction(TEXT("Sprint"), EInputEvent::IE_Released, this, &APlayerCharacter::StopSprint);
 
+	PlayerInputComponent->BindAction(TEXT("Quest"), EInputEvent::IE_Pressed, this, &APlayerCharacter::QuestKey);
+
+
 
 
 	
 }
+void APlayerCharacter::QuestKey()
+{
+	AAProjectGameModeBase* GameMode = Cast<AAProjectGameModeBase>(GetWorld()->GetAuthGameMode());
+	
+	if (IsValid(GameMode))
+	{
+		UMainHUD* MainHUD = GameMode->GetMainHUD();
+
+		if (IsValid(MainHUD))
+		{
+			UQuestWidget* QuestWidget = MainHUD->GetQuestWidget();
+			{
+				if (IsValid(QuestWidget))
+				{
+					if (QuestWidget->GetVisibility() == ESlateVisibility::Collapsed)
+					{
+						QuestWidget->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+
+						APlayerController* ControllerA = GetWorld()->GetFirstPlayerController();
+						ControllerA->bShowMouseCursor = true;
+					}
+					else
+					{
+						QuestWidget->SetVisibility(ESlateVisibility::Collapsed);
+
+						APlayerController* ControllerA = GetWorld()->GetFirstPlayerController();
+						ControllerA->bShowMouseCursor = false;
+					}
+				}
+			}
+		}
+	}
+}
+
 void APlayerCharacter::SetDirection()
 {
 	FRotator rot = GetActorRotation();

@@ -43,4 +43,5 @@ public:
 
 public:
 	void QuestCheck(EQuestType Type, const FString& Name);
+	void QuestSet();
 };

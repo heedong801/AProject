@@ -60,6 +60,8 @@ public:
 	void AttackKey();
 	void Sprint();
 	void StopSprint();
+	void QuestKey();
+
 	void SetTimeDillation();
 	const FPlayerInfo& GetPlayerInfo()	const { return m_PlayerInfo;}
 
