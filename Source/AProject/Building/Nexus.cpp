@@ -5,6 +5,7 @@
 #include "../UI/HPBar.h"
 #include "../DebugClass.h"
 #include "../AProjectGameInstance.h"
+#include "../AProjectGameModeBase.h"
 // Sets default values
 ANexus::ANexus()
 {
@@ -81,8 +82,35 @@ void ANexus::BeginPlay()
 	m_FirstDamagedParticle->SetVisibility(false);
 	m_SecondDamagedParticle->SetVisibility(false);
 	m_ThirdDamagedParticle->SetVisibility(false);
+
+	GetWorld()->GetTimerManager().SetTimer(m_ClearTimer, this, 
+		&ANexus::CheckClear, 15.f, false, -1.f);
+
 }
 
+void ANexus::CheckClear()
+{
+
+	if (Hp > 0)
+	{
+		//// 몬스터가 죽었을 경우 퀘스트에 해당 몬스터를 잡는 퀘스트가 있는지 판단한다.
+		AAProjectGameModeBase* GameMode = Cast<AAProjectGameModeBase>(GetWorld()->GetAuthGameMode());
+	
+
+		if (GameMode)
+		{
+			UQuestWidget* QuestWidget = GameMode->GetMainHUD()->GetQuestWidget();
+
+
+			if (QuestWidget)
+			{
+			
+
+				QuestWidget->QuestCheck(EQuestType::Defense, TEXT("Nexus"));
+			}
+		}
+	}
+}
 // Called every frame
 void ANexus::Tick(float DeltaTime)
 {
@@ -163,19 +191,7 @@ float ANexus::TakeDamageForNexus(float DamageAmount, struct FDamageEvent const& 
 				result.GetActor()->TakeDamage(500, DmgEvent, nullptr, this);
 			}
 		}
-		//// 몬스터가 죽었을 경우 퀘스트에 해당 몬스터를 잡는 퀘스트가 있는지 판단한다.
-		//AAProjectGameModeBase* GameMode = Cast<AAProjectGameModeBase>(GetWorld()->GetAuthGameMode());
-
-		//if (GameMode)
-		//{
-
-		//	UQuestWidget* QuestWidget = GameMode->GetMainHUD()->GetQuestWidget();
-
-		//	if (QuestWidget)
-		//	{
-
-		//		QuestWidget->QuestCheck(EQuestType::Hunt, m_MonsterInfo.Name);
-		//	}
+		
 	}
 	else
 	{

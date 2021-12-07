@@ -16,6 +16,9 @@ class APROJECT_API AQuestTrigger : public ABoxTrigger
 
 private:
 	bool m_Start;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+		FString m_QuestStr;
 public:
 	AQuestTrigger();
 

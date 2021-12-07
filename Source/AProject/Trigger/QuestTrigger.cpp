@@ -31,84 +31,88 @@ void AQuestTrigger::TriggerBegin()
 		if (GameInst)
 		{
 			TMap<FString, FQuestData>* QuestMap = GameInst->GetMap();
-			FQuestData	Data;
-			LOG(TEXT("A"));
 
-			const FQuestTableInfo* Info = GameInst->FindQuestInfo(TEXT("Meadow1"));
-
-			if (Info)
+			for (int32 i = 1; ; ++i)
 			{
-				LOG(TEXT("B"));
+				FQuestData	Data;
 
-				Data.Name = Info->Name;
-				Data.QuestDesc = Info->QuestDesc;
-				Data.CompleteArray.RemoveAll([](FQuestDataInfo v) {return true; });
-				Data.CompensationArray.RemoveAll([](FQuestCompensationInfo v) {return true; });
-				for (auto& CompleteData : Info->InfoArray)
+				FString QuestName = m_QuestStr + FString::Printf(TEXT("%d"), i);
+
+				const FQuestTableInfo* Info = GameInst->FindQuestInfo(QuestName);
+				//LOG(TEXT("%s"), *QuestName);
+				if (Info)
 				{
-					FQuestDataInfo	DataInfo;
+					Data.Name = Info->Name;
+					Data.QuestDesc = Info->QuestDesc;
+					Data.CompleteArray.RemoveAll([](FQuestDataInfo v) {return true; });
+					Data.CompensationArray.RemoveAll([](FQuestCompensationInfo v) {return true; });
+					for (auto& CompleteData : Info->InfoArray)
+					{
+						FQuestDataInfo	DataInfo;
 
-					DataInfo.Type = CompleteData.Type;
-					DataInfo.DestName = CompleteData.DestName;
-					DataInfo.MaxCount = CompleteData.Count;
-					DataInfo.Count = 0;
-					DataInfo.Complete = false;
+						DataInfo.Type = CompleteData.Type;
+						DataInfo.DestName = CompleteData.DestName;
+						DataInfo.MaxCount = CompleteData.Count;
+						DataInfo.Count = 0;
+						DataInfo.Complete = false;
 
-					Data.CompleteArray.Add(DataInfo);
+						Data.CompleteArray.Add(DataInfo);
+					}
+
+					for (auto& CompensationData : Info->CompensationArray)
+					{
+						FQuestCompensationInfo	DataInfo;
+
+						DataInfo.Type = CompensationData.Type;
+						DataInfo.Compensation = CompensationData.Compensation;
+
+						Data.CompensationArray.Add(DataInfo);
+					}
+
+					Data.Complete = false;
+
+					QuestMap->Add(QuestName, Data);
 				}
+				else
+					break;
 
-				for (auto& CompensationData : Info->CompensationArray)
-				{
-					FQuestCompensationInfo	DataInfo;
+				//Info = GameInst->FindQuestInfo(TEXT("Meadow2"));
+				//if (Info)
+				//{
+				//	//LOG(TEXT("C"));
 
-					DataInfo.Type = CompensationData.Type;
-					DataInfo.Compensation = CompensationData.Compensation;
-
-					Data.CompensationArray.Add(DataInfo);
-				}
-
-				Data.Complete = false;
-
-				QuestMap->Add(TEXT("Meadow1"), Data);
-			}
+				//	Data.Name = Info->Name;
+				//	Data.QuestDesc = Info->QuestDesc;
+				//	Data.CompleteArray.RemoveAll([](FQuestDataInfo v) {return true; });
+				//	Data.CompensationArray.RemoveAll([](FQuestCompensationInfo v) {return true; });
 
 
-			Info = GameInst->FindQuestInfo(TEXT("Meadow2"));
-			if (Info)
-			{
-				LOG(TEXT("C"));
+				//	for (auto& CompleteData : Info->InfoArray)
+				//	{
+				//		FQuestDataInfo	DataInfo;
 
-				Data.Name = Info->Name;
-				Data.QuestDesc = Info->QuestDesc;
-				Data.CompleteArray.RemoveAll([](FQuestDataInfo v) {return true; });
-				Data.CompensationArray.RemoveAll([](FQuestCompensationInfo v) {return true; });
+				//		DataInfo.Type = CompleteData.Type;
+				//		DataInfo.DestName = CompleteData.DestName;
+				//		DataInfo.MaxCount = CompleteData.Count;
+				//		DataInfo.Count = 0;
+				//		DataInfo.Complete = false;
 
+				//		Data.CompleteArray.Add(DataInfo);
+				//	}
 
-				for (auto& CompleteData : Info->InfoArray)
-				{
-					FQuestDataInfo	DataInfo;
+				//	for (auto& CompensationData : Info->CompensationArray)
+				//	{
+				//		FQuestCompensationInfo	DataInfo;
 
-					DataInfo.Type = CompleteData.Type;
-					DataInfo.DestName = CompleteData.DestName;
-					DataInfo.MaxCount = CompleteData.Count;
-					DataInfo.Count = 0;
-					DataInfo.Complete = false;
+				//		DataInfo.Type = CompensationData.Type;
+				//		DataInfo.Compensation = CompensationData.Compensation;
 
-					Data.CompleteArray.Add(DataInfo);
-				}
+				//		Data.CompensationArray.Add(DataInfo);
+				//	}
 
-				for (auto& CompensationData : Info->CompensationArray)
-				{
-					FQuestCompensationInfo	DataInfo;
-
-					DataInfo.Type = CompensationData.Type;
-					DataInfo.Compensation = CompensationData.Compensation;
-
-					Data.CompensationArray.Add(DataInfo);
-				}
-
-				Data.Complete = false;
-				QuestMap->Add(TEXT("Meadow2"), Data);
+				//	Data.Complete = false;
+				//	QuestMap->Add(TEXT("Meadow2"), Data);
+				//}
 			}
 		}
 	}

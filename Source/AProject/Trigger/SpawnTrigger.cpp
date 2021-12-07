@@ -26,7 +26,7 @@ void ASpawnTrigger::Tick(float DeltaTime)
 
 void ASpawnTrigger::TriggerBegin()
 {
-	LOG(TEXT("HI"));
+	//LOG(TEXT("HI"));
 	for (auto& Point : m_SpawnPointArray)
 	{
 		Point->SetActive(true);

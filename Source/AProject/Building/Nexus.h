@@ -45,6 +45,9 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 		UParticleSystemComponent* m_ThirdDamagedParticle;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+		FVector NextPosition;
+
 	ANormalEffect* m_Effect;
 
 	UMaterialInstanceDynamic* m_DynamicMaterial;
@@ -53,6 +56,8 @@ protected:
 
 	FTimerHandle m_ExployedTimer;
 	FTimerDelegate m_TimerDelegate;
+	FTimerHandle m_ClearTimer;
+
 	int m_ExployCnt;
 	bool IsExployed;
 protected:
@@ -66,7 +71,8 @@ public:
 
 	UFUNCTION()
 		void Exploy(FVector HitPos, FRotator NormalRot);
-
+	UFUNCTION()
+		void CheckClear();
 
 	UCapsuleComponent* GetCapsuleComponent() {
 		return m_Body;
