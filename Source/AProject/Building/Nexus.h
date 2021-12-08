@@ -8,6 +8,8 @@
 #include "Components/WidgetComponent.h"
 #include "Particles/ParticleSystemComponent.h"
 #include "../Effect/NormalEffect.h"
+#include "LevelSequence.h"
+#include "LevelSequenceActor.h"
 #include "Nexus.generated.h"
 
 UCLASS()
@@ -46,7 +48,7 @@ protected:
 		UParticleSystemComponent* m_ThirdDamagedParticle;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-		FVector NextPosition;
+		FVector m_NextPosition;
 
 	ANormalEffect* m_Effect;
 
@@ -57,9 +59,20 @@ protected:
 	FTimerHandle m_ExployedTimer;
 	FTimerDelegate m_TimerDelegate;
 	FTimerHandle m_ClearTimer;
+	FTimerHandle m_RecallTimer;
+	FTimerHandle m_RecallEffectTimer;
+	FTimerHandle m_PlayerRecallTimer;
+
 
 	int m_ExployCnt;
 	bool IsExployed;
+
+	//////////////////////Sequence //////////////////////////////////////////////////
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+		ULevelSequence* m_SequenceAsset;
+
+	ULevelSequencePlayer* m_SequencePlayer;
+	ALevelSequenceActor* m_SequenceActor;
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -73,6 +86,12 @@ public:
 		void Exploy(FVector HitPos, FRotator NormalRot);
 	UFUNCTION()
 		void CheckClear();
+	UFUNCTION()
+		void Recall();
+	UFUNCTION()
+		void PlayerRecall();
+	UFUNCTION()
+		void RecallEffectAfterSequence();
 
 	UCapsuleComponent* GetCapsuleComponent() {
 		return m_Body;

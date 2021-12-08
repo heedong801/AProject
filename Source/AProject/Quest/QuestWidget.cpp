@@ -18,6 +18,10 @@ void UQuestWidget::NativeConstruct()
 	m_QuestList = Cast<UListView>(GetWidgetFromName(TEXT("QuestList")));
 	m_QuestDesc = Cast<UQuestDescWidget>(GetWidgetFromName(TEXT("UI_QuestDesc")));
 
+	m_MapImg = Cast<UImage>(GetWidgetFromName(TEXT("MapImg")));
+	m_MapNameText = Cast<UTextBlock>(GetWidgetFromName(TEXT("MapNameText")));
+	m_ImgBackBorder = Cast<UBorder>(GetWidgetFromName(TEXT("ImageBack")));
+
 	m_QuestList->OnItemClicked().AddUObject(this, &UQuestWidget::QuestClick);
 	m_QuestList->OnItemSelectionChanged().AddUObject(this, &UQuestWidget::QuestSelect);
 	m_QuestList->OnItemIsHoveredChanged().AddUObject(this, &UQuestWidget::QuestMouseOn);
@@ -241,5 +245,37 @@ void UQuestWidget::QuestCheck(EQuestType Type, const FString& Name)
 				}
 			}
 		}
+	}
+}
+
+void UQuestWidget::ShowQuestSet(bool bShowFlag, const FString& MapName)
+{
+	if (bShowFlag)
+	{
+		m_MapNameText->SetVisibility(ESlateVisibility::Visible);
+		m_ImgBackBorder->SetVisibility(ESlateVisibility::Visible);
+		m_MapImg->SetVisibility(ESlateVisibility::Visible);
+
+		m_MapNameText->SetText(FText::FromString(MapName));
+
+		UAProjectGameInstance* GameInst = Cast<UAProjectGameInstance>(GetWorld()->GetGameInstance());
+
+		const FMapTableInfo* Info = GameInst->FindMapInfo(MapName);
+		if (Info)
+		{
+			int random = FMath::RandRange(0, Info->MapTexture.Num() - 1);
+
+			UTexture2D* IconTexture = Info->MapTexture[random];
+
+			if (IconTexture)
+				m_MapImg->SetBrushFromTexture(IconTexture);
+		}
+		
+	}
+	else
+	{
+		m_MapNameText->SetVisibility(ESlateVisibility::Collapsed);
+		m_ImgBackBorder->SetVisibility(ESlateVisibility::Collapsed);
+		m_MapImg->SetVisibility(ESlateVisibility::Collapsed);
 	}
 }

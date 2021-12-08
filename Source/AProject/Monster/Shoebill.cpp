@@ -81,7 +81,7 @@ void AShoebill::NormalAttack()
 
 
 		UAProjectGameInstance* GameInst = Cast<UAProjectGameInstance>(GetWorld()->GetGameInstance());
-		ANormalEffect* Effect = GameInst->GetParticlePool()->Pop(HitResult.ImpactPoint, HitResult.ImpactNormal.Rotation());
+		ANormalEffect* Effect = Cast<ANormalEffect>(GameInst->GetParticlePool()->Pop(HitResult.ImpactPoint, HitResult.ImpactNormal.Rotation()));
 		if (Effect != nullptr)
 			Effect->LoadParticleAsync(TEXT("Buff_Black"));
 

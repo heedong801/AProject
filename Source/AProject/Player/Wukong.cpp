@@ -152,7 +152,7 @@ void AWukong::HitDamage()
 			result.ImpactPoint, result.ImpactNormal.Rotation(), param);*/
 
 		UAProjectGameInstance* GameInst = Cast<UAProjectGameInstance>(GetWorld()->GetGameInstance());
-		ANormalEffect* Effect = GameInst->GetParticlePool()->Pop(result.ImpactPoint, result.ImpactNormal.Rotation());
+		ANormalEffect* Effect = Cast<ANormalEffect>(GameInst->GetParticlePool()->Pop(result.ImpactPoint, result.ImpactNormal.Rotation()));
 		 if( Effect != nullptr )
 			 Effect->LoadParticleAsync(TEXT("HitFire"));
 		//에셋 로딩

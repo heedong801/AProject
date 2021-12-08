@@ -35,10 +35,14 @@ private:
 		UDataTable* m_UIItemInfoTable;
 
 	UPROPERTY()
+		UDataTable* m_MapInfoTable;
+
+	UPROPERTY()
 		UDataTable* m_QuestInfoTable;
 
 	TMap<FString, FQuestData>	m_QuestDataMap;
 
+	FString 	m_MapName;
 public:
 	const TMap<FString, FQuestData>& GetQuestData()
 	{
@@ -57,7 +61,7 @@ public:
 	virtual void Init();
 	virtual void StartGameInstance();
 	virtual bool StartPIEGameInstance(ULocalPlayer* LocalPlayer, bool bInSimulateInEditor, bool bAnyBlueprintErrors, bool bStartInSpectatorMode);
-	
+
 	//bool GetParticlePoolIsSet();
 	void SetParticlePool(UParticlePool* pP);
 	int GetPoolSize();
@@ -67,5 +71,10 @@ public:
 
 	//const FUIItemTableInfo* FindUIItemInfo(const FString& Name);
 	const FQuestTableInfo* FindQuestInfo(const FString& Name);
+	const FMapTableInfo* FindMapInfo(const FString& Name);
 
+
+public:
+	void SetMapName(const FString& MapName) { m_MapName = MapName; }
+	const FString& GetMapName() { return m_MapName; }
 };

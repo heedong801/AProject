@@ -161,6 +161,7 @@ float AMonster::TakeDamage(float DamageAmount, struct FDamageEvent const& Damage
 		return 0.f;
 	//AttackedDir.Z = 0.f;
 
+	
 	GetWorld()->GetFirstPlayerController()->ClientPlayCameraShake(
 		UHitCameraShake::StaticClass());
 

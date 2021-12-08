@@ -5,6 +5,10 @@
 #include "CoreMinimal.h"
 #include "QuestDescWidget.h"
 #include "Components/ListView.h"
+#include "Components/TextBlock.h"
+#include "Components/Image.h"
+#include "Components/Border.h"
+
 #include "Blueprint/UserWidget.h"
 #include "QuestWidget.generated.h"
 
@@ -20,6 +24,15 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 		UQuestDescWidget* m_QuestDesc;
 	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+		UImage* m_MapImg;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+		UTextBlock* m_MapNameText;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+		UBorder* m_ImgBackBorder;
+
 	FQuestData* m_CurrentRenderQuest;
 
 	TArray<FQuestData>	m_QuestArray;
@@ -32,6 +45,10 @@ protected:
 	virtual void NativeConstruct();
 	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime);
 
+	void SetImg(UImage* Img)
+	{
+		//m_MapImg->SetBrushFromTexture();
+	}
 public:
 	UFUNCTION()
 		void QuestClick(UObject* Data);
@@ -44,4 +61,6 @@ public:
 public:
 	void QuestCheck(EQuestType Type, const FString& Name);
 	void QuestSet();
+
+	void ShowQuestSet(bool bShowFlag, const FString& MapName);
 };

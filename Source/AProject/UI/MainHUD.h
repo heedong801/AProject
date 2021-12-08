@@ -24,6 +24,7 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 		UQuestWidget* m_QuestWidget;
 
+
 public:
 	UCharacterHUD* GetCharacterHUD()
 	{

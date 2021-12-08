@@ -3,6 +3,8 @@
 
 #include "Loading.h"
 #include "../DebugClass.h"
+#include "../Quest/QuestInfo.h"
+#include "../AProjectGameInstance.h"
 void ULoading::NativeConstruct()
 {
 	Super::NativeConstruct();
@@ -18,11 +20,21 @@ void ULoading::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 	Super::NativeTick(MyGeometry, InDeltaTime);
 }
 
-void ULoading::SetLoadingUI()
+void ULoading::SetMapImg(const FString& MapName)
 {
-	//SetVisibility(ESlateVisibility::Visible);
+	UAProjectGameInstance* GameInst = Cast<UAProjectGameInstance>(GetWorld()->GetGameInstance());
 
-	//GetWorld()->GetTimerManager().SetTimer(m_LoadingTimer, this, &ULoading::UnSetLoadngUI, 0.1f, false, 5.f);
+	const FMapTableInfo* Info = GameInst->FindMapInfo(MapName);
+
+	if (Info)
+	{
+		int random = FMath::RandRange(0, Info->MapTexture.Num() - 1);
+		//LOG(TEXT("%d"), random);
+		UTexture2D* IconTexture = Info->MapTexture[random];
+
+		if (IconTexture)
+			m_LoadingImg->SetBrushFromTexture(IconTexture); 
+	}
 }
 
 void ULoading::UnSetLoadngUI()

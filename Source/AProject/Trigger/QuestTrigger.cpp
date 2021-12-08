@@ -126,6 +126,8 @@ void AQuestTrigger::TriggerBegin()
 		if (MainHUD)
 		{
 			MainHUD->GetQuestWidget()->QuestSet();
+
+			MainHUD->GetQuestWidget()->ShowQuestSet(true, m_QuestStr);
 		}
 	}
 

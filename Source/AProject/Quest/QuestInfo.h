@@ -70,6 +70,19 @@ struct FQuestTableInfo :
 		TArray<FQuestCompensationInfo>	CompensationArray;
 };
 
+USTRUCT(BlueprintType)
+struct FMapTableInfo :
+	public FTableRowBase
+{
+	GENERATED_BODY()
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	FString	MapName;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	TArray<UTexture2D*> MapTexture;
+};
+
 struct FQuestDataInfo
 {
 	EQuestType	Type;

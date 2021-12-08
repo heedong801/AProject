@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "NormalEffect.h"
+#include "../Etc/CustomActor.h"
 #include "ParticlePool.generated.h"
 
 
@@ -14,9 +15,8 @@ class APROJECT_API UParticlePool : public UObject
 	GENERATED_BODY()
 
 protected:
-	TArray<ANormalEffect*> m_NormalEffectArray;
+	TArray<ACustomActor*> m_NormalEffectArray;
 	int32 m_NormalEffectArrayMaxIdx;
-
 
 public:
 	UParticlePool();
@@ -25,5 +25,5 @@ public:
 	void MakePool();
 	int GetSize();
 	
-	ANormalEffect* Pop(FVector Pos, FRotator Rot);
+	ACustomActor* Pop(FVector Pos, FRotator Rot);
 };

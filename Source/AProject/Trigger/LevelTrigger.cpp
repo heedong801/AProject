@@ -5,7 +5,8 @@
 #include "Kismet/GameplayStatics.h"
 #include "../UI/Loading.h"
 #include "../UI/MainHUD.h"
-#include "../AProjectGameModeBase.h"
+#include "../AProjectGameInstance.h"
+#include "../DebugClass.h"
 
 ALevelTrigger::ALevelTrigger()
 {
@@ -36,26 +37,9 @@ void ALevelTrigger::TriggerBegin()
 
 	UGameplayStatics::LoadStreamLevel(GetWorld(), *m_StreamingLevelName,
 		true, false, Info);*/
+	UAProjectGameInstance* GameInst = Cast<UAProjectGameInstance>(GetWorld()->GetGameInstance());
 
-	AAProjectGameModeBase* GameMode = Cast<AAProjectGameModeBase>(GetWorld()->GetAuthGameMode());
-	
-	if (IsValid(GameMode))
-	{
-		UMainHUD* MainHUD = GameMode->GetMainHUD();
-		
-		if (IsValid(MainHUD))
-		{
-			ULoading* LoadingUI = MainHUD->GetLoadingWidget();
-			
-
-			if (IsValid(LoadingUI))
-			{
-				LoadingUI->SetMapNameText(m_StreamingLevelName);
-				LoadingUI->SetLoadingUI();
-			}
-		}
-	}
-
+	GameInst->SetMapName(m_StreamingLevelName);
 	GetWorld()->GetTimerManager().SetTimer(m_MapLoadTimer, this, &ALevelTrigger::LoadMap, 1.f, false, 0.5f);
 
 	//FLatentActionInfo	Info;

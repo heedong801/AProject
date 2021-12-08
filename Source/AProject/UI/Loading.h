@@ -29,7 +29,7 @@ public:
 	//void SetImg(float Percent) { m_HPBar->SetPercent(Percent); }
 	void SetMapNameText(const FString& Name) {		m_MapNameText->SetText(FText::FromString(Name));	}
 
-	void SetLoadingUI();
+	void SetMapImg(const FString& MapName);
 protected:
 	virtual void NativeConstruct();
 	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime);

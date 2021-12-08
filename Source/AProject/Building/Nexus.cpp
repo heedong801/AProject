@@ -6,6 +6,8 @@
 #include "../DebugClass.h"
 #include "../AProjectGameInstance.h"
 #include "../AProjectGameModeBase.h"
+#include "../Player/PlayerCharacter.h"
+#include "../Monster/Monster.h"
 // Sets default values
 ANexus::ANexus()
 {
@@ -75,7 +77,7 @@ void ANexus::BeginPlay()
 	//LOG(TEXT("%f %f %f"), GetActorLocation().X, GetActorLocation().Y, GetActorLocation().Z);
 	//LOG(TEXT("%f %f %f"), m_Bottom->GetRelativeLocation().X, m_Bottom->GetRelativeLocation().Y, m_Bottom->GetRelativeLocation().Z);
 
-	m_Effect = GameInst->GetParticlePool()->Pop(GetActorLocation() + FVector(0.f, 0.f, -260.f), FRotator::ZeroRotator);
+	m_Effect = Cast<ANormalEffect>(GameInst->GetParticlePool()->Pop(GetActorLocation() + FVector(0.f, 0.f, -260.f), FRotator::ZeroRotator));
 	m_Effect->SetActorScale3D(FVector(1.f, 2.f, 1.f));
 	m_Effect->LoadParticleAsync(TEXT("Nexus"));
 
@@ -84,31 +86,99 @@ void ANexus::BeginPlay()
 	m_ThirdDamagedParticle->SetVisibility(false);
 
 	GetWorld()->GetTimerManager().SetTimer(m_ClearTimer, this, 
-		&ANexus::CheckClear, 15.f, false, -1.f);
+		&ANexus::CheckClear, 30.f, false, -1.f);
 
 }
 
-void ANexus::CheckClear()
+void ANexus::CheckClear() 
 {
-
 	if (Hp > 0)
 	{
+		if (m_SequenceAsset)
+		{
+			// 만약 시퀀스 플레이어가 없다면 생성해준다.
+			if (!m_SequencePlayer)
+			{
+				m_SequencePlayer = ULevelSequencePlayer::CreateLevelSequencePlayer(
+					GetWorld(), m_SequenceAsset, FMovieSceneSequencePlaybackSettings(),
+					m_SequenceActor);
+			}
+
+			m_SequencePlayer->Play();
+
+			//PrintViewport(1.f, FColor::Red, TEXT("SequencePlay"));
+		}
+
+		TArray<AActor*> Actors;
+		UGameplayStatics::GetAllActorsOfClass(GetWorld(), AMonster::StaticClass(), Actors);
+
+		for (AActor* Actor : Actors)
+		{
+			AMonster* Monster = Cast<AMonster>(Actor);
+			if (Monster)
+				Monster->Destroy();
+		}
 		//// 몬스터가 죽었을 경우 퀘스트에 해당 몬스터를 잡는 퀘스트가 있는지 판단한다.
 		AAProjectGameModeBase* GameMode = Cast<AAProjectGameModeBase>(GetWorld()->GetAuthGameMode());
-	
 
 		if (GameMode)
 		{
 			UQuestWidget* QuestWidget = GameMode->GetMainHUD()->GetQuestWidget();
-
-
 			if (QuestWidget)
 			{
-			
-
 				QuestWidget->QuestCheck(EQuestType::Defense, TEXT("Nexus"));
 			}
 		}
+
+		GetWorld()->GetTimerManager().SetTimer(m_RecallTimer, this,
+			&ANexus::RecallEffectAfterSequence, 2.25f, false);
+
+		/*APlayerCharacter* Player = GetWorld()->GetFirstPlayerController()->GetPawn<APlayerCharacter>();
+
+		ANormalEffect* Effect1 = GameInst->GetParticlePool()->Pop(Player->GetActorLocation(), GetActorRotation());
+		if (Effect1)
+			Effect1->LoadParticleAsync(TEXT("Player_Recall"));*/
+
+	}
+}
+
+void ANexus::RecallEffectAfterSequence()
+{
+	UAProjectGameInstance* GameInst = Cast<UAProjectGameInstance>(GetWorld()->GetGameInstance());
+	ANormalEffect* Effect = Cast<ANormalEffect>(GameInst->GetParticlePool()->Pop(GetActorLocation() + FVector(0.f, 0.f, -130.f), GetActorRotation()));
+	if (Effect)
+		Effect->LoadParticleAsync(TEXT("Nexus_MagicCircle"));
+
+	GetWorld()->GetTimerManager().SetTimer(m_RecallTimer, this,
+		&ANexus::Recall, 0.5f, false);
+}
+void ANexus::PlayerRecall()
+{
+	APlayerCharacter* Player = GetWorld()->GetFirstPlayerController()->GetPawn<APlayerCharacter>();
+
+	UAProjectGameInstance* GameInst = Cast<UAProjectGameInstance>(GetWorld()->GetGameInstance());
+	ANormalEffect* Effect1 = Cast<ANormalEffect>(GameInst->GetParticlePool()->Pop(m_NextPosition , Player->GetActorRotation()));
+	if (Effect1)
+	{
+		Effect1->SetActorScale3D(FVector(2.0f, 2.0f, 2.0f));
+		Effect1->LoadParticleAsync(TEXT("Player_Recall"));
+		Player->SetActorLocation(m_NextPosition);
+	}
+}
+void ANexus::Recall()
+{
+
+	UAProjectGameInstance* GameInst = Cast<UAProjectGameInstance>(GetWorld()->GetGameInstance());
+	ANormalEffect* Effect1 = Cast<ANormalEffect>(GameInst->GetParticlePool()->Pop(GetActorLocation(), GetActorRotation()));
+	if (Effect1)
+	{
+		Effect1->SetActorScale3D(FVector(2.0f, 2.0f, 2.0f));
+		Effect1->LoadParticleAsync(TEXT("Player_Recall"));
+
+		GetWorld()->GetTimerManager().SetTimer(m_PlayerRecallTimer, this,
+			&ANexus::PlayerRecall, 1.25f, false);
+		/*APlayerCharacter* Player = GetWorld()->GetFirstPlayerController()->GetPawn<APlayerCharacter>();
+		Player->SetActorLocation(m_NextPosition);*/
 	}
 }
 // Called every frame
@@ -123,7 +193,7 @@ void ANexus::Tick(float DeltaTime)
 void ANexus::Exploy(FVector HitPos, FRotator NormalRot)
 {
 	UAProjectGameInstance* GameInst = Cast<UAProjectGameInstance>(GetWorld()->GetGameInstance());
-	ANormalEffect* Effect = GameInst->GetParticlePool()->Pop(HitPos, NormalRot);
+	ANormalEffect* Effect = Cast<ANormalEffect>(GameInst->GetParticlePool()->Pop(HitPos, NormalRot));
 	Effect->LoadParticleAsync(TEXT("Nexus_Exploy"));
 	m_ExployCnt++;
 	if (m_ExployCnt == 6)
@@ -196,12 +266,12 @@ float ANexus::TakeDamageForNexus(float DamageAmount, struct FDamageEvent const& 
 	else
 	{
 		UAProjectGameInstance* GameInst = Cast<UAProjectGameInstance>(GetWorld()->GetGameInstance());
-		ANormalEffect* Effect = GameInst->GetParticlePool()->Pop(HitPos, NormalRot);
+		ANormalEffect* Effect = Cast<ANormalEffect>(GameInst->GetParticlePool()->Pop(HitPos, NormalRot));
 		Effect->SetActorScale3D(FVector(1.5f, 1.5f, 1.5f));
 		Effect->LoadParticleAsync(TEXT("Nexus_Shield"));
 
 		float perHp = Hp / (float)MaxHp * 100;
-		LOG(TEXT("%f"), perHp);
+		//LOG(TEXT("%f"), perHp);
 		if (perHp <= 30)
 			m_ThirdDamagedParticle->SetVisibility(true);
 		else if (perHp <= 60)
