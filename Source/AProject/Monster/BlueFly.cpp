@@ -2,7 +2,7 @@
 
 
 #include "BlueFly.h"
-//#include "ShoebillAIController.h"
+#include "BlueFlyAIController.h"
 #include "../AProjectGameInstance.h"
 #include "../Effect/NormalEffect.h"
 #include "../Building/Nexus.h"
@@ -24,7 +24,7 @@ ABlueFly::ABlueFly()
 	if (AnimAsset.Succeeded())
 		GetMesh()->SetAnimInstanceClass(AnimAsset.Class);
 
-	//AIControllerClass = AShoebillAIController::StaticClass();
+	AIControllerClass = ABlueFlyAIController::StaticClass();
 
 	/*m_MonsterInfoName = TEXT("MinionWorrior");
 

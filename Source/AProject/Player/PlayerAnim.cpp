@@ -105,8 +105,6 @@ void UPlayerAnim::AnimNotify_AddGravity()
 void UPlayerAnim::AddGravity()
 {
 	APlayerCharacter* Player = Cast<APlayerCharacter>(TryGetPawnOwner());
-
-	LOG(TEXT("HI"));
 	if (Player)
 		Player->GetCharacterMovement()->GravityScale = 200.0f;
 

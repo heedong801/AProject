@@ -2,11 +2,12 @@
 
 
 #include "CustomActor.h"
-
+#include "../DebugClass.h"
 ACustomActor::ACustomActor()
 {
 	m_Active = false;
 }
+
 // Sets default values
 void ACustomActor::SetActive(bool bOnFlag)
 {

@@ -5,6 +5,7 @@
 #include "../DebugClass.h"
 #include "../Quest/QuestInfo.h"
 #include "../AProjectGameInstance.h"
+#include "../Player/PlayerCharacter.h"
 void ULoading::NativeConstruct()
 {
 	Super::NativeConstruct();
@@ -39,5 +40,14 @@ void ULoading::SetMapImg(const FString& MapName)
 
 void ULoading::UnSetLoadngUI()
 {
+	APlayerController* Controller = GetWorld()->GetFirstPlayerController();
+
+	///FInputModeUIOnly	Mode;
+	FInputModeGameOnly Mode;
+	//FInputModeGameAndUI	Mode;
+
+	Controller->SetInputMode(Mode);
+	Controller->bShowMouseCursor = false;
+
 	SetVisibility(ESlateVisibility::Collapsed);
 }

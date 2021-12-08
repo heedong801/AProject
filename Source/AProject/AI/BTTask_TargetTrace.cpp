@@ -180,6 +180,7 @@ void UBTTask_TargetTrace::TickTask(UBehaviorTreeComponent& OwnerComp, uint8* Nod
 		//LOG(TEXT("C"));
 
 		Controller->StopMovement();
+		//Controller->SetActorRotation(FQuat::))
 		FinishLatentTask(OwnerComp, EBTNodeResult::Succeeded);
 	}
 }

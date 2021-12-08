@@ -56,8 +56,7 @@ ANexus::ANexus()
 		m_ThirdDamagedParticle->SetTemplate(Asset.Object);
 	}
 
-	MaxHp = 500;
-	Hp = 500;
+	Hp = MaxHp;
 	IsExployed = false;
 }
 

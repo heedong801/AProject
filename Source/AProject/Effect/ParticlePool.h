@@ -15,8 +15,8 @@ class APROJECT_API UParticlePool : public UObject
 	GENERATED_BODY()
 
 protected:
-	TArray<ACustomActor*> m_NormalEffectArray;
-	int32 m_NormalEffectArrayMaxIdx;
+	TArray<ACustomActor*> m_CustomActorArray;
+	int32 m_CustomActorArrayMaxIdx;
 
 public:
 	UParticlePool();

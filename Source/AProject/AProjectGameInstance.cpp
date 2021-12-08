@@ -66,12 +66,6 @@ int UAProjectGameInstance::GetPoolSize()
 //	LOG(TEXT("%d"), m_ParticlePool->GetSize());
 //}
 
-bool UAProjectGameInstance::StartPIEGameInstance(ULocalPlayer* LocalPlayer, bool bInSimulateInEditor, bool bAnyBlueprintErrors, bool bStartInSpectatorMode)
-{
-	bool result = Super::StartPIEGameInstance(LocalPlayer, bInSimulateInEditor, bAnyBlueprintErrors, bStartInSpectatorMode);
-
-	return result;
-}
 const FMonsterInfo* UAProjectGameInstance::FindMonsterInfo(const FString& Name)
 {
 	return m_MonsterInfoTable->FindRow<FMonsterInfo>(*Name, "");

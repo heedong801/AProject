@@ -7,7 +7,7 @@
 #include "../Monster/MonsterAIController.h"
 #include "../DebugClass.h"
 #include "../Building/Nexus.h"
-
+#include "Kismet/KismetMathLibrary.h"
 UBTTask_NormalAttack::UBTTask_NormalAttack()
 {
 	NodeName = TEXT("Attack");
@@ -123,10 +123,13 @@ void UBTTask_NormalAttack::TickTask(UBehaviorTreeComponent& OwnerComp, uint8* No
 
 	
 
-
+	
 	if (Monster->GetAttackEnd())
 	{
 		//PrintViewport(1.0f, FColor::Red, TEXT("AttackEnd.cpp"));
+		
+		FRotator rotator = UKismetMathLibrary::FindLookAtRotation(MonsterLoc, TargetLoc);
+		Monster->SetActorRotation(rotator);
 
 		if (Distance > MonsterInfo.AttackDistance)
 		{

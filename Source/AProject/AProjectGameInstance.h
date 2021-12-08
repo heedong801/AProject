@@ -60,7 +60,6 @@ public:
 	}
 	virtual void Init();
 	virtual void StartGameInstance();
-	virtual bool StartPIEGameInstance(ULocalPlayer* LocalPlayer, bool bInSimulateInEditor, bool bAnyBlueprintErrors, bool bStartInSpectatorMode);
 
 	//bool GetParticlePoolIsSet();
 	void SetParticlePool(UParticlePool* pP);

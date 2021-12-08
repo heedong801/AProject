@@ -103,24 +103,22 @@ void UBTTask_Patrol::TickTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemo
 	
 	// µµÂøÇß´Ù¸é.
 	FVector	PatrolPoint = Monster->GetPatrolPoint();
-
 	FVector	MonsterLoc = Monster->GetActorLocation();
 
-	float	CapsuleHalfHeight = Monster->GetCapsuleComponent()->GetUnscaledCapsuleHalfHeight();
 	float	CapsuleRadius = Monster->GetCapsuleComponent()->GetUnscaledCapsuleRadius();
-	//LOG(TEXT("Capsule  hf, Rad : %f %f"), CapsuleHalfHeight, CapsuleRadius);
 
 	MonsterLoc.Z = PatrolPoint.Z;
+
 	float	Distance = FVector::Distance(MonsterLoc, PatrolPoint);
+	Distance -= CapsuleRadius;
 	//LOG(TEXT("PatrolPoint : %f %f %f"), PatrolPoint.X, PatrolPoint.Y, PatrolPoint.Z);
 	//LOG(TEXT("MonsterLoc : %f %f %f"), MonsterLoc.X, MonsterLoc.Y, MonsterLoc.Z);
-	//LOG(TEXT("%f %f"), Distance, CapsuleRadius + 5);
+	//LOG(TEXT("%f"), Distance );
 
 	m_AccTime += DeltaSeconds;
 
-
-			 
-	if (Distance <= CapsuleRadius + 7 || m_AccTime >= m_WaitTime)
+	int Offset = 10;
+	if (Distance <= Offset || m_AccTime >= m_WaitTime)
 	{
 		//LOG(TEXT("AAAAAAAAAAAAAAAAAAAAAAAAAA"), Distance);
 

@@ -53,6 +53,8 @@ protected:
 	ANormalEffect* m_Effect;
 
 	UMaterialInstanceDynamic* m_DynamicMaterial;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	int32 MaxHp;
 	int32 Hp;
 
