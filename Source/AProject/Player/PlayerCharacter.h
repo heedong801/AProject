@@ -33,6 +33,7 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 		FPlayerInfo	m_PlayerInfo;
 
+	bool m_ActiveWidget;
 	FString m_PlayerInfoName;
 	FTimerHandle TimeDillationHandle;
 protected:

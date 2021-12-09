@@ -16,6 +16,7 @@ class APROJECT_API ABlueFly : public AMonster
 	
 protected:
 	virtual void BeginPlay() override;
+	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser);
 
 public:
 	ABlueFly();

@@ -266,6 +266,7 @@ void UQuestWidget::ShowQuestSet(bool bShowFlag, const FString& MapName)
 
 		Controller->SetInputMode(Mode);
 		Controller->bShowMouseCursor = true;
+		Controller->SetIgnoreLookInput(true);
 
 		UAProjectGameInstance* GameInst = Cast<UAProjectGameInstance>(GetWorld()->GetGameInstance());
 
@@ -291,6 +292,7 @@ void UQuestWidget::ShowQuestSet(bool bShowFlag, const FString& MapName)
 
 		Controller->SetInputMode(Mode);
 		Controller->bShowMouseCursor = false;
+		Controller->SetIgnoreLookInput(false);
 
 		m_MapNameText->SetVisibility(ESlateVisibility::Collapsed);
 		m_ImgBackBorder->SetVisibility(ESlateVisibility::Collapsed);

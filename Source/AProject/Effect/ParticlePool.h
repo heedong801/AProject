@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
-#include "NormalEffect.h"
 #include "../Etc/CustomActor.h"
 #include "ParticlePool.generated.h"
 
@@ -18,6 +17,8 @@ protected:
 	TArray<ACustomActor*> m_CustomActorArray;
 	int32 m_CustomActorArrayMaxIdx;
 
+	int32 m_NormalEffectEnd;
+	int32 m_BlueFlyBulletArray;
 public:
 	UParticlePool();
 	~UParticlePool();
@@ -25,5 +26,9 @@ public:
 	void MakePool();
 	int GetSize();
 	
-	ACustomActor* Pop(FVector Pos, FRotator Rot);
+	ACustomActor* Pop(FVector Pos, FRotator Rot, UClass* Type);
+
+	int32 GetNormalEffectEndIdx() { return m_NormalEffectEnd;  }
+	int32 GetParticleProjectileEndIdx() { return m_BlueFlyBulletArray; }
+
 };

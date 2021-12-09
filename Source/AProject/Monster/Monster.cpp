@@ -69,8 +69,10 @@ void AMonster::BeginPlay()
 	if (GameInst)
 	{
 		const FMonsterInfo* Info = GameInst->FindMonsterInfo(m_MonsterInfoName);
+		//LOG(TEXT("%s"), *m_MonsterInfoName);
 		if (Info)
 		{
+
 			m_MonsterInfo.Name = Info->Name;
 			m_MonsterInfo.Attack = Info->Attack;
 			m_MonsterInfo.Armor = Info->Armor;
@@ -184,7 +186,7 @@ float AMonster::TakeDamage(float DamageAmount, struct FDamageEvent const& Damage
 			MonsterController->BrainComponent->StopLogic(TEXT("Dead"));
 			MonsterController->StopMovement();
 		}
-		GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		//GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 		GetWorldTimerManager().SetTimer(m_MonsterDeathTimer,
 			this, &AMonster::Death, 1.f, false, 2.0f);
 

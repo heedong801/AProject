@@ -36,6 +36,7 @@ APlayerCharacter::APlayerCharacter()
 	
 	GetCapsuleComponent()->SetCollisionProfileName(TEXT("Player"));
 
+	m_ActiveWidget = false;
 }
 
 float APlayerCharacter::TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
@@ -185,14 +186,28 @@ void APlayerCharacter::QuestKey()
 						QuestWidget->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 
 						APlayerController* ControllerA = GetWorld()->GetFirstPlayerController();
+
+						FInputModeGameAndUI Mode;
+
+						ControllerA->SetInputMode(Mode);
+						ControllerA->SetIgnoreLookInput(true);
 						ControllerA->bShowMouseCursor = true;
+						m_ActiveWidget = true;
 					}
 					else
 					{
 						QuestWidget->SetVisibility(ESlateVisibility::Collapsed);
 
 						APlayerController* ControllerA = GetWorld()->GetFirstPlayerController();
+
+						FInputModeGameOnly	Mode;
+						//FInputModeGameOnly
+						//FInputModeGameAndUI	Mode;
+
+						ControllerA->SetInputMode(Mode);
+						ControllerA->SetIgnoreLookInput(false);
 						ControllerA->bShowMouseCursor = false;
+						m_ActiveWidget = false;
 					}
 				}
 			}
@@ -213,30 +228,34 @@ void APlayerCharacter::SetDirection()
 }
 void APlayerCharacter::MoveForward(float Scale)
 {
-
-	AddMovementInput(GetActorForwardVector(), Scale);
+	if(!m_ActiveWidget)
+		AddMovementInput(GetActorForwardVector(), Scale);
 }
 
 void APlayerCharacter::MoveRight(float Scale)
 {
-	AddMovementInput(GetActorRightVector(), Scale);
+	if (!m_ActiveWidget)
+		AddMovementInput(GetActorRightVector(), Scale);
 }
 
 void APlayerCharacter::LookUp(float Scale)
 {
-	AddControllerYawInput(Scale);
+	if (!m_ActiveWidget)
+		AddControllerYawInput(Scale);
 
 }
 
 void APlayerCharacter::Turn(float Scale)
 {
-	FRotator Rot = m_Arm->GetRelativeRotation();
+	if (!m_ActiveWidget)
+	{
+		FRotator Rot = m_Arm->GetRelativeRotation();
 
-	Rot.Pitch += Scale * 10.f * GetWorld()->GetDeltaSeconds();
+		Rot.Pitch += Scale * 10.f * GetWorld()->GetDeltaSeconds();
 
-	Rot.Pitch = FMath::Clamp(Rot.Pitch, -30.f, 0.f);
-	m_Arm->SetRelativeRotation(Rot);
-
+		Rot.Pitch = FMath::Clamp(Rot.Pitch, -45.f, 0.f);
+		m_Arm->SetRelativeRotation(Rot);
+	}
 }
 
 void APlayerCharacter::ZoomInKey(float Scale)
@@ -247,30 +266,33 @@ void APlayerCharacter::ZoomInKey(float Scale)
 }
 void APlayerCharacter::AttackKey()
 {
-	if (m_AnimInst->GetCanAttack())
-	{	
-		if (!m_AnimInst->GetOnSky())			//하늘에 있으면 땅에서 하는 콤보 공격 불가
+	if (!m_ActiveWidget)
+	{
+		if (m_AnimInst->GetCanAttack())
 		{
-			if (GetCurrentCombo() == 0)
-				m_AnimInst->Montage_Play(m_AttackMontage);
-			else
-				m_AnimInst->Montage_JumpToSection(m_AnimInst->GetAttackMontageSectionName(GetCurrentCombo() + 1 % 5));
-
-
-			SetCurrentCombo(GetCurrentCombo() + 1);
-			m_AnimInst->SetIsAttack(true);
-			m_AnimInst->SetCanAttack(false);
-		}
-		else 
-		{
-			
-			//LOG(TEXT("SKY ATTACK"));
-			if (!m_AnimInst->GetDoubleJump())
+			if (!m_AnimInst->GetOnSky())			//하늘에 있으면 땅에서 하는 콤보 공격 불가
 			{
-				m_AnimInst->Montage_Play(m_SkyAttackMontage);
+				if (GetCurrentCombo() == 0)
+					m_AnimInst->Montage_Play(m_AttackMontage);
+				else
+					m_AnimInst->Montage_JumpToSection(m_AnimInst->GetAttackMontageSectionName(GetCurrentCombo() + 1 % 5));
+
+
+				SetCurrentCombo(GetCurrentCombo() + 1);
+				m_AnimInst->SetIsAttack(true);
+				m_AnimInst->SetCanAttack(false);
 			}
-			m_AnimInst->SetIsAttack(true);
-			m_AnimInst->SetCanAttack(false);
+			else
+			{
+
+				//LOG(TEXT("SKY ATTACK"));
+				if (!m_AnimInst->GetDoubleJump())
+				{
+					m_AnimInst->Montage_Play(m_SkyAttackMontage);
+				}
+				m_AnimInst->SetIsAttack(true);
+				m_AnimInst->SetCanAttack(false);
+			}
 		}
 	}
 

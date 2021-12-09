@@ -56,7 +56,7 @@ ANexus::ANexus()
 		m_ThirdDamagedParticle->SetTemplate(Asset.Object);
 	}
 
-	Hp = MaxHp;
+	Hp = 2000;
 	IsExployed = false;
 }
 
@@ -76,10 +76,12 @@ void ANexus::BeginPlay()
 	//LOG(TEXT("%f %f %f"), GetActorLocation().X, GetActorLocation().Y, GetActorLocation().Z);
 	//LOG(TEXT("%f %f %f"), m_Bottom->GetRelativeLocation().X, m_Bottom->GetRelativeLocation().Y, m_Bottom->GetRelativeLocation().Z);
 
-	m_Effect = Cast<ANormalEffect>(GameInst->GetParticlePool()->Pop(GetActorLocation() + FVector(0.f, 0.f, -260.f), FRotator::ZeroRotator));
-	m_Effect->SetActorScale3D(FVector(1.f, 2.f, 1.f));
-	m_Effect->LoadParticleAsync(TEXT("Nexus"));
-
+	m_Effect = Cast<ANormalEffect>(GameInst->GetParticlePool()->Pop(GetActorLocation() + FVector(0.f, 0.f, -260.f), FRotator::ZeroRotator, ANormalEffect::StaticClass()));
+	if (m_Effect)
+	{
+		m_Effect->SetActorScale3D(FVector(1.f, 2.f, 1.f));
+		m_Effect->LoadParticleAsync(TEXT("Nexus"));
+	}
 	m_FirstDamagedParticle->SetVisibility(false);
 	m_SecondDamagedParticle->SetVisibility(false);
 	m_ThirdDamagedParticle->SetVisibility(false);
@@ -144,7 +146,7 @@ void ANexus::CheckClear()
 void ANexus::RecallEffectAfterSequence()
 {
 	UAProjectGameInstance* GameInst = Cast<UAProjectGameInstance>(GetWorld()->GetGameInstance());
-	ANormalEffect* Effect = Cast<ANormalEffect>(GameInst->GetParticlePool()->Pop(GetActorLocation() + FVector(0.f, 0.f, -130.f), GetActorRotation()));
+	ANormalEffect* Effect = Cast<ANormalEffect>(GameInst->GetParticlePool()->Pop(GetActorLocation() + FVector(0.f, 0.f, -130.f), GetActorRotation(), ANormalEffect::StaticClass()));
 	if (Effect)
 		Effect->LoadParticleAsync(TEXT("Nexus_MagicCircle"));
 
@@ -156,7 +158,7 @@ void ANexus::PlayerRecall()
 	APlayerCharacter* Player = GetWorld()->GetFirstPlayerController()->GetPawn<APlayerCharacter>();
 
 	UAProjectGameInstance* GameInst = Cast<UAProjectGameInstance>(GetWorld()->GetGameInstance());
-	ANormalEffect* Effect1 = Cast<ANormalEffect>(GameInst->GetParticlePool()->Pop(m_NextPosition , Player->GetActorRotation()));
+	ANormalEffect* Effect1 = Cast<ANormalEffect>(GameInst->GetParticlePool()->Pop(m_NextPosition , Player->GetActorRotation(), ANormalEffect::StaticClass()));
 	if (Effect1)
 	{
 		Effect1->SetActorScale3D(FVector(2.0f, 2.0f, 2.0f));
@@ -168,7 +170,7 @@ void ANexus::Recall()
 {
 
 	UAProjectGameInstance* GameInst = Cast<UAProjectGameInstance>(GetWorld()->GetGameInstance());
-	ANormalEffect* Effect1 = Cast<ANormalEffect>(GameInst->GetParticlePool()->Pop(GetActorLocation(), GetActorRotation()));
+	ANormalEffect* Effect1 = Cast<ANormalEffect>(GameInst->GetParticlePool()->Pop(GetActorLocation(), GetActorRotation(), ANormalEffect::StaticClass()));
 	if (Effect1)
 	{
 		Effect1->SetActorScale3D(FVector(2.0f, 2.0f, 2.0f));
@@ -192,7 +194,7 @@ void ANexus::Tick(float DeltaTime)
 void ANexus::Exploy(FVector HitPos, FRotator NormalRot)
 {
 	UAProjectGameInstance* GameInst = Cast<UAProjectGameInstance>(GetWorld()->GetGameInstance());
-	ANormalEffect* Effect = Cast<ANormalEffect>(GameInst->GetParticlePool()->Pop(HitPos, NormalRot));
+	ANormalEffect* Effect = Cast<ANormalEffect>(GameInst->GetParticlePool()->Pop(HitPos, NormalRot, ANormalEffect::StaticClass()));
 	Effect->LoadParticleAsync(TEXT("Nexus_Exploy"));
 	m_ExployCnt++;
 	if (m_ExployCnt == 6)
@@ -265,7 +267,7 @@ float ANexus::TakeDamageForNexus(float DamageAmount, struct FDamageEvent const& 
 	else
 	{
 		UAProjectGameInstance* GameInst = Cast<UAProjectGameInstance>(GetWorld()->GetGameInstance());
-		ANormalEffect* Effect = Cast<ANormalEffect>(GameInst->GetParticlePool()->Pop(HitPos, NormalRot));
+		ANormalEffect* Effect = Cast<ANormalEffect>(GameInst->GetParticlePool()->Pop(HitPos, NormalRot, ANormalEffect::StaticClass()));
 		Effect->SetActorScale3D(FVector(1.5f, 1.5f, 1.5f));
 		Effect->LoadParticleAsync(TEXT("Nexus_Shield"));
 

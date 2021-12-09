@@ -149,11 +149,11 @@ void UPlayerAnim::AnimNotify_SlamEnd()
 		Effect->LoadParticleAsync(TEXT("Slam1"));*/
 		
 		UAProjectGameInstance* GameInst = Cast<UAProjectGameInstance>(GetWorld()->GetGameInstance());
-		ANormalEffect* Effect = Cast<ANormalEffect>(GameInst->GetParticlePool()->Pop(impactPoint, FRotator::ZeroRotator));
+		ANormalEffect* Effect = Cast<ANormalEffect>(GameInst->GetParticlePool()->Pop(impactPoint, FRotator::ZeroRotator, ANormalEffect::StaticClass()));
 		
 		Effect->LoadParticleAsync(TEXT("Slam2"));
 		
-		ANormalEffect* Effect1 = Cast<ANormalEffect>(GameInst->GetParticlePool()->Pop(impactPoint, FRotator::ZeroRotator));
+		ANormalEffect* Effect1 = Cast<ANormalEffect>(GameInst->GetParticlePool()->Pop(impactPoint, FRotator::ZeroRotator, ANormalEffect::StaticClass()));
 		Effect1->LoadParticleAsync(TEXT("Slam3"));
 
 

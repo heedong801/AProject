@@ -27,5 +27,10 @@ void ACustomActor::SetActive(bool bOnFlag)
 }
 bool ACustomActor::GetActive()
 {
+	if (this == nullptr)
+	{
+		LOG(TEXT("???"));
+		return true;
+	}
 	return m_Active;
 }

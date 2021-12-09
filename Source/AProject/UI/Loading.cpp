@@ -13,6 +13,16 @@ void ULoading::NativeConstruct()
 	m_LoadingImg = Cast<UImage>(GetWidgetFromName(TEXT("LoadingImg")));
 	m_MapNameText = Cast<UTextBlock>(GetWidgetFromName(TEXT("MapNameText")));
 
+	APlayerController* Controller = GetWorld()->GetFirstPlayerController();
+
+	FInputModeUIOnly	Mode;
+	//FInputModeGameOnly Mode;
+	//FInputModeGameAndUI	Mode;
+
+	Controller->SetInputMode(Mode);
+	Controller->bShowMouseCursor = true;
+	Controller->SetIgnoreLookInput(true);
+
 	GetWorld()->GetTimerManager().SetTimer(m_LoadingTimer, this, &ULoading::UnSetLoadngUI, 0.1f, false, 3.f);
 }
 
@@ -48,6 +58,6 @@ void ULoading::UnSetLoadngUI()
 
 	Controller->SetInputMode(Mode);
 	Controller->bShowMouseCursor = false;
-
+	Controller->SetIgnoreLookInput(false);
 	SetVisibility(ESlateVisibility::Collapsed);
 }
