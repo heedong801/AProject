@@ -115,7 +115,7 @@ float ABlueFly::TakeDamage(float DamageAmount, struct FDamageEvent const& Damage
 		}
 		//GetCapsuleComponent()->SetCapsuleHalfHeight(1.f);
 		GetCapsuleComponent()->SetCapsuleSize(0.1f, 0.1f, true);
-		LOG(TEXT("%f"), GetCapsuleComponent()->GetScaledCapsuleHalfHeight());	
+		//LOG(TEXT("%f"), GetCapsuleComponent()->GetScaledCapsuleHalfHeight());	
 		//GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 		GetWorldTimerManager().SetTimer(m_MonsterDeathTimer,
 			this, &ABlueFly::Death, 1.f, false, 2.0f);

@@ -14,16 +14,17 @@ void ULoading::NativeConstruct()
 	m_MapNameText = Cast<UTextBlock>(GetWidgetFromName(TEXT("MapNameText")));
 
 	APlayerController* Controller = GetWorld()->GetFirstPlayerController();
-
-	FInputModeUIOnly	Mode;
+	APlayerCharacter* PlayerController = Controller->GetPawn<APlayerCharacter>();
+	//FInputModeUIOnly	Mode;
 	//FInputModeGameOnly Mode;
-	//FInputModeGameAndUI	Mode;
-
+	FInputModeGameAndUI	Mode;
+	PlayerController->SetActiveWidget(true);
 	Controller->SetInputMode(Mode);
 	Controller->bShowMouseCursor = true;
 	Controller->SetIgnoreLookInput(true);
+	//LOG(TEXT("B"));
 
-	GetWorld()->GetTimerManager().SetTimer(m_LoadingTimer, this, &ULoading::UnSetLoadngUI, 0.1f, false, 3.f);
+	GetWorld()->GetTimerManager().SetTimer(m_LoadingTimer, this, &ULoading::UnSetLoadngUI, 2.0f, false, -1.f);
 }
 
 void ULoading::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
@@ -51,10 +52,14 @@ void ULoading::SetMapImg(const FString& MapName)
 void ULoading::UnSetLoadngUI()
 {
 	APlayerController* Controller = GetWorld()->GetFirstPlayerController();
+	APlayerCharacter* PlayerController = Controller->GetPawn<APlayerCharacter>();
 
+	LOG(TEXT("A"));
 	///FInputModeUIOnly	Mode;
-	FInputModeGameOnly Mode;
-	//FInputModeGameAndUI	Mode;
+	//FInputModeGameOnly Mode;
+
+	FInputModeGameOnly	Mode;
+	PlayerController->SetActiveWidget(false);
 
 	Controller->SetInputMode(Mode);
 	Controller->bShowMouseCursor = false;

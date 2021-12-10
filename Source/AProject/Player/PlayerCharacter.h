@@ -62,7 +62,7 @@ public:
 	void Sprint();
 	void StopSprint();
 	void QuestKey();
-
+	void SetActiveWidget(bool ActiveWidget) { m_ActiveWidget = ActiveWidget; }
 	void SetTimeDillation();
 	const FPlayerInfo& GetPlayerInfo()	const { return m_PlayerInfo;}
 

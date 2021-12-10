@@ -258,15 +258,15 @@ void UQuestWidget::ShowQuestSet(bool bShowFlag, const FString& MapName)
 
 		m_MapNameText->SetText(FText::FromString(MapName));
 
-		APlayerController* Controller = GetWorld()->GetFirstPlayerController();
+		//APlayerController* Controller = GetWorld()->GetFirstPlayerController();
 
-		FInputModeUIOnly	Mode;
-		//FInputModeGameOnly
-		//FInputModeGameAndUI	Mode;
+		//FInputModeUIOnly	Mode;
+		////FInputModeGameOnly
+		////FInputModeGameAndUI	Mode;
 
-		Controller->SetInputMode(Mode);
-		Controller->bShowMouseCursor = true;
-		Controller->SetIgnoreLookInput(true);
+		//Controller->SetInputMode(Mode);
+		//Controller->bShowMouseCursor = true;
+		//Controller->SetIgnoreLookInput(true);
 
 		UAProjectGameInstance* GameInst = Cast<UAProjectGameInstance>(GetWorld()->GetGameInstance());
 
@@ -287,12 +287,12 @@ void UQuestWidget::ShowQuestSet(bool bShowFlag, const FString& MapName)
 		APlayerController* Controller = GetWorld()->GetFirstPlayerController();
 
 		///FInputModeUIOnly	Mode;
-		FInputModeGameOnly Mode;
-		//FInputModeGameAndUI	Mode;
+		//FInputModeGameOnly Mode;
+		////FInputModeGameAndUI	Mode;
 
-		Controller->SetInputMode(Mode);
-		Controller->bShowMouseCursor = false;
-		Controller->SetIgnoreLookInput(false);
+		//Controller->SetInputMode(Mode);
+		//Controller->bShowMouseCursor = false;
+		//Controller->SetIgnoreLookInput(false);
 
 		m_MapNameText->SetVisibility(ESlateVisibility::Collapsed);
 		m_ImgBackBorder->SetVisibility(ESlateVisibility::Collapsed);

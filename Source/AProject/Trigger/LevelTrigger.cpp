@@ -6,6 +6,7 @@
 #include "../UI/Loading.h"
 #include "../UI/MainHUD.h"
 #include "../AProjectGameInstance.h"
+#include "../AProjectGameModeBase.h"
 #include "../DebugClass.h"
 
 ALevelTrigger::ALevelTrigger()
@@ -40,7 +41,27 @@ void ALevelTrigger::TriggerBegin()
 	UAProjectGameInstance* GameInst = Cast<UAProjectGameInstance>(GetWorld()->GetGameInstance());
 
 	GameInst->SetMapName(m_StreamingLevelName);
-	GetWorld()->GetTimerManager().SetTimer(m_MapLoadTimer, this, &ALevelTrigger::LoadMap, 1.f, false, 0.5f);
+
+
+	//UGameplayStatics::OpenLevel(this, *m_StreamingLevelName);
+
+
+	AAProjectGameModeBase* GameMode = GetWorld()->GetAuthGameMode<AAProjectGameModeBase>();
+
+	if (GameMode)
+	{
+		UMainHUD* MainHUD = GameMode->GetMainHUD();
+
+		if (MainHUD)
+		{
+			MainHUD->GetLoadingWidget()->SetVisibility(ESlateVisibility::Visible);
+			MainHUD->GetLoadingWidget()->SetMapImg(m_StreamingLevelName);
+			MainHUD->GetLoadingWidget()->SetMapNameText(m_StreamingLevelName);
+
+
+			GetWorld()->GetTimerManager().SetTimer(m_MapLoadTimer, this, &ALevelTrigger::LoadMap, 0.5f, false, -1.f);
+		}
+	}
 
 	//FLatentActionInfo	Info;
 
