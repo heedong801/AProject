@@ -187,13 +187,13 @@ float AMonster::TakeDamage(float DamageAmount, struct FDamageEvent const& Damage
 			MonsterController->StopMovement();
 		}
 		//GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		GetCapsuleComponent()->SetCollisionProfileName(TEXT("LandScape"));
+
 		GetWorldTimerManager().SetTimer(m_MonsterDeathTimer,
 			this, &AMonster::Death, 1.f, false, 2.0f);
 
 		if (m_HPBarWidget->GetVisibility() == ESlateVisibility::SelfHitTestInvisible)
 			m_HPBarWidget->SetVisibility(ESlateVisibility::Collapsed);
-
-
 
 		APlayerCharacter* Player = Cast<APlayerCharacter>(DamageCauser);
 		if (Player)
@@ -220,9 +220,11 @@ float AMonster::TakeDamage(float DamageAmount, struct FDamageEvent const& Damage
 	{
 		FVector  PlayerLoc = DamageCauser->GetActorLocation();
 		FVector AttackedDir = GetActorLocation() - PlayerLoc;
+		APlayerCharacter* Player = Cast<APlayerCharacter>(DamageCauser);
+		float LaunchPower = Player->GetLauchPower();
 		//AttackedDir.Normalize();
 		
-		AttackedDir *= ( 1000.f / m_MonsterInfo.weight);
+		AttackedDir *= ( 1000.f / m_MonsterInfo.weight / LaunchPower);
 
 		LaunchCharacter(AttackedDir, false, false);
 	}

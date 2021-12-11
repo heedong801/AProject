@@ -37,6 +37,8 @@ APlayerCharacter::APlayerCharacter()
 	GetCapsuleComponent()->SetCollisionProfileName(TEXT("Player"));
 
 	m_ActiveWidget = false;
+	m_LaunchPower = 1.f;
+	m_Movable = true;
 }
 
 float APlayerCharacter::TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
@@ -159,6 +161,7 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 	PlayerInputComponent->BindAction(TEXT("Attack"), EInputEvent::IE_Pressed, this, &APlayerCharacter::AttackKey);
 	PlayerInputComponent->BindAction(TEXT("Sprint"), EInputEvent::IE_Pressed, this, &APlayerCharacter::Sprint);
 	PlayerInputComponent->BindAction(TEXT("Sprint"), EInputEvent::IE_Released, this, &APlayerCharacter::StopSprint);
+	PlayerInputComponent->BindAction(TEXT("Skill1"), EInputEvent::IE_Pressed, this, &APlayerCharacter::Skill1Key);
 
 	PlayerInputComponent->BindAction(TEXT("Quest"), EInputEvent::IE_Pressed, this, &APlayerCharacter::QuestKey);
 
@@ -166,6 +169,21 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 
 
 	
+}
+
+void APlayerCharacter::Skill1Key()
+{
+	m_SkillIdx = 0;
+	SkillPlayAnim(m_SkillIdx);
+}
+
+void APlayerCharacter::SkillPlayAnim(int32 idx)
+{
+	if (!m_AnimInst->Montage_IsPlaying(m_SkillMontageArray[idx]))
+	{
+		m_AnimInst->Montage_SetPosition(m_SkillMontageArray[idx], 0.f);
+		m_AnimInst->Montage_Play((m_SkillMontageArray[idx]));
+	}
 }
 void APlayerCharacter::QuestKey()
 {
@@ -228,13 +246,13 @@ void APlayerCharacter::SetDirection()
 }
 void APlayerCharacter::MoveForward(float Scale)
 {
-	if(!m_ActiveWidget)
+	if(!m_ActiveWidget && m_Movable)
 		AddMovementInput(GetActorForwardVector(), Scale);
 }
 
 void APlayerCharacter::MoveRight(float Scale)
 {
-	if (!m_ActiveWidget)
+	if (!m_ActiveWidget && m_Movable)
 		AddMovementInput(GetActorRightVector(), Scale);
 }
 
@@ -325,11 +343,11 @@ void APlayerCharacter::JumpKey()
 
 void APlayerCharacter::Sprint()
 {
-	GetCharacterMovement()->MaxWalkSpeed *= 2;
+	GetCharacterMovement()->MaxWalkSpeed *= 1.5;
 }
 void APlayerCharacter::StopSprint()
 {
-	GetCharacterMovement()->MaxWalkSpeed /= 2;
+	GetCharacterMovement()->MaxWalkSpeed /= 1.5;
 }
 
 void APlayerCharacter::SetTimeDefaultTimeDilation()
@@ -376,6 +394,12 @@ void APlayerCharacter::AddExp(int32 Exp)
 	}
 
 }
+
+void APlayerCharacter::UseSkill(int32 Idx)
+{
+
+}
+
 void APlayerCharacter::AddGold(int32 Gold)
 {
 	m_PlayerInfo.Gold += Gold;

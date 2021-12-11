@@ -33,9 +33,20 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 		FPlayerInfo	m_PlayerInfo;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+		TArray<UAnimMontage*> m_SkillMontageArray;
+
 	bool m_ActiveWidget;
+	bool m_Movable;
+
 	FString m_PlayerInfoName;
+
 	FTimerHandle TimeDillationHandle;
+	
+	int32 m_SkillIdx;
+	
+	float m_LaunchPower;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -62,6 +73,8 @@ public:
 	void Sprint();
 	void StopSprint();
 	void QuestKey();
+	void Skill1Key();
+
 	void SetActiveWidget(bool ActiveWidget) { m_ActiveWidget = ActiveWidget; }
 	void SetTimeDillation();
 	const FPlayerInfo& GetPlayerInfo()	const { return m_PlayerInfo;}
@@ -72,9 +85,15 @@ public:
 	virtual int32 GetCurrentCombo() { return 0; } 
 	virtual void SetCurrentCombo(int32 curCombo) { } 
 	virtual void HitDamage() { }
+	virtual void UseSkill(int32 Idx);
 
 	UAnimMontage* GetSkyAttackMontage() { return m_SkyAttackMontage; }
-
+	void SkillPlayAnim(int32 idx);
+	int32 GetSkillIdx() { return m_SkillIdx; }
+	float GetLauchPower() { return m_LaunchPower; }
+	void SetLaunchPower(float Power) { m_LaunchPower = Power; }
+	float GetMovable() { return m_Movable; }
+	void SetMovable(bool Movable) { m_Movable = Movable; }
 	UFUNCTION()
 	void SetTimeDefaultTimeDilation();
 	//struct FPlayerTraceInfo APlayerCharacter::FootTrace(float fTraceDistance, FName sSocket);

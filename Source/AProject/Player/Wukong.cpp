@@ -5,6 +5,9 @@
 #include "../Effect/NormalEffect.h"
 #include "../DebugClass.h"
 #include "../AProjectGameInstance.h"
+#include "PlayerAnim.h"
+#include "../Effect/HitCameraShake.h"
+#include "../AProjectGameModeBase.h"
 AWukong::AWukong()
 	: m_MaxCombo(5), m_CurrentCombo(0)
 {
@@ -31,6 +34,11 @@ AWukong::AWukong()
 	if (SkyAttackAsset.Succeeded())
 		m_SkyAttackMontage = SkyAttackAsset.Object;
 
+	static ConstructorHelpers::FObjectFinder<UAnimMontage>	Skill1Asset(TEXT("AnimMontage'/Game/Player/Wukong/Anim/AM_Lighteningbolt.AM_Lighteningbolt'"));
+
+	if (Skill1Asset.Succeeded())
+		m_SkillMontageArray.Add(Skill1Asset.Object);
+
 	m_PlayerInfoName = TEXT("Wukong");
 	//m_PlayerInfo.Name = TEXT("Wukong");
 	//m_PlayerInfo.Job = EPlayerJob::Knight;
@@ -47,7 +55,7 @@ AWukong::AWukong()
 
 	//m_ParticlePool = CreateDefaultSubobject<UParticlePool>(TEXT("ParticlePool"));
 	
-	
+	m_BoltCnt = 0;
 }
 
 // Called when the game starts or when spawned
@@ -141,7 +149,7 @@ void AWukong::HitDamage()
 	DrawDebugCone(GetWorld(), PlayerLoc, GetActorForwardVector(), m_PlayerInfo.AttackDistance, FMath::DegreesToRadians(m_PlayerInfo.AttackAngle), FMath::DegreesToRadians(m_PlayerInfo.AttackAngle), 20, DrawColor, false, 1.f);
 	//DrawDebugSphere(GetWorld(), PlayerLoc, m_PlayerInfo.AttackDistance, 20, DrawColor, false, 1.f);
 #endif
-
+	m_LaunchPower = 1.0f;
 	for (auto& result : CollisionArray)
 	{
 
@@ -160,10 +168,97 @@ void AWukong::HitDamage()
 		//Effect->LoadSound(TEXT("SoundWave'/Game/Sound/Fire4.Fire4'"));
 		
 		//Effect->LoadSoundAsync(TEXT("HitNormal"));
-
 		//데미지 전달
 		FDamageEvent DmgEvent;
 		float Damage = result.GetActor()->TakeDamage(m_PlayerInfo.Attack, DmgEvent, GetController(), this);
 
+	}
+}
+
+void AWukong::UseSkill(int32 Idx)
+{
+	AAProjectGameModeBase* GameMode = Cast<AAProjectGameModeBase>(GetWorld()->GetAuthGameMode());
+
+	if (IsValid(GameMode))
+	{
+		UMainHUD* MainHUD = GameMode->GetMainHUD();
+
+		if (IsValid(MainHUD))
+		{
+			UCharacterHUD* CharacterHUD = MainHUD->GetCharacterHUD();
+
+			if (IsValid(CharacterHUD))
+			{
+				//LOG(TEXT("AAAAAAAAAAAAA"));
+				m_PlayerInfo.MP -= 20;
+				CharacterHUD->SetMPPercent(m_PlayerInfo.MP / (float)m_PlayerInfo.MPMax);
+			}
+		}
+	}
+
+	if (m_PlayerInfo.MP > 20)
+	{
+		switch (Idx)
+		{
+		case 0:
+		{
+			GetWorld()->GetTimerManager().SetTimer(m_BoltTimerHandler,
+				this, &AWukong::LighteningBolt, 0.05f, true, 0.f);
+			m_BoltCnt = 0;
+			//LOG(TEXT("A"));
+			//m_AnimInst->Montage_JumpToSection(TEXT("Start"), m_SkillMontageArray[0]);
+			break;
+		}
+		}
+	}
+}
+
+void AWukong::LighteningBolt()
+{
+	m_BoltCnt++;
+	if (m_BoltCnt > 100)
+	{
+		GetWorld()->GetTimerManager().ClearTimer(m_BoltTimerHandler);
+		//LOG(TEXT("B"));
+
+		m_AnimInst->Montage_JumpToSection(TEXT("End"), m_SkillMontageArray[0]);
+		
+	}
+	else
+	{
+		FCollisionQueryParams params(NAME_None, false, this);
+
+		TArray<FHitResult> HitResultArray;
+		bool Sweep = GetWorld()->SweepMultiByChannel(HitResultArray, GetActorLocation(), GetActorLocation(), FQuat::Identity, ECollisionChannel::ECC_GameTraceChannel3
+			, FCollisionShape::MakeSphere(3000.f), params);
+		//LOG(TEXT("%f"), MonsterInfo.TraceDistance);
+
+		GetWorld()->GetFirstPlayerController()->ClientPlayCameraShake(UHitCameraShake::StaticClass());
+		m_LaunchPower = 5.0f;
+		for (auto result : HitResultArray)
+		{
+			if (Sweep)
+			{
+				//ANormalEffect* Effect3 = GameInst->GetParticlePool()->Pop(result.ImpactPoint, result.ImpactNormal.Rotation());
+
+				//에셋 로딩
+				//Effect3->LoadParticle(TEXT("ParticleSystem'/Game/AdvancedMagicFX13/Particles/P_ky_impact.P_ky_impact'"));
+				//Effect->LoadSound(TEXT("SoundWave'/Game/Sound/Fire4.Fire4'"));
+				//Effect3->LoadParticleAsync(TEXT("HitNormal"));
+				//Effect->LoadSoundAsync(TEXT("HitNormal"));
+
+				//데미지 전달
+				FDamageEvent DmgEvent;
+				float Damage = result.GetActor()->TakeDamage(50, DmgEvent, GetController(), this);
+			}
+		}
+
+		float RandomX = FMath::RandRange(-1000.f, 1000.f);
+		float RandomY = FMath::RandRange(-1000.f, 1000.f);
+
+		UAProjectGameInstance* GameInst = Cast<UAProjectGameInstance>(GetWorld()->GetGameInstance());
+		ANormalEffect* Effect = Cast<ANormalEffect>(GameInst->GetParticlePool()->Pop(GetActorLocation() + FVector(RandomX,RandomY,0), GetActorRotation(), ANormalEffect::StaticClass()));
+		if (Effect != nullptr)
+			Effect->LoadParticleAsync(TEXT("Player_Bolt"));
 	}
 }

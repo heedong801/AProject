@@ -54,7 +54,7 @@ void ULoading::UnSetLoadngUI()
 	APlayerController* Controller = GetWorld()->GetFirstPlayerController();
 	APlayerCharacter* PlayerController = Controller->GetPawn<APlayerCharacter>();
 
-	LOG(TEXT("A"));
+	//LOG(TEXT("A"));
 	///FInputModeUIOnly	Mode;
 	//FInputModeGameOnly Mode;
 

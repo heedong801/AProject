@@ -156,12 +156,12 @@ void UPlayerAnim::AnimNotify_SlamEnd()
 		ANormalEffect* Effect1 = Cast<ANormalEffect>(GameInst->GetParticlePool()->Pop(impactPoint, FRotator::ZeroRotator, ANormalEffect::StaticClass()));
 		Effect1->LoadParticleAsync(TEXT("Slam3"));
 
-
+		Player->SetLaunchPower(1.0f);
 		for (auto result : HitResultArray)
 		{
 			if (Sweep)
 			{
-				//ANormalEffect* Effect3 = GameInst->GetParticlePool()->Pop(result.ImpactPoint, result.ImpactNormal.Rotation());
+				//ANormalEffect* Effect3 = GameInst->GetParticlePoo l()->Pop(result.ImpactPoint, result.ImpactNormal.Rotation());
 
 				//에셋 로딩
 				//Effect3->LoadParticle(TEXT("ParticleSystem'/Game/AdvancedMagicFX13/Particles/P_ky_impact.P_ky_impact'"));
@@ -187,3 +187,17 @@ void UPlayerAnim::AnimNotify_AttackEnd()
 		Player->SetCurrentCombo(0);
 }
 
+
+void UPlayerAnim::AnimNotify_UseSkill()
+{
+	m_Attack = true;
+	m_CanAttack = false;
+	APlayerCharacter* Player = Cast<APlayerCharacter>(TryGetPawnOwner());
+
+	if (Player)
+	{
+		//LOG(TEXT("C"));
+
+		Player->UseSkill(Player->GetSkillIdx());
+	}
+}

@@ -66,7 +66,8 @@ protected:
 		void AnimNotify_AddGravity();
 	UFUNCTION()
 		void AnimNotify_AttackEnd();
-
+	UFUNCTION()
+		void AnimNotify_UseSkill();
 	void AddGravity();
 public:
 	void SetDirection(float Dir){m_Dir = Dir;}

@@ -28,11 +28,16 @@ public:
 	virtual int32 GetCurrentCombo() { return m_CurrentCombo; }
 	virtual void SetCurrentCombo(int32 curCombo);
 	virtual void HitDamage();
+	virtual void UseSkill(int32 Idx);
+
+	UFUNCTION()
+		void LighteningBolt();
 
 private:
 	int32 m_MaxCombo;
 	int32 m_CurrentCombo;
 
-
+	FTimerHandle m_BoltTimerHandler;
+	int32 m_BoltCnt;
 
 };

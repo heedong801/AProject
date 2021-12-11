@@ -77,7 +77,7 @@ void ABlueFly::NormalAttack()
 void ABlueFly::Death()
 {
 	GetWorldTimerManager().ClearTimer(m_MonsterDeathTimer);
-	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	//GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
 	Destroy();
 }
@@ -113,6 +113,9 @@ float ABlueFly::TakeDamage(float DamageAmount, struct FDamageEvent const& Damage
 			MonsterController->BrainComponent->StopLogic(TEXT("Dead"));
 			MonsterController->StopMovement();
 		}
+		//GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		GetCapsuleComponent()->SetCollisionProfileName(TEXT("LandScape"));
+
 		//GetCapsuleComponent()->SetCapsuleHalfHeight(1.f);
 		GetCapsuleComponent()->SetCapsuleSize(0.1f, 0.1f, true);
 		//LOG(TEXT("%f"), GetCapsuleComponent()->GetScaledCapsuleHalfHeight());	
