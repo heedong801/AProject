@@ -117,7 +117,13 @@ void ANexus::CheckClear()
 		{
 			AMonster* Monster = Cast<AMonster>(Actor);
 			if (Monster)
-				Monster->Destroy();
+			{
+				FVector MonsterLoc = Monster->GetActorLocation();
+				float Distance = FVector::Distance(MonsterLoc, GetActorLocation());
+
+				if (Distance <= 1500.f)
+					Monster->Destroy();
+			}
 		}
 		//// 몬스터가 죽었을 경우 퀘스트에 해당 몬스터를 잡는 퀘스트가 있는지 판단한다.
 		AAProjectGameModeBase* GameMode = Cast<AAProjectGameModeBase>(GetWorld()->GetAuthGameMode());

@@ -187,6 +187,7 @@ void UPlayerAnim::AnimNotify_AttackEnd()
 	{
 		Player->SetCurrentCombo(0);
 		Player->SetMovable(true);
+		Player->CameraArmYawReset();
 	}
 }
 
@@ -197,7 +198,7 @@ void UPlayerAnim::AnimNotify_UseSkill()
 	m_CanAttack = false;
 	APlayerCharacter* Player = Cast<APlayerCharacter>(TryGetPawnOwner());
 
-	if (Player)
+	if (Player )
 	{
 		//LOG(TEXT("C"));
 		Player->SetMovable(false);

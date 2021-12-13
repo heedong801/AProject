@@ -34,8 +34,10 @@ protected:
 		UWidgetComponent* m_HPBar;
 	class UHPBar* m_HPBarWidget;
 
+
 	class UMonsterAnimInstance* m_AnimInstance;
 
+	TSubclassOf<UUserWidget> m_DamageAsset;
 	FTimerHandle m_MonsterDeathTimer;
 
 	bool m_IsSpawned;
@@ -62,4 +64,6 @@ public:
 
 	bool GetIsSpawned() { return m_IsSpawned; }
 	void SetIsSpawned(bool Spawned) {		m_IsSpawned = Spawned;	}
+
+	void SpawnDamageUI(FVector WorldLoc, float Damage);
 };

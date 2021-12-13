@@ -39,6 +39,8 @@ APlayerCharacter::APlayerCharacter()
 	m_ActiveWidget = false;
 	m_LaunchPower = 1.f;
 	m_Movable = true;
+	
+	//LOG(TEXT("%f %f %f"), m_Arm->GetRelativeRotation().Vector().X, m_Arm->GetRelativeRotation().Vector().Y, m_Arm->GetRelativeRotation().Vector().Z);
 }
 
 float APlayerCharacter::TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
@@ -49,7 +51,7 @@ float APlayerCharacter::TakeDamage(float DamageAmount, struct FDamageEvent const
 
 	Damage = Damage - m_PlayerInfo.Armor;
 	Damage = Damage < 1.f ? 1.f : Damage;
-
+	//LOG(TEXT("%f %f %f"), m_Arm->GetRelativeRotation().Vector().X, m_Arm->GetRelativeRotation().Vector().Y, m_Arm->GetRelativeRotation().Vector().Z);
 	m_PlayerInfo.HP -= Damage;
 
 	/*GetWorld()->GetFirstPlayerController()->ClientPlayCameraShake(
@@ -126,7 +128,7 @@ void APlayerCharacter::BeginPlay()
 	Super::BeginPlay();
 
 	m_AnimInst = Cast<UPlayerAnim>(GetMesh()->GetAnimInstance());
-
+	m_ArmRotInitYaw = m_Arm->GetRelativeRotation();
 	
 
 
@@ -175,14 +177,18 @@ void APlayerCharacter::Skill1Key()
 {
 	m_SkillIdx = 0;
 	SkillPlayAnim(m_SkillIdx);
+
 }
 
 void APlayerCharacter::SkillPlayAnim(int32 idx)
 {
-	if (!m_AnimInst->Montage_IsPlaying(m_SkillMontageArray[idx]))
+	if (m_AnimInst->GetOnSky() == false && m_AnimInst->GetCanAttack() == true)
 	{
-		m_AnimInst->Montage_SetPosition(m_SkillMontageArray[idx], 0.f);
-		m_AnimInst->Montage_Play((m_SkillMontageArray[idx]));
+		if (!m_AnimInst->Montage_IsPlaying(m_SkillMontageArray[idx]))
+		{
+			m_AnimInst->Montage_SetPosition(m_SkillMontageArray[idx], 0.f);
+			m_AnimInst->Montage_Play((m_SkillMontageArray[idx]));
+		}
 	}
 }
 void APlayerCharacter::QuestKey()
@@ -235,6 +241,8 @@ void APlayerCharacter::QuestKey()
 
 void APlayerCharacter::SetDirection()
 {
+	//LOG(TEXT("%f %f %f"), m_Arm->GetRelativeRotation().Vector().X, m_Arm->GetRelativeRotation().Vector().Y, m_Arm->GetRelativeRotation().Vector().Z);
+
 	FRotator rot = GetActorRotation();
 
 	FRotator lookRot = GetVelocity().Rotation();
@@ -274,6 +282,11 @@ void APlayerCharacter::LookUp(float Scale)
 
 }
 
+void APlayerCharacter::CameraArmYawReset()
+{
+	m_Arm->SetRelativeRotation(m_ArmRotInitYaw);
+}
+
 void APlayerCharacter::Turn(float Scale)
 {
 	if (!m_ActiveWidget)
@@ -283,6 +296,7 @@ void APlayerCharacter::Turn(float Scale)
 		Rot.Pitch += Scale * 10.f * GetWorld()->GetDeltaSeconds();
 
 		Rot.Pitch = FMath::Clamp(Rot.Pitch, -45.f, 0.f);
+		
 		m_Arm->SetRelativeRotation(Rot);
 	}
 }

@@ -46,7 +46,7 @@ protected:
 	int32 m_SkillIdx;
 	
 	float m_LaunchPower;
-
+	FRotator m_ArmRotInitYaw;
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -81,7 +81,8 @@ public:
 
 	void AddExp(int32 Exp);
 	void AddGold(int32 Gold);
-
+	void CameraArmYawReset();
+	void SetCameraArmYaw(FRotator Init) {		m_ArmRotInitYaw = Init;	}
 	virtual int32 GetCurrentCombo() { return 0; } 
 	virtual void SetCurrentCombo(int32 curCombo) { } 
 	virtual void HitDamage() { }

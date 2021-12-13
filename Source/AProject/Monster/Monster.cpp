@@ -8,6 +8,7 @@
 #include "../AProjectGameModeBase.h"
 #include "../DebugClass.h"
 #include "../UI/HPBar.h"
+#include "../UI/DamageUI.h"
 #include "../Effect/HitCameraShake.h"
 #include "../Player/PlayerCharacter.h"
 #include "NavigationSystem.h"
@@ -21,15 +22,26 @@ AMonster::AMonster()
 	m_HPBar = CreateDefaultSubobject<UWidgetComponent>(TEXT("HPBar"));
 	m_HPBar->SetupAttachment(GetMesh());
 
+
 	static ConstructorHelpers::FClassFinder<UUserWidget>	HPBarAsset(TEXT("WidgetBlueprint'/Game/UI/UI_HPBar.UI_HPBar_C'"));
 
 	if (HPBarAsset.Succeeded())
 		m_HPBar->SetWidgetClass(HPBarAsset.Class);
 
+	static ConstructorHelpers::FClassFinder<UUserWidget>	DamageAsset(TEXT("WidgetBlueprint'/Game/UI/UI_Damage.UI_Damage_C'"));
+
+	if (DamageAsset.Succeeded())
+		m_DamageAsset = DamageAsset.Class;
+
 	m_HPBar->SetWidgetSpace(EWidgetSpace::Screen);
 	m_HPBar->SetDrawSize(FVector2D(200.f, 60.f));
 	m_HPBar->SetRelativeLocation(FVector(0.f, 0.f, 230.f));
 	m_HPBar->SetBlendMode(EWidgetBlendMode::Transparent);
+
+	/*m_Damage->SetWidgetSpace(EWidgetSpace::Screen);
+	m_Damage->SetDrawSize(FVector2D(500.f, 350.f));
+	m_Damage->SetRelativeLocation(FVector(0.f, 0.f, 290.f));
+	m_Damage->SetBlendMode(EWidgetBlendMode::Transparent);*/
 
 	GetCapsuleComponent()->SetCollisionProfileName(TEXT("Enemy"));
 	GetMesh()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
@@ -95,6 +107,8 @@ void AMonster::BeginPlay()
 	}
 
 	m_AnimInstance = Cast<UMonsterAnimInstance>(GetMesh()->GetAnimInstance());
+	//m_DamageWidget = Cast<UDamageUI>(m_Damage->GetWidget());
+
 	m_HPBarWidget = Cast<UHPBar>(m_HPBar->GetWidget());
 
 	m_HPBarWidget->SetName(m_MonsterInfoName);
@@ -174,6 +188,24 @@ float AMonster::TakeDamage(float DamageAmount, struct FDamageEvent const& Damage
 	Damage = Damage < 1.f ? 1.f : Damage;
 
 	m_MonsterInfo.HP -= Damage;
+	
+
+	UDamageUI* DamageUI = Cast<UDamageUI>(CreateWidget(GetWorld(),
+		m_DamageAsset));
+
+
+	//m_Damage->SetupAttachment(GetMesh());
+	//m_Damage->SetWidgetClass(DamageAsset.Class);
+	FVector tmpLoc = GetActorLocation();
+	APlayerCharacter* Player = Cast<APlayerCharacter>(DamageCauser);
+
+	FVector2D ScreenLoc;
+	UGameplayStatics::ProjectWorldToScreen(GetWorld()->GetFirstPlayerController(), tmpLoc, ScreenLoc);
+	LOG(TEXT("%f %f"), tmpLoc.X, tmpLoc.Y);
+	//LOG(TEXT("%s"), *DamageCauser->GetName());
+	DamageUI->SetLocation(ScreenLoc);
+	DamageUI->SetDamage(Damage);
+	DamageUI->AddToViewport();
 
 	//Á×Àº°æ¿ì
 	if (m_MonsterInfo.HP <= 0)
@@ -187,7 +219,7 @@ float AMonster::TakeDamage(float DamageAmount, struct FDamageEvent const& Damage
 			MonsterController->StopMovement();
 		}
 		//GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-		GetCapsuleComponent()->SetCollisionProfileName(TEXT("LandScape"));
+		GetCapsuleComponent()->SetCollisionProfileName(TEXT("Dead"));
 
 		GetWorldTimerManager().SetTimer(m_MonsterDeathTimer,
 			this, &AMonster::Death, 1.f, false, 2.0f);
@@ -195,7 +227,7 @@ float AMonster::TakeDamage(float DamageAmount, struct FDamageEvent const& Damage
 		if (m_HPBarWidget->GetVisibility() == ESlateVisibility::SelfHitTestInvisible)
 			m_HPBarWidget->SetVisibility(ESlateVisibility::Collapsed);
 
-		APlayerCharacter* Player = Cast<APlayerCharacter>(DamageCauser);
+	
 		if (Player)
 		{
 			Player->AddExp(m_MonsterInfo.Exp);
@@ -220,7 +252,7 @@ float AMonster::TakeDamage(float DamageAmount, struct FDamageEvent const& Damage
 	{
 		FVector  PlayerLoc = DamageCauser->GetActorLocation();
 		FVector AttackedDir = GetActorLocation() - PlayerLoc;
-		APlayerCharacter* Player = Cast<APlayerCharacter>(DamageCauser);
+	
 		float LaunchPower = Player->GetLauchPower();
 		//AttackedDir.Normalize();
 		
@@ -312,3 +344,8 @@ FVector AMonster::GetPatrolPoint()
 	return m_PatrolArray[m_PatrolIdx];
 }
 
+
+void SpawnDamageUI(FVector WorldLoc, float Damage)
+{
+
+}

@@ -220,7 +220,6 @@ void AWukong::LighteningBolt()
 	{
 		GetWorld()->GetTimerManager().ClearTimer(m_BoltTimerHandler);
 		//LOG(TEXT("B"));
-
 		m_AnimInst->Montage_JumpToSection(TEXT("End"), m_SkillMontageArray[0]);
 		
 	}
@@ -237,6 +236,7 @@ void AWukong::LighteningBolt()
 		m_LaunchPower = 5.0f;
 		for (auto result : HitResultArray)
 		{
+			LOG(TEXT("%s"), *result.GetActor()->GetName());
 			if (Sweep)
 			{
 				//ANormalEffect* Effect3 = GameInst->GetParticlePool()->Pop(result.ImpactPoint, result.ImpactNormal.Rotation());
