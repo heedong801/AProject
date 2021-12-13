@@ -1,33 +1,31 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Centour.h"
-#include "CentourAIController.h"
+#include "Barghest.h"
+#include "BarghestAIController.h"
 #include "../AProjectGameInstance.h"
 #include "../Effect/NormalEffect.h"
 #include "../DebugClass.h"
 #include "../Building/Nexus.h"
 
-ACentour::ACentour()
+ABarghest::ABarghest()
 {
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	static ConstructorHelpers::FObjectFinder<USkeletalMesh> MeshAsset(TEXT("SkeletalMesh'/Game/QuadrapedCreatures/Centaur/Meshes/SK_Centaur.SK_Centaur'"));
+	static ConstructorHelpers::FObjectFinder<USkeletalMesh> MeshAsset(TEXT("SkeletalMesh'/Game/QuadrapedCreatures/Barghest/Meshes/SK_BARGHEST.SK_BARGHEST'"));
 
 	if (MeshAsset.Succeeded())
 		GetMesh()->SetSkeletalMesh(MeshAsset.Object);
 
-	m_MonsterInfoName = TEXT("Centour");
+	m_MonsterInfoName = TEXT("Barghest");
 
-	static ConstructorHelpers::FClassFinder<UAnimInstance> AnimAsset(TEXT("AnimBlueprint'/Game/Monster/Centour/AB_Centour.AB_Centour_C'"));
+	static ConstructorHelpers::FClassFinder<UAnimInstance> AnimAsset(TEXT("AnimBlueprint'/Game/Monster/Barghest/AB_Barhest.AB_Barhest_C'"));
 
 	if (AnimAsset.Succeeded())
 		GetMesh()->SetAnimInstanceClass(AnimAsset.Class);
-	else
-		LOG(TEXT("A"));
 
-	AIControllerClass = ACentourAIController::StaticClass();
+	AIControllerClass = ABarghestAIController::StaticClass();
 
 	/*m_MonsterInfoName = TEXT("MinionWorrior");
 
@@ -36,20 +34,20 @@ ACentour::ACentour()
 }
 
 // Called when the game starts or when spawned
-void ACentour::BeginPlay()
+void ABarghest::BeginPlay()
 {
 	Super::BeginPlay();
 
 }
 
 // Called every frame
-void ACentour::Tick(float DeltaTime)
+void ABarghest::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
 }
 
-void ACentour::NormalAttack()
+void ABarghest::NormalAttack()
 {
 	FVector MinionLoc = GetActorLocation();
 	FVector Forward = GetActorForwardVector();
@@ -104,9 +102,10 @@ void ACentour::NormalAttack()
 	}
 }
 
-void ACentour::Death()
+void ABarghest::Death()
 {
 	GetWorldTimerManager().ClearTimer(m_MonsterDeathTimer);
+
 
 	Destroy();
 }

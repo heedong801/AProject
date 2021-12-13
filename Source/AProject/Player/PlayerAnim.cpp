@@ -184,7 +184,10 @@ void UPlayerAnim::AnimNotify_AttackEnd()
 	APlayerCharacter* Player = Cast<APlayerCharacter>(TryGetPawnOwner());
 
 	if (Player)
+	{
 		Player->SetCurrentCombo(0);
+		Player->SetMovable(true);
+	}
 }
 
 
@@ -197,6 +200,7 @@ void UPlayerAnim::AnimNotify_UseSkill()
 	if (Player)
 	{
 		//LOG(TEXT("C"));
+		Player->SetMovable(false);
 
 		Player->UseSkill(Player->GetSkillIdx());
 	}
