@@ -25,7 +25,7 @@ UAProjectGameInstance::UAProjectGameInstance()
 
 UAProjectGameInstance::~UAProjectGameInstance()
 {
-
+	
 }
 
 void UAProjectGameInstance::Init()
@@ -49,7 +49,7 @@ void UAProjectGameInstance::SetParticlePool( UParticlePool* pParticlePool)
 	m_ParticlePool = pParticlePool;
 	if (m_ParticlePool->GetSize() == 0)
 		m_ParticlePool->MakePool();
-	
+
 }
 
 int UAProjectGameInstance::GetPoolSize()
@@ -90,4 +90,12 @@ const FQuestTableInfo* UAProjectGameInstance::FindQuestInfo(const FString& Name)
 const FMapTableInfo* UAProjectGameInstance::FindMapInfo(const FString& Name)
 {
 	return m_MapInfoTable->FindRow<FMapTableInfo>(*Name, "");
+}
+
+UParticlePool* UAProjectGameInstance::GetParticlePool() 
+{
+	if (IsValid(m_ParticlePool))
+		return m_ParticlePool;
+	else
+		return nullptr;
 }

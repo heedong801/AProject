@@ -17,6 +17,7 @@ AAProjectGameModeBase::AAProjectGameModeBase()
 		DefaultPawnClass = PawnClass.Class;
 
 	m_ParticlePool = CreateDefaultSubobject<UParticlePool>(TEXT("ParticlePool"));
+	//m_ParticlePool = NewObject<UParticlePool>(GetWorld());
 
 }
 

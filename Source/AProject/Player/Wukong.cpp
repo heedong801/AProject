@@ -199,21 +199,20 @@ void AWukong::UseSkill(int32 Idx)
 		}
 	}
 
-	if (m_PlayerInfo.MP > 20)
+
+	switch (Idx)
 	{
-		switch (Idx)
-		{
-		case 0:
-		{
-			GetWorld()->GetTimerManager().SetTimer(m_BoltTimerHandler,
-				this, &AWukong::LighteningBolt, 0.05f, true, 0.f);
-			m_BoltCnt = 0;
-			//LOG(TEXT("A"));
-			//m_AnimInst->Montage_JumpToSection(TEXT("Start"), m_SkillMontageArray[0]);
-			break;
-		}
-		}
+	case 0:
+	{
+		GetWorld()->GetTimerManager().SetTimer(m_BoltTimerHandler,
+			this, &AWukong::LighteningBolt, 0.05f, true, 0.f);
+		m_BoltCnt = 0;
+		//LOG(TEXT("A"));
+		//m_AnimInst->Montage_JumpToSection(TEXT("Start"), m_SkillMontageArray[0]);
+		break;
 	}
+	}
+
 }
 
 void AWukong::LighteningBolt()

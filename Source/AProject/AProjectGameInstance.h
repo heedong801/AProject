@@ -29,6 +29,7 @@ private:
 	UPROPERTY()
 		UDataTable* m_PlayerInfoTable;
 
+	UPROPERTY()
 	UParticlePool* m_ParticlePool;
 
 	UPROPERTY()
@@ -64,7 +65,7 @@ public:
 	//bool GetParticlePoolIsSet();
 	void SetParticlePool(UParticlePool* pP);
 	int GetPoolSize();
-	UParticlePool* GetParticlePool() { return m_ParticlePool; }
+	UParticlePool* GetParticlePool();
 	const FMonsterInfo* FindMonsterInfo(const FString& Name);
 	const FPlayerInfo* FindPlayerInfo(const FString& Name);
 

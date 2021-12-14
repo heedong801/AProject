@@ -36,6 +36,8 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 		TArray<UAnimMontage*> m_SkillMontageArray;
 
+	int32 MaxExp;
+
 	bool m_ActiveWidget;
 	bool m_Movable;
 

@@ -14,10 +14,13 @@ class APROJECT_API UParticlePool : public UObject
 	GENERATED_BODY()
 
 protected:
+	UPROPERTY()
 	TArray<ACustomActor*> m_CustomActorArray;
+	UPROPERTY()
 	int32 m_CustomActorArrayMaxIdx;
-
+	UPROPERTY()
 	int32 m_NormalEffectEnd;
+	UPROPERTY()
 	int32 m_BlueFlyBulletArray;
 public:
 	UParticlePool();

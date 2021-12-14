@@ -7,6 +7,7 @@
 #include "../AProjectGameInstance.h"
 #include "../UI/CharacterHUD.h"
 #include "../UI/MainHUD.h"
+#include "../UI/SkillImageWidget.h"
 #include "../AProjectGameModeBase.h"
 
 //#include "../Effect/HitCameraShake.h"
@@ -39,7 +40,7 @@ APlayerCharacter::APlayerCharacter()
 	m_ActiveWidget = false;
 	m_LaunchPower = 1.f;
 	m_Movable = true;
-	
+	MaxExp = 100;
 	//LOG(TEXT("%f %f %f"), m_Arm->GetRelativeRotation().Vector().X, m_Arm->GetRelativeRotation().Vector().Y, m_Arm->GetRelativeRotation().Vector().Z);
 }
 
@@ -115,9 +116,9 @@ void APlayerCharacter::PostInitializeComponents()
 			m_PlayerInfo.Exp = Info->Exp;
 			m_PlayerInfo.Gold = Info->Gold;
 			m_PlayerInfo.AttackDistance = Info->AttackDistance;
-			m_PlayerInfo.AttackSpeed = Info->AttackSpeed;
 			m_PlayerInfo.AttackAngle = Info->AttackAngle;
 			m_PlayerInfo.MoveSpeed = Info->MoveSpeed;
+			m_PlayerInfo.SkillTree = Info->SkillTree;
 		}
 	}
 
@@ -167,10 +168,6 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 
 	PlayerInputComponent->BindAction(TEXT("Quest"), EInputEvent::IE_Pressed, this, &APlayerCharacter::QuestKey);
 
-
-
-
-	
 }
 
 void APlayerCharacter::Skill1Key()
@@ -182,12 +179,41 @@ void APlayerCharacter::Skill1Key()
 
 void APlayerCharacter::SkillPlayAnim(int32 idx)
 {
-	if (m_AnimInst->GetOnSky() == false && m_AnimInst->GetCanAttack() == true)
+	//LOG(TEXT("%d"), m_PlayerInfo.MP);
+	if (m_PlayerInfo.MP > m_PlayerInfo.SkillTree[idx].RequiredMP)
 	{
-		if (!m_AnimInst->Montage_IsPlaying(m_SkillMontageArray[idx]))
+		//LOG(TEXT("A"));
+
+		if (m_AnimInst->GetOnSky() == false && m_AnimInst->GetCanAttack() == true)
 		{
-			m_AnimInst->Montage_SetPosition(m_SkillMontageArray[idx], 0.f);
-			m_AnimInst->Montage_Play((m_SkillMontageArray[idx]));
+			//LOG(TEXT("B"));
+
+			AAProjectGameModeBase* GameMode = Cast<AAProjectGameModeBase>(GetWorld()->GetAuthGameMode());
+			//LOG(TEXT("AA"));
+			if (IsValid(GameMode))
+			{
+				UMainHUD* MainHUD = GameMode->GetMainHUD();
+				//LOG(TEXT("BB"));
+				if (IsValid(MainHUD))
+				{
+					UCharacterHUD* CharacterHUD = MainHUD->GetCharacterHUD();
+					//LOG(TEXT("CC"));
+					if (IsValid(CharacterHUD))
+					{
+						TArray<USkillImageWidget*> SkillArray = CharacterHUD->GetSkillArray();
+
+						if (SkillArray[idx]->GetCoolTimeOn() == true)
+						{
+							if (!m_AnimInst->Montage_IsPlaying(m_SkillMontageArray[idx]))
+							{
+								m_AnimInst->Montage_SetPosition(m_SkillMontageArray[idx], 0.f);
+								m_AnimInst->Montage_Play((m_SkillMontageArray[idx]));
+								SkillArray[idx]->SetCoolTimePercent(1.f, m_PlayerInfo.SkillTree[idx].CoolTime);
+							}
+						}
+					}
+				}
+			}
 		}
 	}
 }
@@ -404,16 +430,16 @@ void APlayerCharacter::AddExp(int32 Exp)
 
 			if (IsValid(CharacterHUD))
 			{
-				if (m_PlayerInfo.Exp >= 100)
+				if (m_PlayerInfo.Exp >= MaxExp)
 				{
 					m_PlayerInfo.Exp = 0;
 					m_PlayerInfo.Level++;
-
+					MaxExp *= 2;
 					CharacterHUD->SetLevelText(m_PlayerInfo.Level);
 
 				}
 				
-				CharacterHUD->SetEXPPercent(m_PlayerInfo.Exp / (float)100.f);
+				CharacterHUD->SetEXPPercent(m_PlayerInfo.Exp / (float)MaxExp);
 			}
 		}
 	}

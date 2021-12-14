@@ -4,6 +4,7 @@
 #include "CharacterHUD.h"
 #include "../Player/PlayerCharacter.h"
 #include "../DebugClass.h"
+#include "SkillImageWidget.h"
 void UCharacterHUD::NativeConstruct()
 {
 	Super::NativeConstruct();
@@ -12,6 +13,7 @@ void UCharacterHUD::NativeConstruct()
 	m_HPBar = Cast<UProgressBar>(GetWidgetFromName(TEXT("HPBar")));
 	m_MPBar = Cast<UProgressBar>(GetWidgetFromName(TEXT("MPBar")));	
 	m_EXPBar = Cast<UProgressBar>(GetWidgetFromName(TEXT("EXPBar")));
+	m_SkillArray.Add(Cast<USkillImageWidget>(GetWidgetFromName(TEXT("UI_Skill1"))));
 
 	APlayerCharacter* Player = Cast<APlayerCharacter>(GetWorld()->GetFirstPlayerController()->GetPawn());
 

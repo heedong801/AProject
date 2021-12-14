@@ -6,6 +6,7 @@
 #include "Blueprint/UserWidget.h"
 #include "Components/ProgressBar.h"
 #include "Components/TextBlock.h"
+#include "Components/Image.h"
 #include "CharacterHUD.generated.h"
 
 /**
@@ -29,9 +30,15 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 		UProgressBar* m_EXPBar;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+		TArray<class USkillImageWidget*> m_SkillArray;
 	//FNameDelegate	m_NameDelegate;
 
 public:
+	TArray<class USkillImageWidget*> GetSkillArray()
+	{
+		return m_SkillArray;
+	}
 	void SetHPPercent(float Percent)
 	{
 		m_HPBar->SetPercent(Percent);

@@ -70,10 +70,10 @@ void UBTService_PlayerDetect::TickNode(UBehaviorTreeComponent& OwnerComp, uint8*
 	}*/
 
 #if ENABLE_DRAW_DEBUG
-	FColor DrawColor = Sweep ? FColor::Red : FColor::Green;
+	//FColor DrawColor = Sweep ? FColor::Red : FColor::Green;
 
-	DrawDebugSphere(GetWorld(), Monster->GetActorLocation(), MonsterInfo.TraceDistance, 20, DrawColor, false
-	, 0.3f);
+	//DrawDebugSphere(GetWorld(), Monster->GetActorLocation(), MonsterInfo.TraceDistance, 20, DrawColor, false
+	//, 0.3f);
 
 #endif
 	if (Sweep)
