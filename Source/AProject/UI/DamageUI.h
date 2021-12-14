@@ -23,13 +23,18 @@ protected:
 		int32 m_Damage;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-		FVector2D m_Location;
+		FVector m_Location;
 
 	UPROPERTY(meta = (BindWidgetAnim), meta = (AllowPrivateAccess = "true"), Transient)
 		class UWidgetAnimation* m_FadeAnim;
+
+	bool m_Active;
 public:
 	void SetDamage(const int32& Damage) { m_Damage = Damage; }
-	void SetLocation(const FVector2D& Loc) { m_Location = Loc; }
+	void SetLocation(const FVector& Loc) { m_Location = Loc; }
+
+	void SetActive(bool bOnActive);
+	bool GetActive();
 
 protected:
 	virtual void NativeConstruct();

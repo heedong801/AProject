@@ -34,7 +34,11 @@ protected:
 		UWidgetComponent* m_HPBar;
 	class UHPBar* m_HPBarWidget;
 
-
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+		UWidgetComponent* m_Damage;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	TArray<class UDamageUI*> m_DamageUIArray;
+	int32 m_DamageUINum;
 	class UMonsterAnimInstance* m_AnimInstance;
 
 	TSubclassOf<UUserWidget> m_DamageAsset;

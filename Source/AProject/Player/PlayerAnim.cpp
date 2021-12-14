@@ -132,10 +132,10 @@ void UPlayerAnim::AnimNotify_SlamEnd()
 		//LOG(TEXT("%f"), MonsterInfo.TraceDistance);
 
 #if ENABLE_DRAW_DEBUG
-		FColor DrawColor = Sweep ? FColor::Red : FColor::Green;
+	/*	FColor DrawColor = Sweep ? FColor::Red : FColor::Green;
 
 		DrawDebugSphere(GetWorld(), Player->GetActorLocation(), 500, 20, DrawColor, false
-			, 0.3f);
+			, 0.3f);*/
 
 #endif
 		FVector impactPoint = FVector(Player->GetActorLocation().X, Player->GetActorLocation().Y, Player->GetActorLocation().Z - 80.f);

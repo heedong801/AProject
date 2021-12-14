@@ -22,7 +22,6 @@ AMonster::AMonster()
 	m_HPBar = CreateDefaultSubobject<UWidgetComponent>(TEXT("HPBar"));
 	m_HPBar->SetupAttachment(GetMesh());
 
-
 	static ConstructorHelpers::FClassFinder<UUserWidget>	HPBarAsset(TEXT("WidgetBlueprint'/Game/UI/UI_HPBar.UI_HPBar_C'"));
 
 	if (HPBarAsset.Succeeded())
@@ -31,10 +30,12 @@ AMonster::AMonster()
 	static ConstructorHelpers::FClassFinder<UUserWidget>	DamageAsset(TEXT("WidgetBlueprint'/Game/UI/UI_Damage.UI_Damage_C'"));
 
 	if (DamageAsset.Succeeded())
+	{
 		m_DamageAsset = DamageAsset.Class;
+	}
 
 	m_HPBar->SetWidgetSpace(EWidgetSpace::Screen);
-	m_HPBar->SetDrawSize(FVector2D(200.f, 60.f));
+	m_HPBar->SetDrawSize(FVector2D(100.f, 30.f));
 	m_HPBar->SetRelativeLocation(FVector(0.f, 0.f, 230.f));
 	m_HPBar->SetBlendMode(EWidgetBlendMode::Transparent);
 
@@ -53,6 +54,10 @@ AMonster::AMonster()
 	//spawnBox.BuildAABB(GetActorLocation(), FVector(1500.f, 1500.f, 1));
 	bUseControllerRotationYaw = false;
 	GetCharacterMovement()->bOrientRotationToMovement = true;
+
+	m_DamageUINum = 10;
+
+	
 }
 
 // Called when the game starts or when spawned
@@ -112,6 +117,14 @@ void AMonster::BeginPlay()
 	m_HPBarWidget = Cast<UHPBar>(m_HPBar->GetWidget());
 
 	m_HPBarWidget->SetName(m_MonsterInfoName);
+
+	for (int32 i = 0; i < m_DamageUINum; ++i)
+	{
+		m_DamageUIArray.Add(Cast<UDamageUI>(CreateWidget(GetWorld(),
+			m_DamageAsset)));
+		m_DamageUIArray[i]->SetActive(false);
+		//m_DamageUIArray[i]->SetupAttachment
+	}
 }
 
 // Called every frame
@@ -190,22 +203,42 @@ float AMonster::TakeDamage(float DamageAmount, struct FDamageEvent const& Damage
 	m_MonsterInfo.HP -= Damage;
 	
 
-	UDamageUI* DamageUI = Cast<UDamageUI>(CreateWidget(GetWorld(),
-		m_DamageAsset));
+	APlayerCharacter* Player = Cast<APlayerCharacter>(DamageCauser);
+	for (int32 i = 0; i < m_DamageUINum; ++i)
+	{
+		if (m_DamageUIArray[i]->GetActive() == false)
+		{
+			FVector tmpLoc = GetActorLocation();
+			
 
+			FVector2D ScreenLoc;
+			UGameplayStatics::ProjectWorldToScreen(GetWorld()->GetFirstPlayerController(), tmpLoc, ScreenLoc);
+			//LOG(TEXT("%f %f"), ScreenLoc.X, ScreenLoc.Y);
+			//LOG(TEXT("%s"), *DamageCauser->GetName());
+
+			//ScreenLoc += FVector2D(-50.f, -100.f);
+			m_DamageUIArray[i]->SetLocation(tmpLoc);
+			m_DamageUIArray[i]->SetDamage(Damage);
+			m_DamageUIArray[i]->AddToViewport();
+			m_DamageUIArray[i]->SetActive(true);
+			break;
+		}
+	}
 
 	//m_Damage->SetupAttachment(GetMesh());
 	//m_Damage->SetWidgetClass(DamageAsset.Class);
-	FVector tmpLoc = GetActorLocation();
-	APlayerCharacter* Player = Cast<APlayerCharacter>(DamageCauser);
+	//FVector tmpLoc = GetActorLocation();
+	//APlayerCharacter* Player = Cast<APlayerCharacter>(DamageCauser);
 
-	FVector2D ScreenLoc;
-	UGameplayStatics::ProjectWorldToScreen(GetWorld()->GetFirstPlayerController(), tmpLoc, ScreenLoc);
-	LOG(TEXT("%f %f"), tmpLoc.X, tmpLoc.Y);
-	//LOG(TEXT("%s"), *DamageCauser->GetName());
-	DamageUI->SetLocation(ScreenLoc);
-	DamageUI->SetDamage(Damage);
-	DamageUI->AddToViewport();
+	//FVector2D ScreenLoc;
+	//UGameplayStatics::ProjectWorldToScreen(GetWorld()->GetFirstPlayerController(), tmpLoc, ScreenLoc);
+	////LOG(TEXT("%f %f"), ScreenLoc.X, ScreenLoc.Y);
+	////LOG(TEXT("%s"), *DamageCauser->GetName());
+
+	//ScreenLoc += FVector2D(-50.f, -100.f);
+	//DamageUI->SetLocation(ScreenLoc);
+	//DamageUI->SetDamage(Damage);
+	//DamageUI->AddToViewport();
 
 	//Á×Àº°æ¿ì
 	if (m_MonsterInfo.HP <= 0)

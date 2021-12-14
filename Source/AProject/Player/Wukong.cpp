@@ -133,6 +133,7 @@ void AWukong::HitDamage()
 			Angle = FMath::RadiansToDegrees(Angle);
 			//LOG(TEXT("Attack : %.5f"), Angle);
 
+
 			if (Angle <= m_PlayerInfo.AttackAngle)
 				CollisionArray.Add(result);
 			else
@@ -145,9 +146,9 @@ void AWukong::HitDamage()
 	}
 
 #if ENABLE_DRAW_DEBUG
-	FColor DrawColor = CollisionArray.Num() > 0 ? FColor::Red : FColor::Green;
-	DrawDebugCone(GetWorld(), PlayerLoc, GetActorForwardVector(), m_PlayerInfo.AttackDistance, FMath::DegreesToRadians(m_PlayerInfo.AttackAngle), FMath::DegreesToRadians(m_PlayerInfo.AttackAngle), 20, DrawColor, false, 1.f);
-	//DrawDebugSphere(GetWorld(), PlayerLoc, m_PlayerInfo.AttackDistance, 20, DrawColor, false, 1.f);
+	//FColor DrawColor = CollisionArray.Num() > 0 ? FColor::Red : FColor::Green;
+	//DrawDebugCone(GetWorld(), PlayerLoc, GetActorForwardVector(), m_PlayerInfo.AttackDistance, FMath::DegreesToRadians(m_PlayerInfo.AttackAngle), FMath::DegreesToRadians(m_PlayerInfo.AttackAngle), 20, DrawColor, false, 1.f);
+	////DrawDebugSphere(GetWorld(), PlayerLoc, m_PlayerInfo.AttackDistance, 20, DrawColor, false, 1.f);
 #endif
 	m_LaunchPower = 1.0f;
 	for (auto& result : CollisionArray)
@@ -170,7 +171,9 @@ void AWukong::HitDamage()
 		//Effect->LoadSoundAsync(TEXT("HitNormal"));
 		//데미지 전달
 		FDamageEvent DmgEvent;
-		float Damage = result.GetActor()->TakeDamage(m_PlayerInfo.Attack, DmgEvent, GetController(), this);
+
+		int random = FMath::RandRange(-5, 5);
+		float Damage = result.GetActor()->TakeDamage(m_PlayerInfo.Attack + random, DmgEvent, GetController(), this);
 
 	}
 }
@@ -236,7 +239,7 @@ void AWukong::LighteningBolt()
 		m_LaunchPower = 5.0f;
 		for (auto result : HitResultArray)
 		{
-			LOG(TEXT("%s"), *result.GetActor()->GetName());
+			//LOG(TEXT("%s"), *result.GetActor()->GetName());
 			if (Sweep)
 			{
 				//ANormalEffect* Effect3 = GameInst->GetParticlePool()->Pop(result.ImpactPoint, result.ImpactNormal.Rotation());

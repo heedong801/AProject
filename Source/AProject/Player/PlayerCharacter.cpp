@@ -24,7 +24,7 @@ APlayerCharacter::APlayerCharacter()
 	m_Arm->SetupAttachment(GetMesh());
 	m_Camera->SetupAttachment(m_Arm);
 
-	m_Arm->TargetArmLength = 900.f;
+	m_Arm->TargetArmLength = 1000.f;
 
 	static ConstructorHelpers::FClassFinder<UAnimInstance> WukongAsset(TEXT("AnimBlueprint'/Game/Player/Wukong/Anim/AB_Wukong.AB_Wukong_C'"));
 
@@ -305,7 +305,7 @@ void APlayerCharacter::ZoomInKey(float Scale)
 {
 	m_Arm->TargetArmLength -= Scale * 20.f;
 
-	m_Arm->TargetArmLength = FMath::Clamp(m_Arm->TargetArmLength, 350.f, 750.f);
+	m_Arm->TargetArmLength = FMath::Clamp(m_Arm->TargetArmLength, 350.f, 1000.f);
 }
 void APlayerCharacter::AttackKey()
 {
