@@ -3,6 +3,7 @@
 
 #include "AProjectGameModeBase.h"
 #include "AProjectGameInstance.h"
+#include "Player/PlayerCharacter.h"
 #include "DebugClass.h"
 
 AAProjectGameModeBase::AAProjectGameModeBase()
@@ -17,8 +18,6 @@ AAProjectGameModeBase::AAProjectGameModeBase()
 		DefaultPawnClass = PawnClass.Class;
 
 	m_ParticlePool = CreateDefaultSubobject<UParticlePool>(TEXT("ParticlePool"));
-	//m_ParticlePool = NewObject<UParticlePool>(GetWorld());
-
 }
 
 void AAProjectGameModeBase::InitGame(const FString& MapName,
@@ -29,10 +28,7 @@ void AAProjectGameModeBase::InitGame(const FString& MapName,
 	UAProjectGameInstance* GameInst = Cast<UAProjectGameInstance>(GetWorld()->GetGameInstance());
 
 	if (GameInst )
-	{
 		GameInst->SetParticlePool(m_ParticlePool);
-	}
-
 
 	/*UAProjectGameInstance* GameInst = Cast<UAProjectGameInstance>(GetWorld()->GetGameInstance());
 

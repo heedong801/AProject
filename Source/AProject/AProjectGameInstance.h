@@ -44,6 +44,9 @@ private:
 	TMap<FString, FQuestData>	m_QuestDataMap;
 
 	FString 	m_MapName;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+		FPlayerInfo	m_PlayerInfo;
 public:
 	const TMap<FString, FQuestData>& GetQuestData()
 	{
@@ -61,6 +64,7 @@ public:
 	}
 	virtual void Init();
 	virtual void StartGameInstance();
+	FPlayerInfo& GetPlayerInfo() { return m_PlayerInfo; }
 
 	//bool GetParticlePoolIsSet();
 	void SetParticlePool(UParticlePool* pP);

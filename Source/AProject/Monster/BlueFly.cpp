@@ -155,7 +155,7 @@ float ABlueFly::TakeDamage(float DamageAmount, struct FDamageEvent const& Damage
 		FVector AttackedDir = GetActorLocation() - PlayerLoc;
 		//AttackedDir.Normalize();
 
-		AttackedDir *= (1000.f / m_MonsterInfo.weight);
+		AttackedDir *= (1000.f / m_MonsterInfo.Weight);
 
 		LaunchCharacter(AttackedDir, false, false);
 	}

@@ -173,7 +173,8 @@ void AWukong::HitDamage()
 		FDamageEvent DmgEvent;
 
 		int random = FMath::RandRange(-5, 5);
-		float Damage = result.GetActor()->TakeDamage(m_PlayerInfo.Attack + random, DmgEvent, GetController(), this);
+		int LevelUpDamage = 2;
+		float Damage = result.GetActor()->TakeDamage(m_PlayerInfo.Attack + random + LevelUpDamage* m_PlayerInfo.Level, DmgEvent, GetController(), this);
 
 	}
 }

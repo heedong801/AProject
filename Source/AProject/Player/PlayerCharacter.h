@@ -49,6 +49,8 @@ protected:
 	
 	float m_LaunchPower;
 	FRotator m_ArmRotInitYaw;
+
+	bool m_IsSprint;
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -76,10 +78,12 @@ public:
 	void StopSprint();
 	void QuestKey();
 	void Skill1Key();
+	void Skill2Key();
+	void Skill3Key();
 
 	void SetActiveWidget(bool ActiveWidget) { m_ActiveWidget = ActiveWidget; }
 	void SetTimeDillation();
-	const FPlayerInfo& GetPlayerInfo()	const { return m_PlayerInfo;}
+	FPlayerInfo& GetPlayerInfo()	{ return m_PlayerInfo;}
 
 	void AddExp(int32 Exp);
 	void AddGold(int32 Gold);

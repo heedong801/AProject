@@ -8,7 +8,7 @@
 #include "../AProjectGameInstance.h"
 #include "../AProjectGameModeBase.h"
 #include "../DebugClass.h"
-
+#include "../Player/PlayerCharacter.h"
 ALevelTrigger::ALevelTrigger()
 {
 	PrimaryActorTick.bCanEverTick = true;
@@ -42,7 +42,33 @@ void ALevelTrigger::TriggerBegin()
 
 	GameInst->SetMapName(m_StreamingLevelName);
 
+	if (GameInst)
+	{
+		APlayerCharacter* Player = Cast<APlayerCharacter>(GetWorld()->GetFirstPlayerController()->GetPawn());
+		FPlayerInfo& SavePlayerInfo = GameInst->GetPlayerInfo();
+		FPlayerInfo& PlayerInfo = Player->GetPlayerInfo();
+		if (&PlayerInfo)
+		{
+			SavePlayerInfo.Name = PlayerInfo.Name;
+			SavePlayerInfo.Attack = PlayerInfo.Attack;
+			SavePlayerInfo.Armor = PlayerInfo.Armor;
+			SavePlayerInfo.HP = PlayerInfo.HP;
+			SavePlayerInfo.HPMax = PlayerInfo.HPMax;
+			SavePlayerInfo.MP = PlayerInfo.MP;
+			SavePlayerInfo.MPMax = PlayerInfo.MPMax;
+			SavePlayerInfo.Level = PlayerInfo.Level;
+			SavePlayerInfo.Exp = PlayerInfo.Exp;
+			SavePlayerInfo.Gold = PlayerInfo.Gold;
+			SavePlayerInfo.AttackDistance = PlayerInfo.AttackDistance;
+			SavePlayerInfo.AttackAngle = PlayerInfo.AttackAngle;
+			SavePlayerInfo.MoveSpeed = PlayerInfo.MoveSpeed;
+			SavePlayerInfo.SkillTree = PlayerInfo.SkillTree;
+			SavePlayerInfo.CriticalPercent = PlayerInfo.CriticalPercent;
 
+		}
+
+
+	}
 	//UGameplayStatics::OpenLevel(this, *m_StreamingLevelName);
 
 

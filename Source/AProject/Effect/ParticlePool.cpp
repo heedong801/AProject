@@ -10,7 +10,7 @@ UParticlePool::UParticlePool()
 	//LOG(TEXT("N : %d"), m_CustomActorArray.Num());
 	//LOG(TEXT("M : %d"), m_CustomActorArrayMaxIdx);
 	m_NormalEffectEnd = 300;
-	m_BlueFlyBulletArray = 2;
+	m_BlueFlyBulletArray = 5;
 	m_CustomActorArrayMaxIdx = m_NormalEffectEnd + m_BlueFlyBulletArray;
 	LOG(TEXT("INSERT"));
 	

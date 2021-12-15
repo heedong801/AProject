@@ -103,7 +103,29 @@ void APlayerCharacter::PostInitializeComponents()
 	if (GameInst)
 	{
 		const FPlayerInfo* Info = GameInst->FindPlayerInfo(m_PlayerInfoName);
-		if (Info)
+
+		const FPlayerInfo& SavePlayerInfo = GameInst->GetPlayerInfo();
+
+		if (SavePlayerInfo.Name.IsEmpty() == false)
+		{
+			m_PlayerInfo.Name = SavePlayerInfo.Name;
+			m_PlayerInfo.Attack = SavePlayerInfo.Attack;
+			m_PlayerInfo.Armor = SavePlayerInfo.Armor;
+			m_PlayerInfo.HP = SavePlayerInfo.HP;
+			m_PlayerInfo.HPMax = SavePlayerInfo.HPMax;
+			m_PlayerInfo.MP = SavePlayerInfo.MP;
+			m_PlayerInfo.MPMax = SavePlayerInfo.MPMax;
+			m_PlayerInfo.Level = SavePlayerInfo.Level;
+			m_PlayerInfo.Exp = SavePlayerInfo.Exp;
+			m_PlayerInfo.Gold = SavePlayerInfo.Gold;
+			m_PlayerInfo.AttackDistance = SavePlayerInfo.AttackDistance;
+			m_PlayerInfo.AttackAngle = SavePlayerInfo.AttackAngle;
+			m_PlayerInfo.MoveSpeed = SavePlayerInfo.MoveSpeed;
+			m_PlayerInfo.SkillTree = SavePlayerInfo.SkillTree;
+			m_PlayerInfo.CriticalPercent = SavePlayerInfo.CriticalPercent;
+
+		}
+		else if (Info)
 		{
 			m_PlayerInfo.Name = Info->Name;
 			m_PlayerInfo.Attack = Info->Attack;
@@ -119,6 +141,8 @@ void APlayerCharacter::PostInitializeComponents()
 			m_PlayerInfo.AttackAngle = Info->AttackAngle;
 			m_PlayerInfo.MoveSpeed = Info->MoveSpeed;
 			m_PlayerInfo.SkillTree = Info->SkillTree;
+			m_PlayerInfo.CriticalPercent = Info->CriticalPercent;
+
 		}
 	}
 
@@ -131,7 +155,25 @@ void APlayerCharacter::BeginPlay()
 	m_AnimInst = Cast<UPlayerAnim>(GetMesh()->GetAnimInstance());
 	m_ArmRotInitYaw = m_Arm->GetRelativeRotation();
 	
+	AAProjectGameModeBase* GameMode = Cast<AAProjectGameModeBase>(GetWorld()->GetAuthGameMode());
+	UMainHUD* MainHUD = GameMode->GetMainHUD();
 
+	if (IsValid(MainHUD))
+	{
+		UCharacterHUD* CharacterHUD = MainHUD->GetCharacterHUD();
+
+		if (IsValid(CharacterHUD))
+		{
+			TArray<USkillImageWidget*> SkillArray = CharacterHUD->GetSkillArray();
+
+			for (int32 i = 0; i < SkillArray.Num(); ++i)
+			{
+				if (m_PlayerInfo.Level >= m_PlayerInfo.SkillTree[i].RequiredLevel)
+					SkillArray[i]->SetVisibility(ESlateVisibility::Visible);
+
+			}
+		}
+	}
 
 	//m_AnimInst->OnMontageEnded.AddDynamic(this, &APlayerCharacter::OnAttackMontageEnded);
 }
@@ -165,6 +207,8 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 	PlayerInputComponent->BindAction(TEXT("Sprint"), EInputEvent::IE_Pressed, this, &APlayerCharacter::Sprint);
 	PlayerInputComponent->BindAction(TEXT("Sprint"), EInputEvent::IE_Released, this, &APlayerCharacter::StopSprint);
 	PlayerInputComponent->BindAction(TEXT("Skill1"), EInputEvent::IE_Pressed, this, &APlayerCharacter::Skill1Key);
+	PlayerInputComponent->BindAction(TEXT("Skill2"), EInputEvent::IE_Pressed, this, &APlayerCharacter::Skill2Key);
+	PlayerInputComponent->BindAction(TEXT("Skill3"), EInputEvent::IE_Pressed, this, &APlayerCharacter::Skill3Key);
 
 	PlayerInputComponent->BindAction(TEXT("Quest"), EInputEvent::IE_Pressed, this, &APlayerCharacter::QuestKey);
 
@@ -177,10 +221,22 @@ void APlayerCharacter::Skill1Key()
 
 }
 
+void APlayerCharacter::Skill2Key()
+{
+	m_SkillIdx = 1;
+	SkillPlayAnim(m_SkillIdx);
+
+}
+void APlayerCharacter::Skill3Key()
+{
+	m_SkillIdx = 2;
+	SkillPlayAnim(m_SkillIdx);
+
+}
 void APlayerCharacter::SkillPlayAnim(int32 idx)
 {
 	//LOG(TEXT("%d"), m_PlayerInfo.MP);
-	if (m_PlayerInfo.MP > m_PlayerInfo.SkillTree[idx].RequiredMP)
+	if (m_PlayerInfo.MP > m_PlayerInfo.SkillTree[idx].RequiredMP && m_PlayerInfo.Level >= m_PlayerInfo.SkillTree[idx].RequiredLevel)
 	{
 		//LOG(TEXT("A"));
 
@@ -286,7 +342,7 @@ void APlayerCharacter::MoveForward(float Scale)
 
 void APlayerCharacter::MoveRight(float Scale)
 {
-	if (!m_ActiveWidget && m_Movable)
+	if (!m_ActiveWidget && m_Movable && !m_IsSprint)
 		AddMovementInput(GetActorRightVector(), Scale);
 }
 
@@ -395,10 +451,12 @@ void APlayerCharacter::JumpKey()
 void APlayerCharacter::Sprint()
 {
 	GetCharacterMovement()->MaxWalkSpeed *= 1.5;
+	m_IsSprint = true;
 }
 void APlayerCharacter::StopSprint()
 {
 	GetCharacterMovement()->MaxWalkSpeed /= 1.5;
+	m_IsSprint = false;
 }
 
 void APlayerCharacter::SetTimeDefaultTimeDilation()
@@ -437,6 +495,15 @@ void APlayerCharacter::AddExp(int32 Exp)
 					MaxExp *= 2;
 					CharacterHUD->SetLevelText(m_PlayerInfo.Level);
 
+					TArray<USkillImageWidget*> SkillArray = CharacterHUD->GetSkillArray();
+
+					for (int32 i = 0; i < SkillArray.Num(); ++i)
+					{
+						if (m_PlayerInfo.Level >= m_PlayerInfo.SkillTree[i].RequiredLevel)
+						{
+							SkillArray[i]->SetVisibility(ESlateVisibility::Visible);
+						}
+					}
 				}
 				
 				CharacterHUD->SetEXPPercent(m_PlayerInfo.Exp / (float)MaxExp);

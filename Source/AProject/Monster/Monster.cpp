@@ -106,7 +106,9 @@ void AMonster::BeginPlay()
 			m_MonsterInfo.AttackAngle = Info->AttackAngle;
 			m_MonsterInfo.MoveSpeed = Info->MoveSpeed;
 			m_MonsterInfo.TraceDistance = Info->TraceDistance;
-			m_MonsterInfo.weight = Info->weight;
+			m_MonsterInfo.Weight = Info->Weight;
+			m_MonsterInfo.DistanceOffset = Info->DistanceOffset;
+
 		}
 
 	}
@@ -289,7 +291,7 @@ float AMonster::TakeDamage(float DamageAmount, struct FDamageEvent const& Damage
 		float LaunchPower = Player->GetLauchPower();
 		//AttackedDir.Normalize();
 		
-		AttackedDir *= ( 1000.f / m_MonsterInfo.weight / LaunchPower);
+		AttackedDir *= ( 1000.f / m_MonsterInfo.Weight / LaunchPower);
 
 		LaunchCharacter(AttackedDir, false, false);
 	}

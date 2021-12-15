@@ -62,7 +62,10 @@ public:
 		float TraceDistance;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-		int32 weight;
+		int32 Weight;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	float DistanceOffset;
 };
 
 UENUM(BlueprintType)

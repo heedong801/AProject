@@ -76,7 +76,11 @@ public:
 		float			MoveSpeed;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+		float CriticalPercent;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	TArray<FPlayerSkillInfo> SkillTree;
+
 };
 
 struct FPlayerTraceInfo

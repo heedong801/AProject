@@ -117,7 +117,7 @@ void UBTTask_Patrol::TickTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemo
 
 	m_AccTime += DeltaSeconds;
 
-	int Offset = 10;
+	int Offset = Monster->GetMonsterInfo().DistanceOffset;
 	if (Distance <= Offset || m_AccTime >= m_WaitTime)
 	{
 		//LOG(TEXT("AAAAAAAAAAAAAAAAAAAAAAAAAA"), Distance);
