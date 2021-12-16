@@ -27,20 +27,14 @@ APlayerCharacter::APlayerCharacter()
 
 	m_Arm->TargetArmLength = 1000.f;
 
-	static ConstructorHelpers::FClassFinder<UAnimInstance> WukongAsset(TEXT("AnimBlueprint'/Game/Player/Wukong/Anim/AB_Wukong.AB_Wukong_C'"));
-
-	if (WukongAsset.Succeeded())
-		GetMesh()->SetAnimInstanceClass(WukongAsset.Class);
-
-
 	GetCharacterMovement()->JumpZVelocity = 800.f;
-	
 	GetCapsuleComponent()->SetCollisionProfileName(TEXT("Player"));
 
 	m_ActiveWidget = false;
 	m_LaunchPower = 1.f;
 	m_Movable = true;
 	MaxExp = 100;
+	m_IsCritical = false;
 	//LOG(TEXT("%f %f %f"), m_Arm->GetRelativeRotation().Vector().X, m_Arm->GetRelativeRotation().Vector().Y, m_Arm->GetRelativeRotation().Vector().Z);
 }
 
@@ -123,6 +117,7 @@ void APlayerCharacter::PostInitializeComponents()
 			m_PlayerInfo.MoveSpeed = SavePlayerInfo.MoveSpeed;
 			m_PlayerInfo.SkillTree = SavePlayerInfo.SkillTree;
 			m_PlayerInfo.CriticalPercent = SavePlayerInfo.CriticalPercent;
+			m_PlayerInfo.CriticalDamage = SavePlayerInfo.CriticalDamage;
 
 		}
 		else if (Info)
@@ -142,8 +137,10 @@ void APlayerCharacter::PostInitializeComponents()
 			m_PlayerInfo.MoveSpeed = Info->MoveSpeed;
 			m_PlayerInfo.SkillTree = Info->SkillTree;
 			m_PlayerInfo.CriticalPercent = Info->CriticalPercent;
+			m_PlayerInfo.CriticalDamage = Info->CriticalDamage;
 
 		}
+
 	}
 
 }
@@ -169,20 +166,59 @@ void APlayerCharacter::BeginPlay()
 			for (int32 i = 0; i < SkillArray.Num(); ++i)
 			{
 				if (m_PlayerInfo.Level >= m_PlayerInfo.SkillTree[i].RequiredLevel)
+				{
+					SkillArray[i]->SetSkillImg(m_PlayerInfo.SkillTree[i].TexturePath);
 					SkillArray[i]->SetVisibility(ESlateVisibility::Visible);
+				}
+
+			}
+		}
+	}
+	GetWorld()->GetTimerManager().SetTimer(RecoveryHandle, this, &APlayerCharacter::Recovery,
+		0.5f, true, -1.f);
+	//m_AnimInst->OnMontageEnded.AddDynamic(this, &APlayerCharacter::OnAttackMontageEnded);
+}
+
+void APlayerCharacter::Recovery()
+{
+	//LOG(TEXT("%f"), m_PlayerInfo.HP);
+
+	if (m_PlayerInfo.HP < m_PlayerInfo.HPMax)
+		m_PlayerInfo.HP += 0.2f;
+	else
+		m_PlayerInfo.HP = m_PlayerInfo.HPMax;
+
+	if (m_PlayerInfo.MP < m_PlayerInfo.MPMax)
+		m_PlayerInfo.MP += 0.1f;
+	else
+		m_PlayerInfo.MP = m_PlayerInfo.MPMax;
+
+	AAProjectGameModeBase* GameMode = Cast<AAProjectGameModeBase>(GetWorld()->GetAuthGameMode());
+	//LOG(TEXT("AA"));
+	if (IsValid(GameMode))
+	{
+		UMainHUD* MainHUD = GameMode->GetMainHUD();
+		//LOG(TEXT("BB"));
+		if (IsValid(MainHUD))
+		{
+			UCharacterHUD* CharacterHUD = MainHUD->GetCharacterHUD();
+			//LOG(TEXT("CC"));
+			if (IsValid(CharacterHUD))
+			{
+				CharacterHUD->SetHPPercent(m_PlayerInfo.HP / m_PlayerInfo.HPMax);
+				CharacterHUD->SetMPPercent(m_PlayerInfo.MP / m_PlayerInfo.MPMax);
 
 			}
 		}
 	}
 
-	//m_AnimInst->OnMontageEnded.AddDynamic(this, &APlayerCharacter::OnAttackMontageEnded);
 }
-
 // Called every frame
 void APlayerCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 	JumpMaxCount = 2;
+	
 	
 	SetDirection();
 	m_AnimInst->SetFullbody(m_AnimInst->GetCurveValue("FullBody"));
@@ -216,6 +252,8 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 
 void APlayerCharacter::Skill1Key()
 {
+	LOG(TEXT("1"));
+
 	m_SkillIdx = 0;
 	SkillPlayAnim(m_SkillIdx);
 
@@ -233,9 +271,9 @@ void APlayerCharacter::Skill3Key()
 	SkillPlayAnim(m_SkillIdx);
 
 }
-void APlayerCharacter::SkillPlayAnim(int32 idx)
+bool APlayerCharacter::SkillPlayAnim(int32 idx)
 {
-	//LOG(TEXT("%d"), m_PlayerInfo.MP);
+	//LOG(TEXT("Start"));
 	if (m_PlayerInfo.MP > m_PlayerInfo.SkillTree[idx].RequiredMP && m_PlayerInfo.Level >= m_PlayerInfo.SkillTree[idx].RequiredLevel)
 	{
 		//LOG(TEXT("A"));
@@ -265,6 +303,7 @@ void APlayerCharacter::SkillPlayAnim(int32 idx)
 								m_AnimInst->Montage_SetPosition(m_SkillMontageArray[idx], 0.f);
 								m_AnimInst->Montage_Play((m_SkillMontageArray[idx]));
 								SkillArray[idx]->SetCoolTimePercent(1.f, m_PlayerInfo.SkillTree[idx].CoolTime);
+								return true;
 							}
 						}
 					}
@@ -272,6 +311,7 @@ void APlayerCharacter::SkillPlayAnim(int32 idx)
 			}
 		}
 	}
+	return false;
 }
 void APlayerCharacter::QuestKey()
 {
@@ -501,6 +541,8 @@ void APlayerCharacter::AddExp(int32 Exp)
 					{
 						if (m_PlayerInfo.Level >= m_PlayerInfo.SkillTree[i].RequiredLevel)
 						{
+							SkillArray[i]->SetSkillImg(m_PlayerInfo.SkillTree[i].TexturePath);
+
 							SkillArray[i]->SetVisibility(ESlateVisibility::Visible);
 						}
 					}

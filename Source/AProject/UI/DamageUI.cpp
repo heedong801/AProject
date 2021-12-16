@@ -15,7 +15,11 @@ void UDamageUI::NativeConstruct()
 	
 	m_DamageText->SetText(FText::FromString(FString::FromInt(m_Damage)));
 
-	PlayAnimation(m_FadeAnim);
+	if( m_Critical == false)
+		PlayAnimation(m_FadeAnim);
+	else
+		PlayAnimation(m_CriticalFadeAnim);
+
 }
 
 void UDamageUI::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
@@ -45,7 +49,10 @@ void UDamageUI::SetActive(bool bOnActive)
 		ScreenLoc += FVector2D(-50.f, -100.f);
 		SetPositionInViewport(ScreenLoc);
 		m_DamageText->SetText(FText::FromString(FString::FromInt(m_Damage)));
-		PlayAnimation(m_FadeAnim);
+		if (m_Critical == false)
+			PlayAnimation(m_FadeAnim);
+		else
+			PlayAnimation(m_CriticalFadeAnim);
 	}
 	else
 	{

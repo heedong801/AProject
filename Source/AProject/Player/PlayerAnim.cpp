@@ -6,6 +6,7 @@
 #include "Engine/EngineTypes.h"
 #include "TimerManager.h"
 #include "../AProjectGameInstance.h"
+#include "../Player/Wukong.h"
 UPlayerAnim::UPlayerAnim()
 	: m_Dir(0), m_Speed(0), m_CanAttack(true), m_OnSky(false)
 {
@@ -148,14 +149,27 @@ void UPlayerAnim::AnimNotify_SlamEnd()
 			impactPoint, FRotator::ZeroRotator, param);
 		Effect->LoadParticleAsync(TEXT("Slam1"));*/
 		
-		UAProjectGameInstance* GameInst = Cast<UAProjectGameInstance>(GetWorld()->GetGameInstance());
-		ANormalEffect* Effect = Cast<ANormalEffect>(GameInst->GetParticlePool()->Pop(impactPoint, FRotator::ZeroRotator, ANormalEffect::StaticClass()));
-		
-		Effect->LoadParticleAsync(TEXT("Slam2"));
-		
-		ANormalEffect* Effect1 = Cast<ANormalEffect>(GameInst->GetParticlePool()->Pop(impactPoint, FRotator::ZeroRotator, ANormalEffect::StaticClass()));
-		Effect1->LoadParticleAsync(TEXT("Slam3"));
+		AWukong* Wukong = Cast<AWukong>(Player);
+		if (Wukong->GetFuryMode() == false)
+		{
+			UAProjectGameInstance* GameInst = Cast<UAProjectGameInstance>(GetWorld()->GetGameInstance());
+			ANormalEffect* Effect = Cast<ANormalEffect>(GameInst->GetParticlePool()->Pop(impactPoint, FRotator::ZeroRotator, ANormalEffect::StaticClass()));
 
+			Effect->LoadParticleAsync(TEXT("Slam2"));
+
+			ANormalEffect* Effect1 = Cast<ANormalEffect>(GameInst->GetParticlePool()->Pop(impactPoint, FRotator::ZeroRotator, ANormalEffect::StaticClass()));
+			Effect1->LoadParticleAsync(TEXT("Slam3"));
+		}
+		else
+		{
+			UAProjectGameInstance* GameInst = Cast<UAProjectGameInstance>(GetWorld()->GetGameInstance());
+			ANormalEffect* Effect = Cast<ANormalEffect>(GameInst->GetParticlePool()->Pop(impactPoint, FRotator::ZeroRotator, ANormalEffect::StaticClass()));
+
+			Effect->LoadParticleAsync(TEXT("Saga_Slam2"));
+
+			ANormalEffect* Effect1 = Cast<ANormalEffect>(GameInst->GetParticlePool()->Pop(impactPoint, FRotator::ZeroRotator, ANormalEffect::StaticClass()));
+			Effect1->LoadParticleAsync(TEXT("Saga_Slam3"));
+		}
 		Player->SetLaunchPower(1.0f);
 		for (auto result : HitResultArray)
 		{
@@ -171,7 +185,16 @@ void UPlayerAnim::AnimNotify_SlamEnd()
 
 				//데미지 전달
 				FDamageEvent DmgEvent;
-				float Damage = result.GetActor()->TakeDamage(150, DmgEvent, Player->GetController(), Player);
+				float CriticalRandom = FMath::RandRange(0.f, 100.f);
+				if (CriticalRandom <= Player->GetPlayerInfo().CriticalPercent)
+					Player->SetCritical(true);
+				else
+					Player->SetCritical(false);
+
+				int PlayerLevel = Player->GetPlayerInfo().Level;
+				int DamageRandom = FMath::RandRange(-5 * PlayerLevel, 5 * PlayerLevel);
+				int LevelUpDamage = 2;
+				float Damage = result.GetActor()->TakeDamage( (150 + DamageRandom + LevelUpDamage * PlayerLevel) * Player->GetPlayerInfo().CriticalDamage, DmgEvent, Player->GetController(), Player);
 			}
 		}
 	}

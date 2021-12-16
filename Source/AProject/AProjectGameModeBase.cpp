@@ -18,6 +18,7 @@ AAProjectGameModeBase::AAProjectGameModeBase()
 		DefaultPawnClass = PawnClass.Class;
 
 	m_ParticlePool = CreateDefaultSubobject<UParticlePool>(TEXT("ParticlePool"));
+
 }
 
 void AAProjectGameModeBase::InitGame(const FString& MapName,
@@ -85,3 +86,4 @@ void AAProjectGameModeBase::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 }
+

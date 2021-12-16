@@ -52,7 +52,8 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	virtual float TakeDamage(float Damage, struct FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
+	float TakeDamage(float Damage, struct FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser);
+
 	virtual void NormalAttack() {}
 	virtual void Death() {}
 	FVector NextPatrolPoint();
@@ -69,5 +70,5 @@ public:
 	bool GetIsSpawned() { return m_IsSpawned; }
 	void SetIsSpawned(bool Spawned) {		m_IsSpawned = Spawned;	}
 
-	void SpawnDamageUI(FVector WorldLoc, float Damage);
+	void SetDamageUI(bool Critical, float Damage);
 };

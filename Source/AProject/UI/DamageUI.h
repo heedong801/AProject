@@ -28,13 +28,19 @@ protected:
 	UPROPERTY(meta = (BindWidgetAnim), meta = (AllowPrivateAccess = "true"), Transient)
 		class UWidgetAnimation* m_FadeAnim;
 
+	UPROPERTY(meta = (BindWidgetAnim), meta = (AllowPrivateAccess = "true"), Transient)
+		class UWidgetAnimation* m_CriticalFadeAnim;
+
 	bool m_Active;
+	bool m_Critical;
 public:
 	void SetDamage(const int32& Damage) { m_Damage = Damage; }
 	void SetLocation(const FVector& Loc) { m_Location = Loc; }
 
 	void SetActive(bool bOnActive);
 	bool GetActive();
+
+	void SetCritical(bool Critical) { m_Critical = Critical; }
 
 protected:
 	virtual void NativeConstruct();

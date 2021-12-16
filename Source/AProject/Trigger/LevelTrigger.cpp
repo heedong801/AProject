@@ -64,6 +64,7 @@ void ALevelTrigger::TriggerBegin()
 			SavePlayerInfo.MoveSpeed = PlayerInfo.MoveSpeed;
 			SavePlayerInfo.SkillTree = PlayerInfo.SkillTree;
 			SavePlayerInfo.CriticalPercent = PlayerInfo.CriticalPercent;
+			SavePlayerInfo.CriticalDamage = PlayerInfo.CriticalDamage;
 
 		}
 

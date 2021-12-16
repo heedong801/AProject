@@ -183,6 +183,29 @@ void AMonster::Tick(float DeltaTime)
 	//}
 
 }
+void AMonster::SetDamageUI(bool Critical, float Damage)
+{
+	for (int32 i = 0; i < m_DamageUINum; ++i)
+	{
+		if (m_DamageUIArray[i]->GetActive() == false)
+		{
+			FVector tmpLoc = GetActorLocation();
+
+			FVector2D ScreenLoc;
+			UGameplayStatics::ProjectWorldToScreen(GetWorld()->GetFirstPlayerController(), tmpLoc, ScreenLoc);
+			if (Critical == true)
+				m_DamageUIArray[i]->SetCritical(true);
+			else
+				m_DamageUIArray[i]->SetCritical(false);
+
+			m_DamageUIArray[i]->SetLocation(tmpLoc);
+			m_DamageUIArray[i]->SetDamage(Damage);
+			m_DamageUIArray[i]->AddToViewport();
+			m_DamageUIArray[i]->SetActive(true);
+			break;
+		}
+	}
+}
 
 float AMonster::TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
 {
@@ -191,8 +214,13 @@ float AMonster::TakeDamage(float DamageAmount, struct FDamageEvent const& Damage
 	if (Damage == 0.f)
 		return 0.f;
 	//AttackedDir.Z = 0.f;
-
+	APlayerCharacter* Player = Cast<APlayerCharacter>(DamageCauser);
 	
+	if (Player->GetCritical() == true)
+		SetDamageUI(true, Damage);
+	else
+		SetDamageUI(false , Damage);
+
 	GetWorld()->GetFirstPlayerController()->ClientPlayCameraShake(
 		UHitCameraShake::StaticClass());
 
@@ -204,28 +232,7 @@ float AMonster::TakeDamage(float DamageAmount, struct FDamageEvent const& Damage
 
 	m_MonsterInfo.HP -= Damage;
 	
-
-	APlayerCharacter* Player = Cast<APlayerCharacter>(DamageCauser);
-	for (int32 i = 0; i < m_DamageUINum; ++i)
-	{
-		if (m_DamageUIArray[i]->GetActive() == false)
-		{
-			FVector tmpLoc = GetActorLocation();
-			
-
-			FVector2D ScreenLoc;
-			UGameplayStatics::ProjectWorldToScreen(GetWorld()->GetFirstPlayerController(), tmpLoc, ScreenLoc);
-			//LOG(TEXT("%f %f"), ScreenLoc.X, ScreenLoc.Y);
-			//LOG(TEXT("%s"), *DamageCauser->GetName());
-
-			//ScreenLoc += FVector2D(-50.f, -100.f);
-			m_DamageUIArray[i]->SetLocation(tmpLoc);
-			m_DamageUIArray[i]->SetDamage(Damage);
-			m_DamageUIArray[i]->AddToViewport();
-			m_DamageUIArray[i]->SetActive(true);
-			break;
-		}
-	}
+	
 
 	//m_Damage->SetupAttachment(GetMesh());
 	//m_Damage->SetWidgetClass(DamageAsset.Class);
@@ -262,7 +269,7 @@ float AMonster::TakeDamage(float DamageAmount, struct FDamageEvent const& Damage
 		if (m_HPBarWidget->GetVisibility() == ESlateVisibility::SelfHitTestInvisible)
 			m_HPBarWidget->SetVisibility(ESlateVisibility::Collapsed);
 
-	
+
 		if (Player)
 		{
 			Player->AddExp(m_MonsterInfo.Exp);
@@ -287,7 +294,6 @@ float AMonster::TakeDamage(float DamageAmount, struct FDamageEvent const& Damage
 	{
 		FVector  PlayerLoc = DamageCauser->GetActorLocation();
 		FVector AttackedDir = GetActorLocation() - PlayerLoc;
-	
 		float LaunchPower = Player->GetLauchPower();
 		//AttackedDir.Normalize();
 		

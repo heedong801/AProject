@@ -14,16 +14,27 @@ AWukong::AWukong()
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 	
-	static ConstructorHelpers::FObjectFinder<USkeletalMesh> WukongMesh(TEXT("SkeletalMesh'/Game/ParagonSunWukong/Characters/Heroes/Wukong/Meshes/Wukong.Wukong'"));
+	m_FuryWukongMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("FuryMesh"));
 
+	static ConstructorHelpers::FObjectFinder<USkeletalMesh>	FuryMesh(TEXT("SkeletalMesh'/Game/ParagonSunWukong/Characters/Heroes/Wukong/Skins/GreatSage/Meshes/Wukong_GreatSage.Wukong_GreatSage'"));
+	if (FuryMesh.Succeeded())
+		m_FuryWukongMesh->SetSkeletalMesh(FuryMesh.Object);
+
+	static ConstructorHelpers::FObjectFinder<USkeletalMesh> WukongMesh(TEXT("SkeletalMesh'/Game/ParagonSunWukong/Characters/Heroes/Wukong/Meshes/Wukong.Wukong'"));
 	if (WukongMesh.Succeeded())
-		GetMesh()->SetSkeletalMesh((WukongMesh.Object));
+		GetMesh()->SetSkeletalMesh(WukongMesh.Object);
 
 	static ConstructorHelpers::FClassFinder<UAnimInstance>	WukongAnimAsset(TEXT("AnimBlueprint'/Game/Player/Wukong/Anim/AB_Wukong.AB_Wukong_C'"));
+	static ConstructorHelpers::FClassFinder<UAnimInstance>	FuryWukongAnimAsset(TEXT("AnimBlueprint'/Game/Player/Wukong/Anim/AB_Wukong.AB_Wukong_C'"));
 
 	if (WukongAnimAsset.Succeeded())
+	{
 		GetMesh()->SetAnimInstanceClass(WukongAnimAsset.Class);
 
+		if (FuryWukongAnimAsset.Succeeded())
+			m_FuryWukongMesh->SetAnimInstanceClass(WukongAnimAsset.Class);
+
+	}
 	static ConstructorHelpers::FObjectFinder<UAnimMontage>	Attack1Asset(TEXT("AnimMontage'/Game/Player/Wukong/Anim/AM_AttackA.AM_AttackA'"));
 
 	if (Attack1Asset.Succeeded())
@@ -38,6 +49,23 @@ AWukong::AWukong()
 
 	if (Skill1Asset.Succeeded())
 		m_SkillMontageArray.Add(Skill1Asset.Object);
+
+	static ConstructorHelpers::FObjectFinder<UAnimMontage>	Skill2Asset(TEXT("AnimMontage'/Game/Player/Wukong/Anim/AM_Fury.AM_Fury'"));
+
+	if (Skill2Asset.Succeeded())
+		m_SkillMontageArray.Add(Skill2Asset.Object);
+
+	m_FuryAuraEffect = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("Aura"));
+	static ConstructorHelpers::FObjectFinder<UParticleSystem> AuraAsset(TEXT("ParticleSystem'/Game/AdvancedMagicFX12/particles/P_ky_aura_fire.P_ky_aura_fire'"));
+	if (AuraAsset.Succeeded())
+		m_FuryAuraEffect->SetTemplate(AuraAsset.Object);
+	m_FuryAuraEffect->SetupAttachment(GetMesh());
+	m_FuryAuraEffect->SetVisibility(false);
+
+	m_FuryWukongMesh->SetupAttachment(GetCapsuleComponent());
+	m_FuryWukongMesh->SetRelativeLocation(FVector(0.f, 0.f, -90.f));
+	m_FuryWukongMesh->SetRelativeRotation(FRotator(0.f, -90.f, 0.f));
+	m_FuryWukongMesh->SetVisibility(false);
 
 	m_PlayerInfoName = TEXT("Wukong");
 	//m_PlayerInfo.Name = TEXT("Wukong");
@@ -56,12 +84,18 @@ AWukong::AWukong()
 	//m_ParticlePool = CreateDefaultSubobject<UParticlePool>(TEXT("ParticlePool"));
 	
 	m_BoltCnt = 0;
+	m_FuryMode = false;
 }
 
 // Called when the game starts or when spawned
 void AWukong::BeginPlay()
 {
 	Super::BeginPlay();
+
+	
+	//LOG(TEXT("A"));
+
+
 	/*LOG(TEXT("%s"), *m_ParticlePool->GetName());
 	if (m_ParticlePool->GetSize() == 0)
 		m_ParticlePool->MakePool();
@@ -75,6 +109,7 @@ void AWukong::BeginPlay()
 void AWukong::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
 
 }
 
@@ -160,10 +195,20 @@ void AWukong::HitDamage()
 	/*	ANormalEffect* Effect = GetWorld()->SpawnActor<ANormalEffect>(ANormalEffect::StaticClass(),
 			result.ImpactPoint, result.ImpactNormal.Rotation(), param);*/
 
-		UAProjectGameInstance* GameInst = Cast<UAProjectGameInstance>(GetWorld()->GetGameInstance());
-		ANormalEffect* Effect = Cast<ANormalEffect>(GameInst->GetParticlePool()->Pop(result.ImpactPoint, result.ImpactNormal.Rotation(), ANormalEffect::StaticClass()));
-		 if( Effect != nullptr )
-			 Effect->LoadParticleAsync(TEXT("HitFire"));
+		if (m_FuryMode != true)
+		{
+			UAProjectGameInstance* GameInst = Cast<UAProjectGameInstance>(GetWorld()->GetGameInstance());
+			ANormalEffect* Effect = Cast<ANormalEffect>(GameInst->GetParticlePool()->Pop(result.ImpactPoint, result.ImpactNormal.Rotation(), ANormalEffect::StaticClass()));
+			if (Effect != nullptr)
+				Effect->LoadParticleAsync(TEXT("HitFire"));
+		}
+		else
+		{
+			UAProjectGameInstance* GameInst = Cast<UAProjectGameInstance>(GetWorld()->GetGameInstance());
+			ANormalEffect* Effect = Cast<ANormalEffect>(GameInst->GetParticlePool()->Pop(result.ImpactPoint, result.ImpactNormal.Rotation(), ANormalEffect::StaticClass()));
+			if (Effect != nullptr)
+				Effect->LoadParticleAsync(TEXT("Saga_Impact"));
+		}
 		//에셋 로딩
 		//Effect->LoadParticle(TEXT("ParticleSystem'/Game/ParagonSunWukong/FX/Particles/Wukong/Abilities/Primary/FX/P_Wukong_Impact_Empowered.P_Wukong_Impact_Empowered'"));
 		//Effect->LoadSound(TEXT("SoundWave'/Game/Sound/Fire4.Fire4'"));
@@ -171,11 +216,17 @@ void AWukong::HitDamage()
 		//Effect->LoadSoundAsync(TEXT("HitNormal"));
 		//데미지 전달
 		FDamageEvent DmgEvent;
+		float CriticalRandom = FMath::RandRange(0.f, 100.f);
+		if (CriticalRandom <= m_PlayerInfo.CriticalPercent)
+			m_IsCritical = true;
+		
+		else
+			m_IsCritical = false;
 
-		int random = FMath::RandRange(-5, 5);
+		int PlayerLevel = m_PlayerInfo.Level;
+		int DamageRandom = FMath::RandRange(-5 * PlayerLevel, 5 * PlayerLevel);
 		int LevelUpDamage = 2;
-		float Damage = result.GetActor()->TakeDamage(m_PlayerInfo.Attack + random + LevelUpDamage* m_PlayerInfo.Level, DmgEvent, GetController(), this);
-
+		float Damage = result.GetActor()->TakeDamage((20 + DamageRandom + LevelUpDamage * PlayerLevel) * m_PlayerInfo.CriticalDamage, DmgEvent, GetController(), this);
 	}
 }
 
@@ -210,8 +261,16 @@ void AWukong::UseSkill(int32 Idx)
 		m_BoltCnt = 0;
 		//LOG(TEXT("A"));
 		//m_AnimInst->Montage_JumpToSection(TEXT("Start"), m_SkillMontageArray[0]);
-		break;
 	}
+	break;
+	
+	case 1:
+	{
+		GetWorld()->GetTimerManager().SetTimer(m_FuryModeTimerHandler,
+			this, &AWukong::UnSetFuryMode, 15.f, false, -1.f);
+		SetFuryMode();
+	}
+	break;
 	}
 
 }
@@ -252,16 +311,109 @@ void AWukong::LighteningBolt()
 
 				//데미지 전달
 				FDamageEvent DmgEvent;
-				float Damage = result.GetActor()->TakeDamage(50, DmgEvent, GetController(), this);
+				float CriticalRandom = FMath::RandRange(0.f, 100.f);
+				if (CriticalRandom <= m_PlayerInfo.CriticalPercent)
+					m_IsCritical = true;
+				else
+					m_IsCritical = false;
+
+				int PlayerLevel = m_PlayerInfo.Level;
+				int DamageRandom = FMath::RandRange(-5 * PlayerLevel, 5 * PlayerLevel);
+				int LevelUpDamage = 2;
+				float Damage = result.GetActor()->TakeDamage((50 + DamageRandom + LevelUpDamage * PlayerLevel) * m_PlayerInfo.CriticalDamage, DmgEvent, GetController(), this);
 			}
 		}
 
 		float RandomX = FMath::RandRange(-1000.f, 1000.f);
 		float RandomY = FMath::RandRange(-1000.f, 1000.f);
 
-		UAProjectGameInstance* GameInst = Cast<UAProjectGameInstance>(GetWorld()->GetGameInstance());
-		ANormalEffect* Effect = Cast<ANormalEffect>(GameInst->GetParticlePool()->Pop(GetActorLocation() + FVector(RandomX,RandomY,0), GetActorRotation(), ANormalEffect::StaticClass()));
-		if (Effect != nullptr)
-			Effect->LoadParticleAsync(TEXT("Player_Bolt"));
+		if (m_FuryMode == false)
+		{
+			UAProjectGameInstance* GameInst = Cast<UAProjectGameInstance>(GetWorld()->GetGameInstance());
+			ANormalEffect* Effect = Cast<ANormalEffect>(GameInst->GetParticlePool()->Pop(GetActorLocation() + FVector(RandomX, RandomY, 0), GetActorRotation(), ANormalEffect::StaticClass()));
+			if (Effect != nullptr)
+				Effect->LoadParticleAsync(TEXT("Player_Bolt"));
+		}
+		else
+		{
+			UAProjectGameInstance* GameInst = Cast<UAProjectGameInstance>(GetWorld()->GetGameInstance());
+			ANormalEffect* Effect = Cast<ANormalEffect>(GameInst->GetParticlePool()->Pop(GetActorLocation() + FVector(RandomX, RandomY, 0), GetActorRotation(), ANormalEffect::StaticClass()));
+			if (Effect != nullptr)
+				Effect->LoadParticleAsync(TEXT("Saga_Bolt"));
+		}
 	}
+}
+
+
+void AWukong::SetFuryMode()
+{
+	if (!m_FuryMode)
+	{
+		UAProjectGameInstance* GameInst = Cast<UAProjectGameInstance>(GetWorld()->GetGameInstance());
+		ANormalEffect* Effect = Cast<ANormalEffect>(GameInst->GetParticlePool()->Pop(GetActorLocation() - FVector(0.f, 0.f, 90.f), GetActorRotation(), ANormalEffect::StaticClass()));
+		if (Effect != nullptr)
+			Effect->LoadParticleAsync(TEXT("Saga_Start"));
+
+		ANormalEffect* Effect1 = Cast<ANormalEffect>(GameInst->GetParticlePool()->Pop(GetActorLocation() - FVector(0.f, 0.f, 90.f), GetActorRotation(), ANormalEffect::StaticClass()));
+		if (Effect1 != nullptr)
+			Effect1->LoadParticleAsync(TEXT("Saga_Destroy"));
+		//m_FuryAuraEffect = Cast<ANormalEffect>(GameInst->GetParticlePool()->Pop(GetActorLocation() - FVector(0.f, 0.f, 90.f), GetActorRotation(), ANormalEffect::StaticClass()));
+		
+		FCollisionQueryParams params(NAME_None, false, this);
+
+		TArray<FHitResult> HitResultArray;
+		bool Sweep = GetWorld()->SweepMultiByChannel(HitResultArray, GetActorLocation(), GetActorLocation(), FQuat::Identity, ECollisionChannel::ECC_GameTraceChannel3
+			, FCollisionShape::MakeSphere(3000.f), params);
+		//LOG(TEXT("%f"), MonsterInfo.TraceDistance);
+
+		GetWorld()->GetFirstPlayerController()->ClientPlayCameraShake(UHitCameraShake::StaticClass());
+		m_IsCritical = false;
+		m_LaunchPower = 5.0f;
+		for (auto result : HitResultArray)
+		{
+			if (Sweep)
+			{
+				//데미지 전달
+				FDamageEvent DmgEvent;
+				float Damage = result.GetActor()->TakeDamage(2000, DmgEvent, GetController(), this);
+			}
+		}
+
+		m_FuryAuraEffect->SetVisibility(true);
+
+		m_FuryWukongMesh->SetVisibility(true);
+		GetMesh()->SetVisibility(false);
+		m_AnimInst = Cast<UPlayerAnim>(m_FuryWukongMesh->GetAnimInstance());
+		m_FuryMode = true;
+	}
+}
+void AWukong::UnSetFuryMode()
+{
+	if (m_FuryMode)
+	{
+		m_FuryWukongMesh->SetVisibility(false);
+		GetMesh()->SetVisibility(true);
+		m_AnimInst = Cast<UPlayerAnim>(GetMesh()->GetAnimInstance());
+		m_FuryAuraEffect->SetVisibility(false);
+
+		m_AnimInst->SetIsAttack(false);
+		m_AnimInst->SetCanAttack(true);
+
+		m_FuryMode = false;
+	}
+}
+
+bool AWukong::SkillPlayAnim(int32 idx)
+{
+	bool result = Super::SkillPlayAnim(idx);
+	if (idx == 1)
+	{
+		if (result)
+		{
+			(Cast<UPlayerAnim>(m_FuryWukongMesh->GetAnimInstance())->Montage_SetPosition(m_SkillMontageArray[idx], 0.f));
+			(Cast<UPlayerAnim>(m_FuryWukongMesh->GetAnimInstance())->Montage_Play((m_SkillMontageArray[idx])));
+			return true;
+		}
+	}
+	return false;
 }

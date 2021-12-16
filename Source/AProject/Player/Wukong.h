@@ -33,11 +33,25 @@ public:
 	UFUNCTION()
 		void LighteningBolt();
 
+	void SetFuryMode();
+	void UnSetFuryMode();
+
+	bool GetFuryMode() { return m_FuryMode; }
+	bool SkillPlayAnim(int32 idx);
 private:
 	int32 m_MaxCombo;
 	int32 m_CurrentCombo;
-
-	FTimerHandle m_BoltTimerHandler;
 	int32 m_BoltCnt;
 
+	FTimerHandle m_BoltTimerHandler;
+	FTimerHandle m_FuryModeTimerHandler;
+
+	bool m_FuryMode;
+	UParticleSystemComponent* m_FuryAuraEffect;
+	class UPlayerAnim* m_FuryAnimInst;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+		USkeletalMeshComponent* m_FuryWukongMesh;
+
+	//TArray<TSubclassOf<APawn>> m_WukongBP;
 };

@@ -27,8 +27,10 @@ protected:
 	UMainHUD* m_MainHUD;
 
 	UAssetPathMain* m_MainAssetPath;
+
 	UPROPERTY()
 	UParticlePool* m_ParticlePool;
+
 public:
 	UMainHUD* GetMainHUD()	{		return m_MainHUD;	}
 

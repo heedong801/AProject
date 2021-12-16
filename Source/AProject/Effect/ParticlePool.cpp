@@ -12,7 +12,7 @@ UParticlePool::UParticlePool()
 	m_NormalEffectEnd = 300;
 	m_BlueFlyBulletArray = 5;
 	m_CustomActorArrayMaxIdx = m_NormalEffectEnd + m_BlueFlyBulletArray;
-	LOG(TEXT("INSERT"));
+	//LOG(TEXT("INSERT"));
 	
 }
 
@@ -21,7 +21,7 @@ UParticlePool::~UParticlePool()
 	/*LOG(TEXT("%d"), m_CustomActorArray.Num());
 	m_CustomActorArray.RemoveAll([](NormalEffect* e) {return true; });
 	LOG(TEXT("%d"), m_CustomActorArray.Num());*/
-	LOG(TEXT("DELETE"));
+	//LOG(TEXT("DELETE"));
 
 }
 
@@ -63,7 +63,7 @@ ACustomActor* UParticlePool::Pop(FVector Pos, FRotator Rot, UClass* Type)
 {
 	if (this != nullptr && IsValid(this))
 	{
-		LOG(TEXT("POP"));
+		//LOG(TEXT("POP"));
 		int32 Start = 0, End = m_CustomActorArrayMaxIdx;
 
 		if (Type == ANormalEffect::StaticClass())
@@ -87,15 +87,15 @@ ACustomActor* UParticlePool::Pop(FVector Pos, FRotator Rot, UClass* Type)
 					m_CustomActorArray[i]->SetActorLocation(Pos);
 					m_CustomActorArray[i]->SetActorRotation(Rot);
 
-					LOG(TEXT("S : %d"), i);
+					//LOG(TEXT("S : %d"), i);
 					return m_CustomActorArray[i];
 				}
-				else
-					LOG(TEXT("SF : %d"), i);
+				//else
+					//LOG(TEXT("SF : %d"), i);
 
 			}
-			else
-				LOG(TEXT("F : %d"), i);
+			//else
+				//LOG(TEXT("F : %d"), i);
 		}
 
 		return nullptr;

@@ -14,6 +14,7 @@ void UCharacterHUD::NativeConstruct()
 	m_MPBar = Cast<UProgressBar>(GetWidgetFromName(TEXT("MPBar")));	
 	m_EXPBar = Cast<UProgressBar>(GetWidgetFromName(TEXT("EXPBar")));
 	m_SkillArray.Add(Cast<USkillImageWidget>(GetWidgetFromName(TEXT("UI_Skill1"))));
+	m_SkillArray.Add(Cast<USkillImageWidget>(GetWidgetFromName(TEXT("UI_Skill2"))));
 
 	APlayerCharacter* Player = Cast<APlayerCharacter>(GetWorld()->GetFirstPlayerController()->GetPawn());
 

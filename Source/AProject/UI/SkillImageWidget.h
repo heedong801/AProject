@@ -31,6 +31,7 @@ protected:
 public:
 	void SetCoolTimePercent(float Percent, int32 CoolTime);
 	void SetCoolTime();
+	void SetSkillImg(UTexture2D* Path);
 	bool GetCoolTimeOn() { return m_CoolTimeOn; }
 protected:
 	virtual void NativeConstruct();

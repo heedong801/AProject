@@ -33,3 +33,7 @@ void USkillImageWidget::SetCoolTime()
 	m_Percent += 0.2f;
 	m_CoolTimeBar->SetPercent( 1.f - m_Percent / (float)m_CoolTime);
 }
+void USkillImageWidget::SetSkillImg(UTexture2D* Path)
+{
+	m_SkillImg->SetBrushFromTexture(Path);
+}
