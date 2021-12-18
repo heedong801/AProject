@@ -31,7 +31,7 @@ void UPlayerAnim::NativeUpdateAnimation(float DeltaSeconds)
 		if (Movement)
 		{
 			m_Speed = Movement->Velocity.Size();
-			
+			//LOG(TEXT("%f"), m_Speed);
 			m_OnSky = Movement->IsFalling();
 
 			//LOG(TEXT("%f"), Player->GetCharacterMovement()->GravityScale);
@@ -58,6 +58,9 @@ void UPlayerAnim::NativeUpdateAnimation(float DeltaSeconds)
 
 void UPlayerAnim::AnimNotify_AttackCombo()
 {
+	//LOG(TEXT("true : %s"), *GetSkelMeshComponent()->GetName());
+
+
 	m_CanAttack = true;
 }
 
@@ -116,94 +119,16 @@ void UPlayerAnim::AnimNotify_SlamEnd()
 {
 	//LOG(TEXT("AnimNotify_SlamEnd"));
 
-	APlayerCharacter* Player = Cast<APlayerCharacter>(TryGetPawnOwner());
-
-	if (Player)
-	{
-		Player->SetTimeDillation();
-		Player->GetCharacterMovement()->GravityScale = 1.0f;
-		m_Attack = false;
-		m_CanAttack = true;
-
-		FCollisionQueryParams params(NAME_None, false, Player); 
-	
-		TArray<FHitResult> HitResultArray;
-		bool Sweep = GetWorld()->SweepMultiByChannel(HitResultArray, Player->GetActorLocation(), Player->GetActorLocation(), FQuat::Identity, ECollisionChannel::ECC_GameTraceChannel3
-			, FCollisionShape::MakeSphere(500.f), params);
-		//LOG(TEXT("%f"), MonsterInfo.TraceDistance);
-
-#if ENABLE_DRAW_DEBUG
-	/*	FColor DrawColor = Sweep ? FColor::Red : FColor::Green;
-
-		DrawDebugSphere(GetWorld(), Player->GetActorLocation(), 500, 20, DrawColor, false
-			, 0.3f);*/
-
-#endif
-		FVector impactPoint = FVector(Player->GetActorLocation().X, Player->GetActorLocation().Y, Player->GetActorLocation().Z - 80.f);
-
-
-		FActorSpawnParameters param;
-		param.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-
-	/*	ANormalEffect* Effect = GetWorld()->SpawnActor<ANormalEffect>(ANormalEffect::StaticClass(),
-			impactPoint, FRotator::ZeroRotator, param);
-		Effect->LoadParticleAsync(TEXT("Slam1"));*/
-		
-		AWukong* Wukong = Cast<AWukong>(Player);
-		if (Wukong->GetFuryMode() == false)
-		{
-			UAProjectGameInstance* GameInst = Cast<UAProjectGameInstance>(GetWorld()->GetGameInstance());
-			ANormalEffect* Effect = Cast<ANormalEffect>(GameInst->GetParticlePool()->Pop(impactPoint, FRotator::ZeroRotator, ANormalEffect::StaticClass()));
-
-			Effect->LoadParticleAsync(TEXT("Slam2"));
-
-			ANormalEffect* Effect1 = Cast<ANormalEffect>(GameInst->GetParticlePool()->Pop(impactPoint, FRotator::ZeroRotator, ANormalEffect::StaticClass()));
-			Effect1->LoadParticleAsync(TEXT("Slam3"));
-		}
-		else
-		{
-			UAProjectGameInstance* GameInst = Cast<UAProjectGameInstance>(GetWorld()->GetGameInstance());
-			ANormalEffect* Effect = Cast<ANormalEffect>(GameInst->GetParticlePool()->Pop(impactPoint, FRotator::ZeroRotator, ANormalEffect::StaticClass()));
-
-			Effect->LoadParticleAsync(TEXT("Saga_Slam2"));
-
-			ANormalEffect* Effect1 = Cast<ANormalEffect>(GameInst->GetParticlePool()->Pop(impactPoint, FRotator::ZeroRotator, ANormalEffect::StaticClass()));
-			Effect1->LoadParticleAsync(TEXT("Saga_Slam3"));
-		}
-		Player->SetLaunchPower(1.0f);
-		for (auto result : HitResultArray)
-		{
-			if (Sweep)
-			{
-				//ANormalEffect* Effect3 = GameInst->GetParticlePoo l()->Pop(result.ImpactPoint, result.ImpactNormal.Rotation());
-
-				//에셋 로딩
-				//Effect3->LoadParticle(TEXT("ParticleSystem'/Game/AdvancedMagicFX13/Particles/P_ky_impact.P_ky_impact'"));
-				//Effect->LoadSound(TEXT("SoundWave'/Game/Sound/Fire4.Fire4'"));
-				//Effect3->LoadParticleAsync(TEXT("HitNormal"));
-				//Effect->LoadSoundAsync(TEXT("HitNormal"));
-
-				//데미지 전달
-				FDamageEvent DmgEvent;
-				float CriticalRandom = FMath::RandRange(0.f, 100.f);
-				if (CriticalRandom <= Player->GetPlayerInfo().CriticalPercent)
-					Player->SetCritical(true);
-				else
-					Player->SetCritical(false);
-
-				int PlayerLevel = Player->GetPlayerInfo().Level;
-				int DamageRandom = FMath::RandRange(-5 * PlayerLevel, 5 * PlayerLevel);
-				int LevelUpDamage = 2;
-				float Damage = result.GetActor()->TakeDamage( (150 + DamageRandom + LevelUpDamage * PlayerLevel) * Player->GetPlayerInfo().CriticalDamage, DmgEvent, Player->GetController(), Player);
-			}
-		}
-	}
+	AWukong* Wukong = Cast<AWukong>(TryGetPawnOwner());
+	Wukong->SlamDamage();
 }
 
 void UPlayerAnim::AnimNotify_AttackEnd()
 {
+	//LOG(TEXT("true : %s"), *GetSkelMeshComponent()->GetName());
+
 	m_CanAttack = true;
-	m_Attack = false;
+
 	APlayerCharacter* Player = Cast<APlayerCharacter>(TryGetPawnOwner());
 
 	if (Player)
@@ -211,13 +136,20 @@ void UPlayerAnim::AnimNotify_AttackEnd()
 		Player->SetCurrentCombo(0);
 		Player->SetMovable(true);
 		Player->CameraArmYawReset();
+		
+		AWukong* Wukong = Cast<AWukong>(Player);
+		if (Wukong)
+			Wukong->SetCanAttack();
+
 	}
+
+
 }
 
 
 void UPlayerAnim::AnimNotify_UseSkill()
 {
-	m_Attack = true;
+
 	m_CanAttack = false;
 	APlayerCharacter* Player = Cast<APlayerCharacter>(TryGetPawnOwner());
 

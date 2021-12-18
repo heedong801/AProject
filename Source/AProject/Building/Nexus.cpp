@@ -58,6 +58,10 @@ ANexus::ANexus()
 
 	Hp = 2000;
 	IsExployed = false;
+	m_Top->bReceivesDecals = false;
+	m_Mid->bReceivesDecals = false;
+	m_Bottom->bReceivesDecals = false;
+
 }
 
 // Called when the game starts or when spawned

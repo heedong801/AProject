@@ -56,7 +56,7 @@ AMonster::AMonster()
 	GetCharacterMovement()->bOrientRotationToMovement = true;
 
 	m_DamageUINum = 10;
-
+	GetMesh()->bReceivesDecals = false;
 	
 }
 

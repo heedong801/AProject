@@ -22,6 +22,8 @@ protected:
 	int32 m_NormalEffectEnd;
 	UPROPERTY()
 	int32 m_BlueFlyBulletArray;
+	UPROPERTY()
+	int32 m_WukongBulletArray;
 public:
 	UParticlePool();
 	~UParticlePool();

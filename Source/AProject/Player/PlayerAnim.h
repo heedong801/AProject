@@ -36,9 +36,6 @@ protected:
 		float m_Speed;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-		bool m_Attack;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	bool m_CanAttack;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
@@ -74,9 +71,6 @@ public:
 	bool GetCanAttack() { return m_CanAttack; }
 	void SetCanAttack(bool AttackEnable) { m_CanAttack = AttackEnable; }
 	FName GetAttackMontageSectionName(int32 Section);
-
-	void SetIsAttack(bool Attack) { m_Attack = Attack; }
-	bool IsAttack()	const{return m_Attack;}
 
 	void SetDoubleJump(bool jump) { m_DoubleJump = jump; }
 	bool GetDoubleJump()	const { return m_DoubleJump; }

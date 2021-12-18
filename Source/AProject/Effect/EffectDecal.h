@@ -3,12 +3,12 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Actor.h"
+#include "../Etc/CustomActor.h"
 #include "Components/DecalComponent.h"
 #include "EffectDecal.generated.h"
 
 UCLASS()
-class APROJECT_API AEffectDecal : public AActor
+class APROJECT_API AEffectDecal : public ACustomActor
 {
 	GENERATED_BODY()
 	

@@ -45,6 +45,10 @@ protected:
 
 	FTimerHandle TimeDillationHandle;
 	FTimerHandle RecoveryHandle;
+	FTimerHandle ComboTimerHandle;
+
+	bool m_ActiveComboTime;
+	int32 m_ComboCnt;
 	int32 m_SkillIdx;
 	
 	float m_LaunchPower;
@@ -82,6 +86,7 @@ public:
 	void Skill2Key();
 	void Skill3Key();
 
+	void ResetCombo() { m_ActiveComboTime = false; m_ComboCnt = 0; }
 	void Recovery();
 	void SetActiveWidget(bool ActiveWidget) { m_ActiveWidget = ActiveWidget; }
 	void SetTimeDillation();
@@ -95,7 +100,7 @@ public:
 	virtual void SetCurrentCombo(int32 curCombo) { } 
 	virtual void HitDamage() { }
 	virtual void UseSkill(int32 Idx);
-
+	virtual void Attack();
 	UAnimMontage* GetSkyAttackMontage() { return m_SkyAttackMontage; }
 	virtual bool SkillPlayAnim(int32 idx);
 	int32 GetSkillIdx() { return m_SkillIdx; }

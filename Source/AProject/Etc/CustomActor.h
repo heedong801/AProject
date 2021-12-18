@@ -17,7 +17,7 @@ public:
 	// Sets default values for this actor's properties
 	ACustomActor();
 
-	void SetActive(bool bOnFlag);
-	bool GetActive();
+	virtual void SetActive(bool bOnFlag);
+	virtual bool GetActive();
 
 };

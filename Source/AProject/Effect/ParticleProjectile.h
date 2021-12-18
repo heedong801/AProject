@@ -33,7 +33,7 @@ protected:
 		float	m_Distance;
 
 	int32	m_Attack;
-	class AMonster* m_Owner;
+	ACharacter* m_Owner;
 
 public:
 	virtual void SetActiveBullet(FVector Dir);
@@ -42,9 +42,9 @@ public:
 		m_Attack = Attack;
 	}
 
-	void SetProjectileOwner(class AMonster* Monster)
+	void SetProjectileOwner(class ACharacter* Actor)
 	{
-		m_Owner = Monster;
+		m_Owner = Actor;
 	}
 protected:
 	// Called when the game starts or when spawned

@@ -58,6 +58,7 @@ void ANormalEffect::LoadSound(const FString& Path)
 
 void ANormalEffect::ParticleFinish(UParticleSystemComponent* Particle)
 {
+	SetActorScale3D(FVector(1.f, 1.f, 1.f));
 	SetActive(false);
 }
 

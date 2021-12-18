@@ -35,7 +35,11 @@ APlayerCharacter::APlayerCharacter()
 	m_Movable = true;
 	MaxExp = 100;
 	m_IsCritical = false;
+	m_ActiveComboTime = false;
+	m_ComboCnt = 0;
 	//LOG(TEXT("%f %f %f"), m_Arm->GetRelativeRotation().Vector().X, m_Arm->GetRelativeRotation().Vector().Y, m_Arm->GetRelativeRotation().Vector().Z);
+	GetMesh()->bReceivesDecals = false;
+
 }
 
 float APlayerCharacter::TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
@@ -149,6 +153,7 @@ void APlayerCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
+	//LOG(TEXT("A : %s"), *GetMesh()->GetName());
 	m_AnimInst = Cast<UPlayerAnim>(GetMesh()->GetAnimInstance());
 	m_ArmRotInitYaw = m_Arm->GetRelativeRotation();
 	
@@ -189,7 +194,7 @@ void APlayerCharacter::Recovery()
 		m_PlayerInfo.HP = m_PlayerInfo.HPMax;
 
 	if (m_PlayerInfo.MP < m_PlayerInfo.MPMax)
-		m_PlayerInfo.MP += 0.1f;
+		m_PlayerInfo.MP += 1.f;
 	else
 		m_PlayerInfo.MP = m_PlayerInfo.MPMax;
 
@@ -219,7 +224,7 @@ void APlayerCharacter::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 	JumpMaxCount = 2;
 	
-	
+
 	SetDirection();
 	m_AnimInst->SetFullbody(m_AnimInst->GetCurveValue("FullBody"));
 	//LOG(TEXT(" GetDoubleJump : %d"), m_AnimInst->GetDoubleJump());
@@ -252,8 +257,6 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 
 void APlayerCharacter::Skill1Key()
 {
-	LOG(TEXT("1"));
-
 	m_SkillIdx = 0;
 	SkillPlayAnim(m_SkillIdx);
 
@@ -429,38 +432,13 @@ void APlayerCharacter::ZoomInKey(float Scale)
 
 	m_Arm->TargetArmLength = FMath::Clamp(m_Arm->TargetArmLength, 350.f, 1000.f);
 }
+
+void APlayerCharacter::Attack()
+{}
+
 void APlayerCharacter::AttackKey()
 {
-	if (!m_ActiveWidget)
-	{
-		if (m_AnimInst->GetCanAttack())
-		{
-			if (!m_AnimInst->GetOnSky())			//하늘에 있으면 땅에서 하는 콤보 공격 불가
-			{
-				if (GetCurrentCombo() == 0)
-					m_AnimInst->Montage_Play(m_AttackMontage);
-				else
-					m_AnimInst->Montage_JumpToSection(m_AnimInst->GetAttackMontageSectionName(GetCurrentCombo() + 1 % 5));
-
-
-				SetCurrentCombo(GetCurrentCombo() + 1);
-				m_AnimInst->SetIsAttack(true);
-				m_AnimInst->SetCanAttack(false);
-			}
-			else
-			{
-
-				//LOG(TEXT("SKY ATTACK"));
-				if (!m_AnimInst->GetDoubleJump())
-				{
-					m_AnimInst->Montage_Play(m_SkyAttackMontage);
-				}
-				m_AnimInst->SetIsAttack(true);
-				m_AnimInst->SetCanAttack(false);
-			}
-		}
-	}
-
+	Attack();
 }
 
 void APlayerCharacter::JumpKey()
@@ -532,6 +510,17 @@ void APlayerCharacter::AddExp(int32 Exp)
 				{
 					m_PlayerInfo.Exp = 0;
 					m_PlayerInfo.Level++;
+
+					int LevelUpDamage = 2;
+					int LevelUpArmor = 5;
+					int LevelUpHp = 25;
+					int LevelUpMp = 15;
+
+					m_PlayerInfo.Attack += LevelUpDamage;
+					m_PlayerInfo.Armor += LevelUpArmor;
+					m_PlayerInfo.HPMax += LevelUpHp;
+					m_PlayerInfo.MPMax += LevelUpMp;
+
 					MaxExp *= 2;
 					CharacterHUD->SetLevelText(m_PlayerInfo.Level);
 
