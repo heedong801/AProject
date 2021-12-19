@@ -221,7 +221,7 @@ void AWukong::HitDamage()
 {
 	Super::HitDamage();
 
-	if (m_FuryMode)
+	if (!m_FuryMode)
 	{
 		FVector PlayerLoc = GetActorLocation();
 
@@ -300,20 +300,17 @@ void AWukong::HitDamage()
 			/*	ANormalEffect* Effect = GetWorld()->SpawnActor<ANormalEffect>(ANormalEffect::StaticClass(),
 					result.ImpactPoint, result.ImpactNormal.Rotation(), param);*/
 
-			if (m_FuryMode != true)
+
+			UAProjectGameInstance* GameInst = Cast<UAProjectGameInstance>(GetWorld()->GetGameInstance());
+			ANormalEffect* Effect = Cast<ANormalEffect>(GameInst->GetParticlePool()->Pop(result.ImpactPoint, result.ImpactNormal.Rotation(), ANormalEffect::StaticClass()));
+			if (Effect != nullptr)
 			{
-				UAProjectGameInstance* GameInst = Cast<UAProjectGameInstance>(GetWorld()->GetGameInstance());
-				ANormalEffect* Effect = Cast<ANormalEffect>(GameInst->GetParticlePool()->Pop(result.ImpactPoint, result.ImpactNormal.Rotation(), ANormalEffect::StaticClass()));
-				if (Effect != nullptr)
+				if (m_FuryMode != true)
 					Effect->LoadParticleAsync(TEXT("HitFire"));
-			}
-			else
-			{
-				UAProjectGameInstance* GameInst = Cast<UAProjectGameInstance>(GetWorld()->GetGameInstance());
-				ANormalEffect* Effect = Cast<ANormalEffect>(GameInst->GetParticlePool()->Pop(result.ImpactPoint, result.ImpactNormal.Rotation(), ANormalEffect::StaticClass()));
-				if (Effect != nullptr)
+				else
 					Effect->LoadParticleAsync(TEXT("Saga_Impact"));
 			}
+
 			//에셋 로딩
 			//Effect->LoadParticle(TEXT("ParticleSystem'/Game/ParagonSunWukong/FX/Particles/Wukong/Abilities/Primary/FX/P_Wukong_Impact_Empowered.P_Wukong_Impact_Empowered'"));
 			//Effect->LoadSound(TEXT("SoundWave'/Game/Sound/Fire4.Fire4'"));
@@ -340,6 +337,19 @@ void AWukong::HitDamage()
 
 		UAProjectGameInstance* GameInst = Cast<UAProjectGameInstance>(GetWorld()->GetGameInstance());
 		AWukongAttackProjectile* Bullet = Cast<AWukongAttackProjectile>(GameInst->GetParticlePool()->Pop(MuzzleLoc, GetActorRotation(), AWukongAttackProjectile::StaticClass()));
+
+		if (m_ActiveComboTime)
+		{
+			m_ComboCnt++;
+			GetWorld()->GetTimerManager().ClearTimer(ComboTimerHandle);
+			GetWorld()->GetTimerManager().SetTimer(ComboTimerHandle, this, &APlayerCharacter::ResetCombo, 2.f, false, -1.f);
+		}
+		else
+		{
+			m_ComboCnt = 1;
+			GetWorld()->GetTimerManager().SetTimer(ComboTimerHandle, this, &APlayerCharacter::ResetCombo, 2.f, false, -1.f);
+			m_ActiveComboTime = true;
+		}
 
 		if (Bullet)
 		{

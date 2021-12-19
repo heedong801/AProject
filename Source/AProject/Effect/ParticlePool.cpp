@@ -10,10 +10,10 @@ UParticlePool::UParticlePool()
 {
 	//LOG(TEXT("N : %d"), m_CustomActorArray.Num());
 	//LOG(TEXT("M : %d"), m_CustomActorArrayMaxIdx);
-	m_NormalEffectEnd = 300;
-	m_BlueFlyBulletArray = 5;
-	m_WukongBulletArray = 10;
-	m_CustomActorArrayMaxIdx = m_NormalEffectEnd + m_BlueFlyBulletArray + m_WukongBulletArray;
+	m_NormalEffectNum = 300;
+	m_BlueFlyBulletArrayNum = 5;
+	m_WukongBulletArrayNum = 10;
+	m_CustomActorArrayMaxIdx = m_NormalEffectNum + m_BlueFlyBulletArrayNum + m_WukongBulletArrayNum;
 	//LOG(TEXT("INSERT"));
 	
 }
@@ -29,7 +29,7 @@ UParticlePool::~UParticlePool()
 
 void UParticlePool::MakePool()
 {
-	for (int32 i = 0; i < m_NormalEffectEnd; ++i)
+	for (int32 i = 0; i < m_NormalEffectNum; ++i)
 	{
 		FActorSpawnParameters param;
 		param.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
@@ -40,7 +40,7 @@ void UParticlePool::MakePool()
 		Effect->SetActive(false);
 		m_CustomActorArray.Add(Effect);
 	}
-	for (int32 i = 0; i < m_BlueFlyBulletArray; ++i)
+	for (int32 i = 0; i < m_BlueFlyBulletArrayNum; ++i)
 	{
 		FActorSpawnParameters param;
 		param.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
@@ -51,7 +51,7 @@ void UParticlePool::MakePool()
 		Effect->SetActive(false);
 		m_CustomActorArray.Add(Effect);
 	}
-	for (int32 i = 0; i < m_WukongBulletArray; ++i)
+	for (int32 i = 0; i < m_WukongBulletArrayNum; ++i)
 	{
 		FActorSpawnParameters param;
 		param.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
@@ -82,16 +82,16 @@ ACustomActor* UParticlePool::Pop(FVector Pos, FRotator Rot, UClass* Type)
 		if (Type == ANormalEffect::StaticClass())
 		{
 			Start = 0;
-			End = m_NormalEffectEnd;
+			End = m_NormalEffectNum;
 		}
 		else if (Type == ABlueFlyProjectile::StaticClass())
 		{
-			Start = m_NormalEffectEnd;
-			End = m_NormalEffectEnd + m_BlueFlyBulletArray;
+			Start = m_NormalEffectNum;
+			End = m_NormalEffectNum + m_BlueFlyBulletArrayNum;
 		}
 		else if (Type == AWukongAttackProjectile::StaticClass())
 		{
-			Start = m_NormalEffectEnd + m_BlueFlyBulletArray;
+			Start = m_NormalEffectNum + m_BlueFlyBulletArrayNum;
 			End = m_CustomActorArrayMaxIdx;
 		}
 
@@ -105,15 +105,10 @@ ACustomActor* UParticlePool::Pop(FVector Pos, FRotator Rot, UClass* Type)
 					m_CustomActorArray[i]->SetActorLocation(Pos);
 					m_CustomActorArray[i]->SetActorRotation(Rot);
 
-					//LOG(TEXT("S : %d"), i);
 					return m_CustomActorArray[i];
 				}
-				//else
-					//LOG(TEXT("SF : %d"), i);
-
 			}
-			//else
-				//LOG(TEXT("F : %d"), i);
+
 		}
 
 		return nullptr;

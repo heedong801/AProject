@@ -62,16 +62,16 @@ void AGolem::NormalAttack()
 		params);
 
 	//PrintViewport(1.0f, FColor::Red, TEXT("ASDASD"));
-#if ENABLE_DRAW_DEBUG
-	FColor DrawColor = Sweep ? FColor::Red : FColor::Green;
-
-	FVector Center = MinionLoc + Forward * m_MonsterInfo.AttackDistance * 0.5f;
-	DrawDebugCapsule(GetWorld(), Center, m_MonsterInfo.DamageDistance * 0.5f, 30.f,
-		FRotationMatrix::MakeFromZ(Forward).ToQuat(), DrawColor,
-		false, 0.5f);
-	//DrawDebugCone(GetWorld(), MinionLoc, GetActorForwardVector(), m_PlayerInfo.AttackDistance, FMath::DegreesToRadians(m_PlayerInfo.AttackAngle), FMath::DegreesToRadians(m_PlayerInfo.AttackAngle), 20, DrawColor, false, 1.f);
-	//DrawDebugSphere(GetWorld(), MinionLoc, m_PlayerInfo.AttackDistance, 20, DrawColor, false, 1.f);
-#endif
+//#if ENABLE_DRAW_DEBUG
+//	FColor DrawColor = Sweep ? FColor::Red : FColor::Green;
+//
+//	FVector Center = MinionLoc + Forward * m_MonsterInfo.AttackDistance * 0.5f;
+//	DrawDebugCapsule(GetWorld(), Center, m_MonsterInfo.DamageDistance * 0.5f, 30.f,
+//		FRotationMatrix::MakeFromZ(Forward).ToQuat(), DrawColor,
+//		false, 0.5f);
+//	//DrawDebugCone(GetWorld(), MinionLoc, GetActorForwardVector(), m_PlayerInfo.AttackDistance, FMath::DegreesToRadians(m_PlayerInfo.AttackAngle), FMath::DegreesToRadians(m_PlayerInfo.AttackAngle), 20, DrawColor, false, 1.f);
+//	//DrawDebugSphere(GetWorld(), MinionLoc, m_PlayerInfo.AttackDistance, 20, DrawColor, false, 1.f);
+//#endif
 
 	if (Sweep)
 	{

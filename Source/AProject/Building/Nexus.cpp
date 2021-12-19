@@ -141,6 +141,7 @@ void ANexus::CheckClear()
 			}
 		}
 
+		m_HPBarWidget->SetVisibility(ESlateVisibility::Collapsed);
 		GetWorld()->GetTimerManager().SetTimer(m_RecallTimer, this,
 			&ANexus::RecallEffectAfterSequence, 2.25f, false);
 

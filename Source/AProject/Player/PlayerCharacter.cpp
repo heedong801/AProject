@@ -189,7 +189,7 @@ void APlayerCharacter::Recovery()
 	//LOG(TEXT("%f"), m_PlayerInfo.HP);
 
 	if (m_PlayerInfo.HP < m_PlayerInfo.HPMax)
-		m_PlayerInfo.HP += 0.2f;
+		m_PlayerInfo.HP += 1.2f;
 	else
 		m_PlayerInfo.HP = m_PlayerInfo.HPMax;
 
@@ -276,25 +276,20 @@ void APlayerCharacter::Skill3Key()
 }
 bool APlayerCharacter::SkillPlayAnim(int32 idx)
 {
-	//LOG(TEXT("Start"));
 	if (m_PlayerInfo.MP > m_PlayerInfo.SkillTree[idx].RequiredMP && m_PlayerInfo.Level >= m_PlayerInfo.SkillTree[idx].RequiredLevel)
 	{
-		//LOG(TEXT("A"));
-
 		if (m_AnimInst->GetOnSky() == false && m_AnimInst->GetCanAttack() == true)
 		{
-			//LOG(TEXT("B"));
-
 			AAProjectGameModeBase* GameMode = Cast<AAProjectGameModeBase>(GetWorld()->GetAuthGameMode());
-			//LOG(TEXT("AA"));
+
 			if (IsValid(GameMode))
 			{
 				UMainHUD* MainHUD = GameMode->GetMainHUD();
-				//LOG(TEXT("BB"));
+	
 				if (IsValid(MainHUD))
 				{
 					UCharacterHUD* CharacterHUD = MainHUD->GetCharacterHUD();
-					//LOG(TEXT("CC"));
+
 					if (IsValid(CharacterHUD))
 					{
 						TArray<USkillImageWidget*> SkillArray = CharacterHUD->GetSkillArray();

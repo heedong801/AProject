@@ -19,11 +19,11 @@ protected:
 	UPROPERTY()
 	int32 m_CustomActorArrayMaxIdx;
 	UPROPERTY()
-	int32 m_NormalEffectEnd;
+	int32 m_NormalEffectNum;
 	UPROPERTY()
-	int32 m_BlueFlyBulletArray;
+	int32 m_BlueFlyBulletArrayNum;
 	UPROPERTY()
-	int32 m_WukongBulletArray;
+	int32 m_WukongBulletArrayNum;
 public:
 	UParticlePool();
 	~UParticlePool();
@@ -33,7 +33,7 @@ public:
 	
 	ACustomActor* Pop(FVector Pos, FRotator Rot, UClass* Type);
 
-	int32 GetNormalEffectEndIdx() { return m_NormalEffectEnd;  }
-	int32 GetParticleProjectileEndIdx() { return m_BlueFlyBulletArray; }
+	int32 GetNormalEffectEndIdx() { return m_NormalEffectNum;  }
+	int32 GetParticleProjectileEndIdx() { return m_BlueFlyBulletArrayNum; }
 
 };
