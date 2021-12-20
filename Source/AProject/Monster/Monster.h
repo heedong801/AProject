@@ -44,7 +44,10 @@ protected:
 	TSubclassOf<UUserWidget> m_DamageAsset;
 	FTimerHandle m_MonsterDeathTimer;
 
+	class APlayerCharacter* m_Player;
 	bool m_IsSpawned;
+
+	float m_TraceDistanceOrigin;
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
@@ -69,6 +72,8 @@ public:
 
 	bool GetIsSpawned() { return m_IsSpawned; }
 	void SetIsSpawned(bool Spawned) {		m_IsSpawned = Spawned;	}
+
+	APlayerCharacter* GetPlayer() { return m_Player; }
 
 	void SetDamageUI(bool Critical, float Damage);
 };

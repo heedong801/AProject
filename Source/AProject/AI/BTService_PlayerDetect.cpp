@@ -74,6 +74,7 @@ void UBTService_PlayerDetect::TickNode(UBehaviorTreeComponent& OwnerComp, uint8*
 
 	//DrawDebugSphere(GetWorld(), Monster->GetActorLocation(), MonsterInfo.TraceDistance, 20, DrawColor, false
 	//, 0.3f);
+	
 
 #endif
 	if (Sweep)

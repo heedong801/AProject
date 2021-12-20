@@ -110,6 +110,21 @@ void ALevelTrigger::TriggerEnd()
 
 void ALevelTrigger::LoadMap()
 {
+	FLatentActionInfo	Info;
 	UGameplayStatics::OpenLevel(this, *m_StreamingLevelName);
+	//UGameplayStatics::LoadStreamLevel(GetWorld(), *m_StreamingLevelName,
+	//	true, false, Info);
+	//if (m_StreamingLevelName == "Meadow")
+	//{
+	//	
+	//	UGameplayStatics::LoadStreamLevel(GetWorld(), *m_StreamingSubLevelName,
+	//		true, false, Info);
+	///*	UGameplayStatics::UnloadStreamLevel(GetWorld(), TEXT("Meadow2"),
+	//		Info, false);
+
+	//	UGameplayStatics::UnloadStreamLevel(GetWorld(), TEXT("ExceptMeadow"),
+	//		Info, false);*/
+
+	//}
 }
 

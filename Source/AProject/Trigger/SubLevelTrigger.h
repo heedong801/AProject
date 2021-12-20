@@ -4,33 +4,28 @@
 
 #include "CoreMinimal.h"
 #include "BoxTrigger.h"
-#include "Engine/EngineTypes.h"
-#include "LevelTrigger.generated.h"
+#include "SubLevelTrigger.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class APROJECT_API ALevelTrigger : public ABoxTrigger
+class APROJECT_API ASubLevelTrigger : public ABoxTrigger
 {
 	GENERATED_BODY()
-
+	
 public:
-	ALevelTrigger();
+	ASubLevelTrigger();
 
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 		FString m_StreamingLevelName;
 
-
-	FTimerHandle m_MapLoadTimer;
-
-
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+		FString m_ExceptStreamingLevelName;
 protected:
 	virtual void BeginPlay() override;
 
-public:
-	virtual void Tick(float DeltaTime) override;
 
 public:
 	UFUNCTION()
@@ -38,7 +33,4 @@ public:
 
 	UFUNCTION()
 		void TriggerEnd();
-	UFUNCTION()
-		void LoadMap();
-
 };

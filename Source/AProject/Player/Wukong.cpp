@@ -112,45 +112,18 @@ AWukong::AWukong()
 void AWukong::BeginPlay()
 {
 	Super::BeginPlay();
-
-	
-	//LOG(TEXT("A"));
-
-
-	/*LOG(TEXT("%s"), *m_ParticlePool->GetName());
-	if (m_ParticlePool->GetSize() == 0)
-		m_ParticlePool->MakePool();
-
-	LOG(TEXT("%d"), m_ParticlePool->GetSize());*/
-
-
 }
 
 // Called every frame
 void AWukong::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
-	//LOG(TEXT("%d"), m_ComboCnt);
-	/*if (m_OnSkillBolt)
-	{
-		FHitResult result;
-
-
-		bool Hit = GetWorld()->GetFirstPlayerController()->GetHitResultUnderCursor(ECollisionChannel::ECC_GameTraceChannel5, false, result);
-
-		if (Hit)
-		{
-			m_BoltDecal->SetActorLocation(result.ImpactPoint);
-		}
-	}*/
 }
 
 // Called to bind functionality to input
 void AWukong::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
-
 }
 
 void AWukong::SetCurrentCombo(int32 curCombo) 
@@ -162,59 +135,57 @@ void AWukong::SetCurrentCombo(int32 curCombo)
 
 void AWukong::Attack()
 {
+	if (m_OnSkillBolt)
+	{
+		m_BoltImpactPoint = m_BoltDecal->GetActorLocation();
+		m_BoltDecal->SetSkillOn(false);
+		m_BoltDecal->Destroy();
+		m_BoltDecal = nullptr;
+		m_OnSkillBolt = false;
+		m_ActiveWidget = false;
+		GetWorld()->GetTimerManager().SetTimer(m_BoltTimerHandler,
+			this, &AWukong::LighteningBolt, 0.1f, true, 0.f);
+		m_BoltCnt = 0;
+		//if (!m_AnimInst->Montage_IsPlaying(m_Skill3FireMontage))
+		//{
+		//	m_AnimInst->Montage_SetPosition(m_Skill3FireMontage, 0.f);
+		//	m_AnimInst->Montage_Play(m_Skill3FireMontage);
+
+		//	//Ghost Trail On
+		//	OnGhostTrail();
+		//}
+	}
 	if (!m_ActiveWidget)
 	{
-		if (m_OnSkillBolt)
+		if (m_AnimInst->GetCanAttack())
 		{
-			m_BoltImpactPoint = m_BoltDecal->GetActorLocation();
-			m_BoltDecal->SetSkillOn(false);
-			m_BoltDecal->Destroy();
-			m_BoltDecal = nullptr;
-			m_OnSkillBolt = false;
+			//LOG(TEXT("C"));
 
-			GetWorld()->GetTimerManager().SetTimer(m_BoltTimerHandler,
-				this, &AWukong::LighteningBolt, 0.1f, true, 0.f);
-			m_BoltCnt = 0;
-			//if (!m_AnimInst->Montage_IsPlaying(m_Skill3FireMontage))
-			//{
-			//	m_AnimInst->Montage_SetPosition(m_Skill3FireMontage, 0.f);
-			//	m_AnimInst->Montage_Play(m_Skill3FireMontage);
-
-			//	//Ghost Trail On
-			//	OnGhostTrail();
-			//}
-		}
-		else
-		{
-			if (m_AnimInst->GetCanAttack())
+			if (!m_AnimInst->GetOnSky())			//하늘에 있으면 땅에서 하는 콤보 공격 불가
 			{
-				//LOG(TEXT("C"));
-
-				if (!m_AnimInst->GetOnSky())			//하늘에 있으면 땅에서 하는 콤보 공격 불가
-				{
-					if (GetCurrentCombo() == 0)
-						m_AnimInst->Montage_Play(m_AttackMontage);
-					else
-						m_AnimInst->Montage_JumpToSection(m_AnimInst->GetAttackMontageSectionName(GetCurrentCombo() + 1 % 5));
-
-
-					SetCurrentCombo(GetCurrentCombo() + 1);
-
-					m_AnimInst->SetCanAttack(false);
-				}
+				if (GetCurrentCombo() == 0)
+					m_AnimInst->Montage_Play(m_AttackMontage);
 				else
+					m_AnimInst->Montage_JumpToSection(m_AnimInst->GetAttackMontageSectionName(GetCurrentCombo() + 1 % 5));
+
+
+				SetCurrentCombo(GetCurrentCombo() + 1);
+
+				m_AnimInst->SetCanAttack(false);
+			}
+			else
+			{
+
+				//LOG(TEXT("SKY ATTACK"));
+				if (!m_AnimInst->GetDoubleJump())
 				{
-
-					//LOG(TEXT("SKY ATTACK"));
-					if (!m_AnimInst->GetDoubleJump())
-					{
-						m_AnimInst->Montage_Play(m_SkyAttackMontage);
-					}
-
-					m_AnimInst->SetCanAttack(false);
+					m_AnimInst->Montage_Play(m_SkyAttackMontage);
 				}
+
+				m_AnimInst->SetCanAttack(false);
 			}
 		}
+
 	}
 }
 void AWukong::HitDamage()
@@ -384,7 +355,7 @@ void AWukong::UseSkill(int32 Idx)
 			if (!m_OnSkillBolt)
 			{
 				m_OnSkillBolt = true;
-
+				m_ActiveWidget = true;
 				FActorSpawnParameters param;
 
 				if (m_BoltDecal == nullptr)
@@ -462,12 +433,13 @@ void AWukong::LighteningBolt()
 
 		GetWorld()->GetFirstPlayerController()->ClientPlayCameraShake(UHitCameraShake::StaticClass());
 		m_LaunchPower = 5.0f;
-		for (auto result : HitResultArray)
+		if (Sweep)
 		{
-			//LOG(TEXT("%s"), *result.GetActor()->GetName());
-			if (Sweep)
+			for (auto result : HitResultArray)
 			{
-				//데미지 전달
+				//LOG(TEXT("%s"), *result.GetActor()->GetName());
+
+					//데미지 전달
 				FDamageEvent DmgEvent;
 				float CriticalRandom = FMath::RandRange(0.f, 100.f);
 				if (CriticalRandom <= m_PlayerInfo.CriticalPercent)
@@ -479,7 +451,8 @@ void AWukong::LighteningBolt()
 				int DamageRandom = FMath::RandRange(-5 * PlayerLevel, 5 * PlayerLevel);
 
 				int FuryDamage = m_FuryMode ? 2 : 1;
-				float Damage = result.GetActor()->TakeDamage(((50 + DamageRandom ) * GetPlayerInfo().CriticalDamage) * FuryDamage, DmgEvent, GetController(), this);
+				float Damage = result.GetActor()->TakeDamage(((50 + DamageRandom) * GetPlayerInfo().CriticalDamage) * FuryDamage, DmgEvent, GetController(), this);
+
 			}
 		}
 
@@ -505,7 +478,7 @@ void AWukong::FuryLighteningBolt()
 		GetWorld()->GetTimerManager().ClearTimer(m_BoltTimerHandler);
 		//LOG(TEXT("B"));
 		m_AnimInst->Montage_JumpToSection(TEXT("End"), m_SkillMontageArray[0]);
-		
+		(GetMesh()->GetAnimInstance())->Montage_JumpToSection(TEXT("End"), m_SkillMontageArray[0]);
 	}
 	else
 	{
@@ -519,12 +492,13 @@ void AWukong::FuryLighteningBolt()
 
 		GetWorld()->GetFirstPlayerController()->ClientPlayCameraShake(UHitCameraShake::StaticClass());
 		m_LaunchPower = 5.0f;
-		for (auto result : HitResultArray)
+		if (Sweep)
 		{
-			//LOG(TEXT("%s"), *result.GetActor()->GetName());
-			if (Sweep)
+			for (auto result : HitResultArray)
 			{
-				//데미지 전달
+				//LOG(TEXT("%s"), *result.GetActor()->GetName());
+
+					//데미지 전달
 				FDamageEvent DmgEvent;
 				float CriticalRandom = FMath::RandRange(0.f, 100.f);
 				if (CriticalRandom <= m_PlayerInfo.CriticalPercent)
@@ -534,11 +508,12 @@ void AWukong::FuryLighteningBolt()
 
 				int PlayerLevel = m_PlayerInfo.Level;
 				int DamageRandom = FMath::RandRange(-5 * PlayerLevel, 5 * PlayerLevel);
-	
+
 				int FuryDamage = m_FuryMode ? 2 : 1;
-				float Damage = result.GetActor()->TakeDamage(((50 + DamageRandom ) * GetPlayerInfo().CriticalDamage) * FuryDamage, DmgEvent, GetController(), this);
+				float Damage = result.GetActor()->TakeDamage(((50 + DamageRandom) * GetPlayerInfo().CriticalDamage) * FuryDamage, DmgEvent, GetController(), this);
 			}
 		}
+	
 
 		float RandomX = FMath::RandRange(-1000.f, 1000.f);
 		float RandomY = FMath::RandRange(-1000.f, 1000.f);
@@ -589,13 +564,15 @@ void AWukong::SetFuryMode()
 			GetWorld()->GetFirstPlayerController()->ClientPlayCameraShake(UHitCameraShake::StaticClass());
 			m_IsCritical = false;
 			m_LaunchPower = 5.0f;
-			for (auto result : HitResultArray)
+			if (Sweep)
 			{
-				if (Sweep)
+				for (auto result : HitResultArray)
 				{
+
 					//데미지 전달
 					FDamageEvent DmgEvent;
 					float Damage = result.GetActor()->TakeDamage(2000, DmgEvent, GetController(), this);
+
 				}
 			}
 		}
@@ -700,10 +677,11 @@ void AWukong::SlamDamage()
 		Effect1->LoadParticleAsync(TEXT("Saga_Slam3"));
 	}
 	SetLaunchPower(1.0f);
-	for (auto result : HitResultArray)
+	if (Sweep)
 	{
-		if (Sweep)
+		for (auto result : HitResultArray)
 		{
+
 			//데미지 전달
 			FDamageEvent DmgEvent;
 			float CriticalRandom = FMath::RandRange(0.f, 100.f);
@@ -717,7 +695,8 @@ void AWukong::SlamDamage()
 			int DamageRandom = FMath::RandRange(-5 * PlayerLevel, 5 * PlayerLevel);
 
 			int FuryDamage = m_FuryMode ? 2 : 1;
-			float Damage = result.GetActor()->TakeDamage(((150 + DamageRandom ) * GetPlayerInfo().CriticalDamage) * FuryDamage, DmgEvent, GetController(), this);
+			float Damage = result.GetActor()->TakeDamage(((150 + DamageRandom) * GetPlayerInfo().CriticalDamage) * FuryDamage, DmgEvent, GetController(), this);
+
 		}
 	}
 

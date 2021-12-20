@@ -389,12 +389,12 @@ void APlayerCharacter::LookUp(float Scale)
 	if (!m_ActiveWidget)
 	{
 		if (m_Movable)
-			AddControllerYawInput(Scale);
+			AddControllerYawInput(Scale * 0.3f);
 		else
 		{
 			FRotator Rot = m_Arm->GetRelativeRotation();
 
-			Rot.Yaw += Scale * 30.f * GetWorld()->GetDeltaSeconds();
+			Rot.Yaw += Scale * 50.f * GetWorld()->GetDeltaSeconds();
 
 			m_Arm->SetRelativeRotation(Rot);
 		}

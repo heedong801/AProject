@@ -36,7 +36,7 @@ void AWukongAttackProjectile::SetActive(bool bOnFlag)
 }
 void AWukongAttackProjectile::StopEvent(const FHitResult& result)
 {
-	LOG(TEXT("%s"), *result.GetActor()->GetName());
+	//LOG(TEXT("%s"), *result.GetActor()->GetName());
 	Super::StopEvent(result);
 
 	UAProjectGameInstance* GameInst = Cast<UAProjectGameInstance>(GetWorld()->GetGameInstance());

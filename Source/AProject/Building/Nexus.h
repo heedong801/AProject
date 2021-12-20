@@ -50,6 +50,9 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 		FVector m_NextPosition;
 
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+		FString m_NextStreamingLevelName;
 	ANormalEffect* m_Effect;
 
 	UMaterialInstanceDynamic* m_DynamicMaterial;

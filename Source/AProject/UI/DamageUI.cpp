@@ -13,7 +13,11 @@ void UDamageUI::NativeConstruct()
 
 	//SetPositionInViewport(m_Location);
 	
-	m_DamageText->SetText(FText::FromString(FString::FromInt(m_Damage)));
+	if (m_Damage != 0.f)
+		m_DamageText->SetText(FText::FromString(FString::FromInt(m_Damage)));
+	else
+		m_DamageText->SetText(FText::FromString(FString("MISS")));
+
 
 	if( m_Critical == false)
 		PlayAnimation(m_FadeAnim);
@@ -48,7 +52,10 @@ void UDamageUI::SetActive(bool bOnActive)
 		UGameplayStatics::ProjectWorldToScreen(GetWorld()->GetFirstPlayerController(), m_Location, ScreenLoc);
 		ScreenLoc += FVector2D(-50.f, -100.f);
 		SetPositionInViewport(ScreenLoc);
-		m_DamageText->SetText(FText::FromString(FString::FromInt(m_Damage)));
+		if (m_Damage != 0.f)
+			m_DamageText->SetText(FText::FromString(FString::FromInt(m_Damage)));
+		else
+			m_DamageText->SetText(FText::FromString(FString("MISS")));
 		if (m_Critical == false)
 			PlayAnimation(m_FadeAnim);
 		else

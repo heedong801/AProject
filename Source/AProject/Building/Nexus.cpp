@@ -114,7 +114,7 @@ void ANexus::CheckClear()
 			//PrintViewport(1.f, FColor::Red, TEXT("SequencePlay"));
 		}
 
-		TArray<AActor*> Actors;
+		/*TArray<AActor*> Actors;
 		UGameplayStatics::GetAllActorsOfClass(GetWorld(), AMonster::StaticClass(), Actors);
 
 		for (AActor* Actor : Actors)
@@ -128,7 +128,7 @@ void ANexus::CheckClear()
 				if (Distance <= 1500.f)
 					Monster->Destroy();
 			}
-		}
+		}*/
 		//// 몬스터가 죽었을 경우 퀘스트에 해당 몬스터를 잡는 퀘스트가 있는지 판단한다.
 		AAProjectGameModeBase* GameMode = Cast<AAProjectGameModeBase>(GetWorld()->GetAuthGameMode());
 
@@ -141,7 +141,7 @@ void ANexus::CheckClear()
 			}
 		}
 
-		m_HPBarWidget->SetVisibility(ESlateVisibility::Collapsed);
+		m_HPBarWidget->SetVisibility(ESlateVisibility::Hidden);
 		GetWorld()->GetTimerManager().SetTimer(m_RecallTimer, this,
 			&ANexus::RecallEffectAfterSequence, 2.25f, false);
 
@@ -175,6 +175,7 @@ void ANexus::PlayerRecall()
 		Effect1->SetActorScale3D(FVector(2.0f, 2.0f, 2.0f));
 		Effect1->LoadParticleAsync(TEXT("Player_Recall"));
 		Player->SetActorLocation(m_NextPosition);
+
 	}
 }
 void ANexus::Recall()
@@ -191,6 +192,14 @@ void ANexus::Recall()
 			&ANexus::PlayerRecall, 1.25f, false);
 		/*APlayerCharacter* Player = GetWorld()->GetFirstPlayerController()->GetPawn<APlayerCharacter>();
 		Player->SetActorLocation(m_NextPosition);*/
+		FLatentActionInfo	Info;
+
+		if (m_NextStreamingLevelName.Len() != 0)
+		{
+			UGameplayStatics::LoadStreamLevel(GetWorld(), *m_NextStreamingLevelName,
+				true, false, Info);
+
+		}
 	}
 }
 // Called every frame
@@ -254,7 +263,7 @@ float ANexus::TakeDamageForNexus(float DamageAmount, struct FDamageEvent const& 
 		FCollisionQueryParams params(NAME_None, false, this);
 
 		Sweep = GetWorld()->SweepMultiByChannel(HitResultArray, GetActorLocation(), GetActorLocation(), FQuat::Identity, ECollisionChannel::ECC_GameTraceChannel3
-				, FCollisionShape::MakeSphere(500.f), params);
+				, FCollisionShape::MakeSphere(3500.f), params);
 
 		for (auto result : HitResultArray)
 		{
@@ -270,7 +279,7 @@ float ANexus::TakeDamageForNexus(float DamageAmount, struct FDamageEvent const& 
 
 				//데미지 전달
 				FDamageEvent DmgEvent;
-				result.GetActor()->TakeDamage(500, DmgEvent, nullptr, this);
+				result.GetActor()->TakeDamage(1500, DmgEvent, nullptr, this);
 			}
 		}
 		
