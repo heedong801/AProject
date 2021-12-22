@@ -1,0 +1,34 @@
+// Fill out your copyright notice in the Description page of Project Settings.
+
+#pragma once
+
+#include "CoreMinimal.h"
+#include "Animation/AnimInstance.h"
+#include "SelectPlayerAnimInstance.generated.h"
+
+UENUM(BlueprintType)
+enum class ESelectAnimType : uint8
+{
+	Idle,
+	Select
+};
+
+UCLASS()
+class APROJECT_API USelectPlayerAnimInstance : public UAnimInstance
+{
+	GENERATED_BODY()
+
+private:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+		ESelectAnimType m_AnimType;
+
+public:
+	USelectPlayerAnimInstance();
+
+	void ChangeAnimType(ESelectAnimType Type)
+	{
+		m_AnimType = Type;
+	}
+
+
+};
