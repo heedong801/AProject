@@ -7,32 +7,16 @@
 ASelectPawn::ASelectPawn()
 {
  	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	/*PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = false;
 
 	m_Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
 	SetRootComponent(m_Camera);
 
-	m_Camera->SetRelativeLocation(FVector(0.f, 0.f, 100.f));*/
+	//m_Camera->SetRelativeLocation(FVector(0.f, 0.f, 100.f));
+
+	//FPostProcessSettings CameraSetting = m_Camera->PostProcessSettings;
+	//CameraSetting.VignetteIntensity = 1.0f;
+	//CameraSetting.WhiteTemp = 7900.f;
+
+	//PostProcessVolume-
 }
-
-// Called when the game starts or when spawned
-void ASelectPawn::BeginPlay()
-{
-	Super::BeginPlay();
-	
-}
-
-// Called every frame
-void ASelectPawn::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-
-}
-
-// Called to bind functionality to input
-void ASelectPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
-{
-	Super::SetupPlayerInputComponent(PlayerInputComponent);
-
-}
-

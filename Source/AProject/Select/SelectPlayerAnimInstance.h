@@ -9,6 +9,7 @@
 UENUM(BlueprintType)
 enum class ESelectAnimType : uint8
 {
+	Start,
 	Idle,
 	Select
 };
@@ -23,12 +24,12 @@ private:
 		ESelectAnimType m_AnimType;
 
 public:
-	USelectPlayerAnimInstance();
 
 	void ChangeAnimType(ESelectAnimType Type)
 	{
 		m_AnimType = Type;
 	}
 
-
+	UFUNCTION()
+		void AnimNotify_IdleStart();
 };

@@ -56,6 +56,8 @@ protected:
 
 	bool m_IsSprint;
 	bool m_IsCritical;
+
+	bool m_IsInTown;
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -82,6 +84,9 @@ public:
 	void Sprint();
 	void StopSprint();
 	void QuestKey();
+	void QuitKey();
+	void InteractionKey();
+
 	void Skill1Key();
 	void Skill2Key();
 	void Skill3Key();
@@ -110,6 +115,8 @@ public:
 	void SetMovable(bool Movable) { m_Movable = Movable; }
 	bool GetCritical() { return m_IsCritical; }
 	void SetCritical(bool Critical) { m_IsCritical = Critical; }
+	bool GetInTown() { return m_IsInTown; }
+	void SetInTown(bool InTown) { m_IsInTown = InTown; }
 	UFUNCTION()
 	void SetTimeDefaultTimeDilation();
 	//struct FPlayerTraceInfo APlayerCharacter::FootTrace(float fTraceDistance, FName sSocket);

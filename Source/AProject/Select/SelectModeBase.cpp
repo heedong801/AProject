@@ -7,8 +7,8 @@
 
 ASelectModeBase::ASelectModeBase()
 {
-	//PlayerControllerClass = ASelectPlayerController::StaticClass();
-	//DefaultPawnClass = ASelectPawn::StaticClass();
+	PlayerControllerClass = ASelectPlayerController::StaticClass();
+	DefaultPawnClass = ASelectPawn::StaticClass();
 	static ConstructorHelpers::FClassFinder<USelectHUD> SelectHUDClass(TEXT("WidgetBlueprint'/Game/UI/UI_SelectHUD.UI_SelectHUD_C'"));
 
 	if (SelectHUDClass.Succeeded())
@@ -16,14 +16,13 @@ ASelectModeBase::ASelectModeBase()
 
 	static ConstructorHelpers::FClassFinder<APawn> PawnClass(TEXT("Blueprint'/Game/Player/Select/BP_SelectPlayer.BP_SelectPlayer_C'"));
 	if (PawnClass.Succeeded())
-		DefaultPawnClass = PawnClass.Class;
+		m_Pawn = PawnClass.Class;
 
 }
 
 void ASelectModeBase::InitGame(const FString& MapName, const FString& Options, FString& ErrorMessage)
 {
 	Super::InitGame(MapName, Options, ErrorMessage);
-
 }
 void ASelectModeBase::BeginPlay()
 {
@@ -34,7 +33,10 @@ void ASelectModeBase::BeginPlay()
 		m_SelectHUD = Cast<USelectHUD>(CreateWidget(GetWorld(), m_SelectHUDClass));
 
 		if (m_SelectHUD)
+		{
 			m_SelectHUD->AddToViewport();
+			m_SelectHUD->SetPawn(m_Pawn);
+		}
 	}
 
 	APlayerController* Controller = GetWorld()->GetFirstPlayerController();
@@ -47,3 +49,7 @@ void ASelectModeBase::BeginPlay()
 	Controller->bShowMouseCursor = true;
 }
 
+void ASelectModeBase::SpawnCharacter()
+{
+
+}

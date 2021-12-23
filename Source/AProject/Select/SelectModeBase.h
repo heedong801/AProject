@@ -21,7 +21,7 @@ protected:
 
 	USelectHUD* m_SelectHUD;
 
-
+	TSubclassOf<APawn> m_Pawn;
 public:
 	ASelectModeBase();
 
@@ -31,6 +31,8 @@ public:
 	{
 		return m_SelectHUD;
 	}
+
+	void SpawnCharacter();
 	virtual void InitGame(const FString& MapName, const FString& Options, FString& ErrorMessage);
 	virtual void BeginPlay();
 };

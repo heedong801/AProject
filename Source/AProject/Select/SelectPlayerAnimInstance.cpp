@@ -3,8 +3,8 @@
 
 #include "SelectPlayerAnimInstance.h"
 
-USelectPlayerAnimInstance::USelectPlayerAnimInstance()
-{
-	//m_AnimType = ESelectAnimType::Idle;
-}
 
+void USelectPlayerAnimInstance::AnimNotify_IdleStart()
+{
+	m_AnimType = ESelectAnimType::Idle;
+}

@@ -6,6 +6,8 @@
 
 ASelectPlayerController::ASelectPlayerController()
 {
+	PrimaryActorTick.bCanEverTick = false;
+
 	/*bShowMouseCursor = true;
 	m_LButtonClick = false;
 	m_SelectJob = EPlayerJob::End;
@@ -16,7 +18,7 @@ void ASelectPlayerController::PlayerTick(float DeltaTime)
 {
 	Super::PlayerTick(DeltaTime);
 
-	Picking();
+	//Picking();
 	
 }
 void ASelectPlayerController::SetupInputComponent()

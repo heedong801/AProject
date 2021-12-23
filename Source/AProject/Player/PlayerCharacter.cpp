@@ -37,6 +37,7 @@ APlayerCharacter::APlayerCharacter()
 	m_IsCritical = false;
 	m_ActiveComboTime = false;
 	m_ComboCnt = 0;
+	m_IsInTown = true;
 	//LOG(TEXT("%f %f %f"), m_Arm->GetRelativeRotation().Vector().X, m_Arm->GetRelativeRotation().Vector().Y, m_Arm->GetRelativeRotation().Vector().Z);
 	GetMesh()->bReceivesDecals = false;
 
@@ -252,6 +253,10 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 	PlayerInputComponent->BindAction(TEXT("Skill3"), EInputEvent::IE_Pressed, this, &APlayerCharacter::Skill3Key);
 
 	PlayerInputComponent->BindAction(TEXT("Quest"), EInputEvent::IE_Pressed, this, &APlayerCharacter::QuestKey);
+	PlayerInputComponent->BindAction(TEXT("Quit"), EInputEvent::IE_Pressed, this, &APlayerCharacter::QuitKey);
+	PlayerInputComponent->BindAction(TEXT("Interaction"), EInputEvent::IE_Pressed, this, &APlayerCharacter::InteractionKey);
+
+
 
 }
 
@@ -276,32 +281,35 @@ void APlayerCharacter::Skill3Key()
 }
 bool APlayerCharacter::SkillPlayAnim(int32 idx)
 {
-	if (m_PlayerInfo.MP > m_PlayerInfo.SkillTree[idx].RequiredMP && m_PlayerInfo.Level >= m_PlayerInfo.SkillTree[idx].RequiredLevel)
+	if (m_IsInTown == false)
 	{
-		if (m_AnimInst->GetOnSky() == false && m_AnimInst->GetCanAttack() == true)
+		if (m_PlayerInfo.MP > m_PlayerInfo.SkillTree[idx].RequiredMP && m_PlayerInfo.Level >= m_PlayerInfo.SkillTree[idx].RequiredLevel)
 		{
-			AAProjectGameModeBase* GameMode = Cast<AAProjectGameModeBase>(GetWorld()->GetAuthGameMode());
-
-			if (IsValid(GameMode))
+			if (m_AnimInst->GetOnSky() == false && m_AnimInst->GetCanAttack() == true)
 			{
-				UMainHUD* MainHUD = GameMode->GetMainHUD();
-	
-				if (IsValid(MainHUD))
+				AAProjectGameModeBase* GameMode = Cast<AAProjectGameModeBase>(GetWorld()->GetAuthGameMode());
+
+				if (IsValid(GameMode))
 				{
-					UCharacterHUD* CharacterHUD = MainHUD->GetCharacterHUD();
+					UMainHUD* MainHUD = GameMode->GetMainHUD();
 
-					if (IsValid(CharacterHUD))
+					if (IsValid(MainHUD))
 					{
-						TArray<USkillImageWidget*> SkillArray = CharacterHUD->GetSkillArray();
+						UCharacterHUD* CharacterHUD = MainHUD->GetCharacterHUD();
 
-						if (SkillArray[idx]->GetCoolTimeOn() == true)
+						if (IsValid(CharacterHUD))
 						{
-							if (!m_AnimInst->Montage_IsPlaying(m_SkillMontageArray[idx]))
+							TArray<USkillImageWidget*> SkillArray = CharacterHUD->GetSkillArray();
+
+							if (SkillArray[idx]->GetCoolTimeOn() == true)
 							{
-								m_AnimInst->Montage_SetPosition(m_SkillMontageArray[idx], 0.f);
-								m_AnimInst->Montage_Play((m_SkillMontageArray[idx]));
-								SkillArray[idx]->SetCoolTimePercent(1.f, m_PlayerInfo.SkillTree[idx].CoolTime);
-								return true;
+								if (!m_AnimInst->Montage_IsPlaying(m_SkillMontageArray[idx]))
+								{
+									m_AnimInst->Montage_SetPosition(m_SkillMontageArray[idx], 0.f);
+									m_AnimInst->Montage_Play((m_SkillMontageArray[idx]));
+									SkillArray[idx]->SetCoolTimePercent(1.f, m_PlayerInfo.SkillTree[idx].CoolTime);
+									return true;
+								}
 							}
 						}
 					}
@@ -327,7 +335,7 @@ void APlayerCharacter::QuestKey()
 				{
 					if (QuestWidget->GetVisibility() == ESlateVisibility::Collapsed)
 					{
-						QuestWidget->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+						QuestWidget->SetVisibility(ESlateVisibility::Visible);
 
 						APlayerController* ControllerA = GetWorld()->GetFirstPlayerController();
 
@@ -374,7 +382,7 @@ void APlayerCharacter::SetDirection()
 }
 void APlayerCharacter::MoveForward(float Scale)
 {
-	if(!m_ActiveWidget && m_Movable)
+	if(!m_ActiveWidget && m_Movable )
 		AddMovementInput(GetActorForwardVector(), Scale);
 }
 
@@ -433,9 +441,57 @@ void APlayerCharacter::Attack()
 
 void APlayerCharacter::AttackKey()
 {
-	Attack();
+	if(!m_IsInTown)
+		Attack();
 }
 
+void APlayerCharacter::InteractionKey()
+{
+	FHitResult HitResult;
+	FCollisionQueryParams params(NAME_None, false, this); //몬스터제외
+
+	bool Sweep = GetWorld()->SweepSingleByChannel(HitResult, GetActorLocation(), GetActorLocation(), FQuat::Identity, ECollisionChannel::ECC_GameTraceChannel9
+		, FCollisionShape::MakeSphere(100.f), params);
+
+	if (Sweep)
+	{
+
+	}
+}
+void APlayerCharacter::QuitKey()
+{
+	AAProjectGameModeBase* GameMode = Cast<AAProjectGameModeBase>(GetWorld()->GetAuthGameMode());
+
+	if (IsValid(GameMode))
+	{
+		UMainHUD* MainHUD = GameMode->GetMainHUD();
+
+		if (IsValid(MainHUD))
+		{
+			UQuestWidget* QuestWidget = MainHUD->GetQuestWidget();
+			{
+				if (IsValid(QuestWidget))
+				{
+					if (QuestWidget->GetVisibility() == ESlateVisibility::Visible)
+					{
+						QuestWidget->SetVisibility(ESlateVisibility::Collapsed);
+
+						APlayerController* ControllerA = GetWorld()->GetFirstPlayerController();
+
+						FInputModeGameOnly	Mode;
+						//FInputModeGameOnly
+						//FInputModeGameAndUI	Mode;
+
+						ControllerA->SetInputMode(Mode);
+						ControllerA->SetIgnoreLookInput(false);
+						ControllerA->bShowMouseCursor = false;
+						m_ActiveWidget = false;
+					}
+				}
+			}
+		}
+	}
+}
 void APlayerCharacter::JumpKey()
 {
 	//LOG(TEXT("%d"), JumpCurrentCount);

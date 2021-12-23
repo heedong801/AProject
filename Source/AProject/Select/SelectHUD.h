@@ -7,6 +7,7 @@
 #include "Components/Button.h"
 #include "Components/TextBlock.h"
 #include "Components/Border.h"
+#include "Components/CanvasPanel.h"
 #include "SelectHUD.generated.h"
 
 /**
@@ -22,6 +23,10 @@ protected:
 		UButton* m_WukongButton;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 		UButton* m_NoneButton;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+		UButton* m_StartButton;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+		UButton* m_BackButton;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 		UTextBlock* m_WukongText;
@@ -37,14 +42,36 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 		UUserWidget* m_WukongDesc;
 
-	TSubclassOf<APawn> m_Pawn;
-public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+		UCanvasPanel* m_SelectSubPanel;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+		UCanvasPanel* m_DescSubPanel;
+
+	UPROPERTY(meta = (BindWidgetAnim), meta = (AllowPrivateAccess = "true"), Transient)
+		class UWidgetAnimation* m_FadeAnim;
+
+	FTimerHandle m_PlayerAnimTimerHandle;
+	FTimerHandle m_LevelOpenTimerHandle;
+
+	TSubclassOf<APawn> m_Pawn;
+	class ASelectPlayer* m_SelectPlayer;
+
+	FString FirstLevelName;
+public:
+	void SetPawn(TSubclassOf<APawn> Pawn) { m_Pawn = Pawn; }
+	void OpenLevel();
+
+	UFUNCTION()
+		void ChangeAnim();
 	UFUNCTION()
 		void WukongClick();
 	UFUNCTION()
 		void NoneClick();
+	UFUNCTION()
+		void StartClick();
+	UFUNCTION()
+		void BackClick();
 protected:
 	virtual void NativeConstruct();
-
 };
