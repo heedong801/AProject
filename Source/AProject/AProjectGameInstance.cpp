@@ -31,6 +31,8 @@ UAProjectGameInstance::~UAProjectGameInstance()
 void UAProjectGameInstance::Init()
 {
 	Super::Init();
+
+	m_LevelManager = NewObject<ULevelManager>(this, ULevelManager::StaticClass(), TEXT("LevelManager"));
 }
 
 void UAProjectGameInstance::StartGameInstance()

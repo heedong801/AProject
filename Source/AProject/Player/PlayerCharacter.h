@@ -58,6 +58,7 @@ protected:
 	bool m_IsCritical;
 
 	bool m_IsInTown;
+	bool m_IsInDungeonTrigger;
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -117,6 +118,8 @@ public:
 	void SetCritical(bool Critical) { m_IsCritical = Critical; }
 	bool GetInTown() { return m_IsInTown; }
 	void SetInTown(bool InTown) { m_IsInTown = InTown; }
+	bool GetInDungeonTrigger() { return m_IsInDungeonTrigger; }
+	void SetInDungeonTrigger(bool InDungeonTrigger) { m_IsInDungeonTrigger = InDungeonTrigger; }
 	UFUNCTION()
 	void SetTimeDefaultTimeDilation();
 	//struct FPlayerTraceInfo APlayerCharacter::FootTrace(float fTraceDistance, FName sSocket);

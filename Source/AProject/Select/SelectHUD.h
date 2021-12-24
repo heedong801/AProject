@@ -52,12 +52,11 @@ protected:
 		class UWidgetAnimation* m_FadeAnim;
 
 	FTimerHandle m_PlayerAnimTimerHandle;
-	FTimerHandle m_LevelOpenTimerHandle;
 
 	TSubclassOf<APawn> m_Pawn;
 	class ASelectPlayer* m_SelectPlayer;
 
-	FString FirstLevelName;
+	//FString FirstLevelName;
 public:
 	void SetPawn(TSubclassOf<APawn> Pawn) { m_Pawn = Pawn; }
 	void OpenLevel();

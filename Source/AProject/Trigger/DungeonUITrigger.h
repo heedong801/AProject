@@ -16,16 +16,13 @@ class APROJECT_API ADungeonUITrigger : public ABoxTrigger
 public:
 	ADungeonUITrigger();
 
-protected:
-	virtual void BeginPlay() override;
-
-public:
-	virtual void Tick(float DeltaTime) override;
-
 public:
 	UFUNCTION()
 		void TriggerBegin();
 
 	UFUNCTION()
 		void TriggerEnd();
+
+	void Interaction();
+
 };

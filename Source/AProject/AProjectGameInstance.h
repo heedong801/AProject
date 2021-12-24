@@ -8,6 +8,7 @@
 #include "Engine/GameInstance.h"
 #include "Effect/ParticlePool.h"
 #include "Quest/QuestInfo.h"
+#include "Manager/LevelManager.h"
 #include "AProjectGameInstance.generated.h"
 
 /**
@@ -47,6 +48,9 @@ private:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 		FPlayerInfo	m_PlayerInfo;
+
+	UPROPERTY()
+	ULevelManager* m_LevelManager;
 public:
 	const TMap<FString, FQuestData>& GetQuestData()
 	{
@@ -76,8 +80,7 @@ public:
 	//const FUIItemTableInfo* FindUIItemInfo(const FString& Name);
 	const FQuestTableInfo* FindQuestInfo(const FString& Name);
 	const FMapTableInfo* FindMapInfo(const FString& Name);
-
-
+	ULevelManager* GetLevelManager() { return m_LevelManager; }
 public:
 	void SetMapName(const FString& MapName) { m_MapName = MapName; }
 	const FString& GetMapName() { return m_MapName; }

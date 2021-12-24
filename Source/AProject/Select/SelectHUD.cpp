@@ -7,7 +7,8 @@
 #include "SelectModeBase.h"
 #include "SelectPawn.h"
 #include "Kismet/GameplayStatics.h"
-
+#include "../Manager/LevelManager.h"
+#include "../AProjectGameInstance.h"
 #include "../DebugClass.h"
 void USelectHUD::NativeConstruct()
 {
@@ -54,7 +55,11 @@ void USelectHUD::WukongClick()
 	
 	GetWorld()->GetTimerManager().SetTimer(m_PlayerAnimTimerHandle, this, &USelectHUD::ChangeAnim, 0.1f, false, 0.2f);
 
-	FirstLevelName = TEXT("MountHuaguo");
+	UAProjectGameInstance* GameInst = Cast<UAProjectGameInstance>(GetWorld()->GetGameInstance());
+
+	if (GameInst)
+		GameInst->GetLevelManager()->SetNextMapName(TEXT("MountHuaguo"));
+
 }
 void USelectHUD::NoneClick()
 {
@@ -71,12 +76,15 @@ void USelectHUD::StartClick()
 	
 	GetOwningPlayerCameraManager()->StartCameraFade(0.0f, 1.f, 3.f, FLinearColor(0.f, 0.f, 0.f), true, true);
 	
-	GetWorld()->GetTimerManager().SetTimer(m_LevelOpenTimerHandle, this, &USelectHUD::OpenLevel, 3.1f, false, -1.f);
+	OpenLevel();
 }
 
 void USelectHUD::OpenLevel()
 {
-	UGameplayStatics::OpenLevel(this, *FirstLevelName);
+	UAProjectGameInstance* GameInst = Cast<UAProjectGameInstance>(GetWorld()->GetGameInstance());
+
+	if (GameInst)
+		GameInst->GetLevelManager()->OpenDelayLevel();
 }
 void USelectHUD::ChangeAnim()
 {

@@ -9,6 +9,7 @@
 #include "../UI/MainHUD.h"
 #include "../UI/SkillImageWidget.h"
 #include "../AProjectGameModeBase.h"
+#include "../Trigger/DungeonUITrigger.h"
 
 //#include "../Effect/HitCameraShake.h"
 
@@ -455,8 +456,13 @@ void APlayerCharacter::InteractionKey()
 
 	if (Sweep)
 	{
-
+		ADungeonUITrigger* DungeonTrigger = Cast<ADungeonUITrigger>(HitResult.Actor);
+		if (DungeonTrigger)
+		{
+			DungeonTrigger->Interaction();
+		}
 	}
+
 }
 void APlayerCharacter::QuitKey()
 {
@@ -468,27 +474,18 @@ void APlayerCharacter::QuitKey()
 
 		if (IsValid(MainHUD))
 		{
-			UQuestWidget* QuestWidget = MainHUD->GetQuestWidget();
-			{
-				if (IsValid(QuestWidget))
-				{
-					if (QuestWidget->GetVisibility() == ESlateVisibility::Visible)
-					{
-						QuestWidget->SetVisibility(ESlateVisibility::Collapsed);
+			MainHUD->QuitAllWidget();
 
-						APlayerController* ControllerA = GetWorld()->GetFirstPlayerController();
+			APlayerController* ControllerA = GetWorld()->GetFirstPlayerController();
 
-						FInputModeGameOnly	Mode;
-						//FInputModeGameOnly
-						//FInputModeGameAndUI	Mode;
+			FInputModeGameOnly	Mode;
+			//FInputModeGameOnly
+			//FInputModeGameAndUI	Mode;
 
-						ControllerA->SetInputMode(Mode);
-						ControllerA->SetIgnoreLookInput(false);
-						ControllerA->bShowMouseCursor = false;
-						m_ActiveWidget = false;
-					}
-				}
-			}
+			ControllerA->SetInputMode(Mode);
+			ControllerA->SetIgnoreLookInput(false);
+			ControllerA->bShowMouseCursor = false;
+			m_ActiveWidget = false;
 		}
 	}
 }
