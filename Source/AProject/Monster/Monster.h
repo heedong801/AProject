@@ -30,6 +30,8 @@ protected:
 
 	FString m_MonsterInfoName;
 
+	class AMonsterSpawnPoint* m_SpawnPoint;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 		UWidgetComponent* m_HPBar;
 	class UHPBar* m_HPBarWidget;
@@ -76,4 +78,6 @@ public:
 	APlayerCharacter* GetPlayer() { return m_Player; }
 
 	void SetDamageUI(bool Critical, float Damage);
+
+	void SetSpawnPoint(class AMonsterSpawnPoint* SpawnPoint)	{		m_SpawnPoint = SpawnPoint;	}
 };

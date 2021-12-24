@@ -11,6 +11,7 @@
 #include "../UI/DamageUI.h"
 #include "../Effect/HitCameraShake.h"
 #include "../Player/PlayerCharacter.h"
+#include "MonsterSpawnPoint.h"
 #include "NavigationSystem.h"
 
 // Sets default values
@@ -60,6 +61,7 @@ AMonster::AMonster()
 	GetMesh()->bReceivesDecals = false;
 
 	m_Player = nullptr;
+	m_SpawnPoint = nullptr;
 	
 }
 
@@ -255,12 +257,13 @@ float AMonster::TakeDamage(float DamageAmount, struct FDamageEvent const& Damage
 		//ScreenLoc += FVector2D(-50.f, -100.f);
 		//DamageUI->SetLocation(ScreenLoc);
 		//DamageUI->SetDamage(Damage);
-		//DamageUI->AddToViewport();
+		//DamageUI->AddToViewport();u
 
 		//Á×Àº°æ¿ì
 		if (m_MonsterInfo.HP <= 0)
 		{
-
+			if( m_SpawnPoint)
+				m_SpawnPoint->Death();
 			m_MonsterInfo.TraceDistance = m_TraceDistanceOrigin;
 			m_Player = nullptr;
 			ChangeAnimType(EMonsterAnimType::Death);
@@ -401,8 +404,3 @@ FVector AMonster::GetPatrolPoint()
 	return m_PatrolArray[m_PatrolIdx];
 }
 
-
-void SpawnDamageUI(FVector WorldLoc, float Damage)
-{
-
-}

@@ -38,7 +38,7 @@ APlayerCharacter::APlayerCharacter()
 	m_IsCritical = false;
 	m_ActiveComboTime = false;
 	m_ComboCnt = 0;
-	m_IsInTown = true;
+	
 	//LOG(TEXT("%f %f %f"), m_Arm->GetRelativeRotation().Vector().X, m_Arm->GetRelativeRotation().Vector().Y, m_Arm->GetRelativeRotation().Vector().Z);
 	GetMesh()->bReceivesDecals = false;
 

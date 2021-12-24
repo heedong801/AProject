@@ -3,6 +3,7 @@
 
 #include "DungeonSelect.h"
 #include "../AProjectGameInstance.h"
+#include "../Player/PlayerCharacter.h"
 void UDungeonSelect::NativeConstruct()
 {
 	Super::NativeConstruct();
@@ -22,27 +23,34 @@ void UDungeonSelect::NativeConstruct()
 
 void UDungeonSelect::RuinClick()
 {
-	GetOwningPlayerCameraManager()->StartCameraFade(0.0f, 1.f, 3.f, FLinearColor(0.f, 0.f, 0.f), true, true);
+	GetOwningPlayerCameraManager()->StartCameraFade(0.0f, 1.f, 2.f, FLinearColor(0.f, 0.f, 0.f), true, true);
 
 	UAProjectGameInstance* GameInst = Cast<UAProjectGameInstance>(GetWorld()->GetGameInstance());
 
 	if (GameInst)
 	{
-		GameInst->GetLevelManager()->SetNextMapName(TEXT("ExampleMap"));
+		GameInst->GetLevelManager()->SetNextMapName(TEXT("Ruin"));
 		GameInst->GetLevelManager()->OpenDelayLevel();
-	}
 
+		APlayerCharacter* Player = Cast<APlayerCharacter>(GetWorld()->GetFirstPlayerController()->GetPawn());
+		Player->SetInTown(false);
+	}
 }
+
+
 void UDungeonSelect::CaveClick()
 {
-	GetOwningPlayerCameraManager()->StartCameraFade(0.0f, 1.f, 3.f, FLinearColor(0.f, 0.f, 0.f), true, true);
+	GetOwningPlayerCameraManager()->StartCameraFade(0.0f, 1.f, 2.f, FLinearColor(0.f, 0.f, 0.f), true, true);
 
-	/*UAProjectGameInstance* GameInst = Cast<UAProjectGameInstance>(GetWorld()->GetGameInstance());
+	UAProjectGameInstance* GameInst = Cast<UAProjectGameInstance>(GetWorld()->GetGameInstance());
 
 	if (GameInst)
-	{
-		GameInst->GetLevelManager()->SetNextMapName(TEXT("MountHuaguo"));
+	{ 
+		GameInst->GetLevelManager()->SetNextMapName(TEXT("Cave"));
 		GameInst->GetLevelManager()->OpenDelayLevel();
-	}*/
+
+		APlayerCharacter* Player = Cast<APlayerCharacter>(GetWorld()->GetFirstPlayerController()->GetPawn());
+		Player->SetInTown(false);
+	}
 }
 

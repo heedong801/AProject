@@ -11,7 +11,7 @@ AMonsterSpawnPoint::AMonsterSpawnPoint()
 	PrimaryActorTick.bCanEverTick = true;
 
 	m_AccTime = 0.f;
-	m_SpawnTime = 1.f;
+	m_SpawnTime = 5.f;
 	m_Monster = nullptr;
 
 	IsActivate = false;
@@ -65,8 +65,10 @@ void AMonsterSpawnPoint::Tick(float DeltaTime)
 				AMonster* Monster = GetWorld()->SpawnActor<AMonster>(m_MonsterClassArray[random],
 					GetActorLocation(), GetActorRotation(), param);
 				Monster->SetIsSpawned(true);
-				Monster->GetMonsterInfo().TraceDistance = 4000.f;
+				Monster->SetSpawnPoint(this);
+				//Monster->GetMonsterInfo().TraceDistance = 4000.f;
 				m_Monster = Monster;
+
 			}
 		}
 	}
