@@ -7,6 +7,7 @@
 #include "GameFramework/GameModeBase.h"
 #include "AssetManager/AssetPathMain.h"
 #include "Effect/ParticlePool.h"
+#include "Monster/MonsterPool.h"
 #include "AProjectGameModeBase.generated.h"
 
 /**
@@ -30,7 +31,8 @@ protected:
 
 	UPROPERTY()
 	UParticlePool* m_ParticlePool;
-
+	UPROPERTY()
+	UMonsterPool* m_MonsterPool;
 public:
 	UMainHUD* GetMainHUD()	{		return m_MainHUD;	}
 

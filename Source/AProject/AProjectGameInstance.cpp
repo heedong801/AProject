@@ -42,31 +42,18 @@ void UAProjectGameInstance::StartGameInstance()
 
 void UAProjectGameInstance::SetParticlePool( UParticlePool* pParticlePool)
 {
-	/*LOG(TEXT("%s"), *pP->GetName());
-	if(pP->GetSize() == 0 )
-		pP->MakePool();
-
-	LOG(TEXT("%d"), pP->GetSize());*/
-
 	m_ParticlePool = pParticlePool;
 	if (m_ParticlePool->GetSize() == 0)
 		m_ParticlePool->MakePool();
-
 }
 
-int UAProjectGameInstance::GetPoolSize()
+void UAProjectGameInstance::SetMonsterPool(UMonsterPool* pMonsterPool)
 {
-	return m_ParticlePool->GetSize();
+	m_MonsterPool = pMonsterPool;
+	if (m_MonsterPool->GetSize() == 0)
+		m_MonsterPool->MakePool();
 }
 
-//void UAProjectGameInstance::SetParticlePool()
-//{
-//	LOG(TEXT("%s"), *m_ParticlePool->GetName());
-//	if (m_ParticlePool->GetSize() == 0)
-//		m_ParticlePool->MakePool();
-//
-//	LOG(TEXT("%d"), m_ParticlePool->GetSize());
-//}
 
 const FMonsterInfo* UAProjectGameInstance::FindMonsterInfo(const FString& Name)
 {
@@ -98,6 +85,14 @@ UParticlePool* UAProjectGameInstance::GetParticlePool()
 {
 	if (IsValid(m_ParticlePool))
 		return m_ParticlePool;
+	else
+		return nullptr;
+}
+
+UMonsterPool* UAProjectGameInstance::GetMonsterPool()
+{
+	if (IsValid(m_MonsterPool))
+		return m_MonsterPool;
 	else
 		return nullptr;
 }

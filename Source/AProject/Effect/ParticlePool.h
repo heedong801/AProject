@@ -14,26 +14,21 @@ class APROJECT_API UParticlePool : public UObject
 	GENERATED_BODY()
 
 protected:
-	UPROPERTY()
+	//UPROPERTY()
 	TArray<ACustomActor*> m_CustomActorArray;
-	UPROPERTY()
+	//UPROPERTY()
 	int32 m_CustomActorArrayMaxIdx;
-	UPROPERTY()
+	//UPROPERTY()
 	int32 m_NormalEffectNum;
-	UPROPERTY()
+	//UPROPERTY()
 	int32 m_BlueFlyBulletArrayNum;
-	UPROPERTY()
+	//UPROPERTY()
 	int32 m_WukongBulletArrayNum;
 public:
 	UParticlePool();
-	~UParticlePool();
 
 	void MakePool();
 	int GetSize();
 	
 	ACustomActor* Pop(FVector Pos, FRotator Rot, UClass* Type);
-
-	int32 GetNormalEffectEndIdx() { return m_NormalEffectNum;  }
-	int32 GetParticleProjectileEndIdx() { return m_BlueFlyBulletArrayNum; }
-
 };

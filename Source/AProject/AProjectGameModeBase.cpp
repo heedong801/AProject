@@ -18,7 +18,7 @@ AAProjectGameModeBase::AAProjectGameModeBase()
 		DefaultPawnClass = PawnClass.Class;
 
 	m_ParticlePool = CreateDefaultSubobject<UParticlePool>(TEXT("ParticlePool"));
-
+	m_MonsterPool = CreateDefaultSubobject<UMonsterPool>(TEXT("MonsterPool"));
 }
 
 void AAProjectGameModeBase::InitGame(const FString& MapName,
@@ -28,8 +28,11 @@ void AAProjectGameModeBase::InitGame(const FString& MapName,
 
 	UAProjectGameInstance* GameInst = Cast<UAProjectGameInstance>(GetWorld()->GetGameInstance());
 
-	if (GameInst )
+	if (GameInst)
+	{
 		GameInst->SetParticlePool(m_ParticlePool);
+		GameInst->SetMonsterPool(m_MonsterPool);
+	}
 
 	/*UAProjectGameInstance* GameInst = Cast<UAProjectGameInstance>(GetWorld()->GetGameInstance());
 

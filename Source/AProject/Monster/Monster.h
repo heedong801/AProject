@@ -5,12 +5,12 @@
 #include "EngineMinimal.h"
 #include "MonsterInfo.h"
 #include "../Etc/PatrolPointSpline.h"
-#include "GameFramework/Character.h"
+#include "../Etc/CustomCharacter.h"
 #include "Components/WidgetComponent.h"
 #include "Monster.generated.h"
 
 UCLASS()
-class APROJECT_API AMonster : public ACharacter
+class APROJECT_API AMonster : public ACustomCharacter
 {
 	GENERATED_BODY()
 

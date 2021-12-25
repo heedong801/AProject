@@ -18,52 +18,30 @@ UParticlePool::UParticlePool()
 	
 }
 
-UParticlePool::~UParticlePool()
-{
-	/*LOG(TEXT("%d"), m_CustomActorArray.Num());
-	m_CustomActorArray.RemoveAll([](NormalEffect* e) {return true; });
-	LOG(TEXT("%d"), m_CustomActorArray.Num());*/
-	//LOG(TEXT("DELETE"));
 
-}
 
 void UParticlePool::MakePool()
 {
-	for (int32 i = 0; i < m_NormalEffectNum; ++i)
+	ACustomActor* Effect = nullptr;
+	for (int32 i = 0; i < m_CustomActorArrayMaxIdx; ++i)
 	{
 		FActorSpawnParameters param;
 		param.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
 
-		ANormalEffect* Effect = GetWorld()->SpawnActor<ANormalEffect>(ANormalEffect::StaticClass(),
-			FVector::ZeroVector, FRotator::ZeroRotator, param);
+		if( i < m_NormalEffectNum )
+			Effect = GetWorld()->SpawnActor<ANormalEffect>(ANormalEffect::StaticClass(),FVector::ZeroVector, FRotator::ZeroRotator, param);
+		else if (i < m_NormalEffectNum + m_BlueFlyBulletArrayNum)
+			Effect = GetWorld()->SpawnActor<ABlueFlyProjectile>(ABlueFlyProjectile::StaticClass(), FVector::ZeroVector, FRotator::ZeroRotator, param);
+		else if (i < m_CustomActorArrayMaxIdx)
+			Effect = GetWorld()->SpawnActor<AWukongAttackProjectile>(AWukongAttackProjectile::StaticClass(), FVector::ZeroVector, FRotator::ZeroRotator, param);
 
-		Effect->SetActive(false);
-		m_CustomActorArray.Add(Effect);
+		if (Effect)
+		{
+			Effect->SetActive(false);
+			m_CustomActorArray.Add(Effect);
+		}
 	}
-	for (int32 i = 0; i < m_BlueFlyBulletArrayNum; ++i)
-	{
-		FActorSpawnParameters param;
-		param.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
 
-		ABlueFlyProjectile* Effect = GetWorld()->SpawnActor<ABlueFlyProjectile>(ABlueFlyProjectile::StaticClass(),
-			FVector::ZeroVector, FRotator::ZeroRotator, param);
-
-		Effect->SetActive(false);
-		m_CustomActorArray.Add(Effect);
-	}
-	for (int32 i = 0; i < m_WukongBulletArrayNum; ++i)
-	{
-		FActorSpawnParameters param;
-		param.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
-
-		AWukongAttackProjectile* Effect = GetWorld()->SpawnActor<AWukongAttackProjectile>(AWukongAttackProjectile::StaticClass(),
-			FVector::ZeroVector, FRotator::ZeroRotator, param);
-
-		Effect->SetActive(false);
-		m_CustomActorArray.Add(Effect);
-	}
-	//LOG(TEXT("MN : %d"), m_CustomActorArray.Num());
-	//LOG(TEXT("MM : %d"), m_CustomActorArrayMaxIdx);
 }
 
 

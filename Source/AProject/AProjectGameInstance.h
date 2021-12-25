@@ -7,6 +7,7 @@
 #include "Monster/MonsterInfo.h"
 #include "Engine/GameInstance.h"
 #include "Effect/ParticlePool.h"
+#include "Monster/MonsterPool.h"
 #include "Quest/QuestInfo.h"
 #include "Manager/LevelManager.h"
 #include "AProjectGameInstance.generated.h"
@@ -32,6 +33,9 @@ private:
 
 	UPROPERTY()
 	UParticlePool* m_ParticlePool;
+
+	UPROPERTY()
+		UMonsterPool* m_MonsterPool;
 
 	UPROPERTY()
 		UDataTable* m_UIItemInfoTable;
@@ -70,10 +74,11 @@ public:
 	virtual void StartGameInstance();
 	FPlayerInfo& GetPlayerInfo() { return m_PlayerInfo; }
 
-	//bool GetParticlePoolIsSet();
+	void SetMonsterPool(UMonsterPool* pM);
 	void SetParticlePool(UParticlePool* pP);
-	int GetPoolSize();
+	UMonsterPool* GetMonsterPool();
 	UParticlePool* GetParticlePool();
+
 	const FMonsterInfo* FindMonsterInfo(const FString& Name);
 	const FPlayerInfo* FindPlayerInfo(const FString& Name);
 

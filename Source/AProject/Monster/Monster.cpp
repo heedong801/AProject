@@ -59,7 +59,7 @@ AMonster::AMonster()
 
 	m_DamageUINum = 10;
 	GetMesh()->bReceivesDecals = false;
-
+	GetMesh()->SetWorldRotation(FRotator(0.f, -90.f, 0.f));
 	m_Player = nullptr;
 	m_SpawnPoint = nullptr;
 	

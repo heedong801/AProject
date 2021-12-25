@@ -3,7 +3,8 @@
 
 #include "MonsterSpawnPoint.h"
 #include "NavigationSystem.h"
-
+#include "../AProjectGameInstance.h"
+#include "../DebugClass.h"
 // Sets default values
 AMonsterSpawnPoint::AMonsterSpawnPoint()
 {
@@ -21,25 +22,6 @@ AMonsterSpawnPoint::AMonsterSpawnPoint()
 void AMonsterSpawnPoint::BeginPlay()
 {
 	Super::BeginPlay();
-
-	/*if (m_MonsterClass)
-	{
-		FActorSpawnParameters	param;
-		param.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
-
-		AMonster* Monster = GetWorld()->SpawnActor<AMonster>(m_MonsterClass,
-			GetActorLocation(), GetActorRotation(), param);
-
-		Monster->SetSpawnPoint(this);
-
-		Monster->AddPatrolPoint(GetActorLocation());
-
-		for (auto& Point : m_PatrolPointArray)
-		{
-			Monster->AddPatrolPoint(Point->GetActorLocation());
-		}
-		m_Monster = Monster;
-	}*/
 }
 
 // Called every frame
@@ -61,13 +43,19 @@ void AMonsterSpawnPoint::Tick(float DeltaTime)
 				param.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
 
 				int random = FMath::RandRange(0, m_MonsterClassArray.Num() - 1);
+				
+				UAProjectGameInstance* GameInst = Cast<UAProjectGameInstance>(GetWorld()->GetGameInstance());
+				UClass* Type = m_MonsterClassArray[random];
 
-				AMonster* Monster = GetWorld()->SpawnActor<AMonster>(m_MonsterClassArray[random],
-					GetActorLocation(), GetActorRotation(), param);
-				Monster->SetIsSpawned(true);
-				Monster->SetSpawnPoint(this);
-				//Monster->GetMonsterInfo().TraceDistance = 4000.f;
-				m_Monster = Monster;
+				AMonster* Monster = Cast<AMonster>(GameInst->GetMonsterPool()->Pop(GetActorLocation(), GetActorRotation(), m_MonsterClassArray[random]));
+
+				if (Monster)
+				{
+					Monster->SetIsSpawned(true);
+					Monster->SetSpawnPoint(this);
+					//Monster->GetMonsterInfo().TraceDistance = 4000.f;
+					m_Monster = Monster;
+				}
 
 			}
 		}
