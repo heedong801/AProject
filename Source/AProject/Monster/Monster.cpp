@@ -231,7 +231,7 @@ float AMonster::TakeDamage(float DamageAmount, struct FDamageEvent const& Damage
 	
 	if (Damage > 0.f)
 	{
-
+		
 		GetWorld()->GetFirstPlayerController()->ClientPlayCameraShake(
 			UHitCameraShake::StaticClass());
 

@@ -48,7 +48,7 @@ void AMonsterSpawnPoint::Tick(float DeltaTime)
 
 				UClass* Type = m_MonsterClassArray[random];
 
-				AMonster* Monster = Cast<AMonster>(GameMode->GetMonsterPool()->Pop(GetActorLocation(), GetActorRotation(), m_MonsterClassArray[random]));
+				AMonster* Monster = Cast<AMonster>(GameMode->GetCharacterPool()->Pop(GetActorLocation(), GetActorRotation(), m_MonsterClassArray[random]));
 
 				LOG(TEXT("A"));
 				if (Monster)

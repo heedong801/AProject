@@ -33,10 +33,7 @@ ABarghest::ABarghest()
 	m_DropItemNameArray.Add(TEXT("HPÆ÷¼Ç"));*/
 }
 
-ABarghest::~ABarghest()
-{
-	LOG(TEXT("DOE"));
-}
+
 // Called when the game starts or when spawned
 void ABarghest::BeginPlay()
 {

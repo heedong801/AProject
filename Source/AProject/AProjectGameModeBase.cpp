@@ -18,7 +18,7 @@ AAProjectGameModeBase::AAProjectGameModeBase()
 		DefaultPawnClass = PawnClass.Class;
 
 	m_ParticlePool = CreateDefaultSubobject<UParticlePool>(TEXT("ParticlePool"));
-	m_MonsterPool = CreateDefaultSubobject<UMonsterPool>(TEXT("MonsterPool"));
+	m_CharacterPool = CreateDefaultSubobject<UCharacterPool>(TEXT("CharacterPool"));
 }
 
 void AAProjectGameModeBase::InitGame(const FString& MapName,
@@ -52,6 +52,8 @@ void AAProjectGameModeBase::InitGame(const FString& MapName,
 		}
 	}*/
 
+	m_ParticlePool->MakePool();
+	m_CharacterPool->MakePool();
 
 	m_MainAssetPath = UAssetPathMain::StaticClass()->GetDefaultObject<UAssetPathMain>();
 
@@ -60,9 +62,6 @@ void AAProjectGameModeBase::InitGame(const FString& MapName,
 void AAProjectGameModeBase::BeginPlay()
 {
 	Super::BeginPlay();
-
-	m_ParticlePool->MakePool();
-	m_MonsterPool->MakePool();
 	
 	if (IsValid(m_MainHUDClass))
 	{
@@ -93,10 +92,10 @@ UParticlePool* AAProjectGameModeBase::GetParticlePool()
 		return nullptr;
 }
 
-UMonsterPool* AAProjectGameModeBase::GetMonsterPool()
+UCharacterPool* AAProjectGameModeBase::GetCharacterPool()
 {
-	if (IsValid(m_MonsterPool))
-		return m_MonsterPool;
+	if (IsValid(m_CharacterPool))
+		return m_CharacterPool;
 	else
 		return nullptr;
 }

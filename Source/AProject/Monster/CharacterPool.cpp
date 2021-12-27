@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "MonsterPool.h"
+#include "CharacterPool.h"
 #include "../DebugClass.h"
 #include "../Monster/Barghest.h"
 #include "../Monster/BlueFly.h"
@@ -10,7 +10,7 @@
 #include "../Monster/Omnik.h"
 #include "../Monster/Shoebill.h"
 
-UMonsterPool::UMonsterPool()
+UCharacterPool::UCharacterPool()
 {
 	//m_GolemNum = 5;
 	//m_BlueFlyNum = 5;
@@ -46,19 +46,12 @@ UMonsterPool::UMonsterPool()
 	m_CustomCharacterArrayMaxIdx = m_MonsterNum * 6;
 }
 
-UMonsterPool::~UMonsterPool()
+void UCharacterPool::MakePool()
 {
-	LOG(TEXT("DELETE POOL"));
-}
-void UMonsterPool::MakePool()
-{
-	LOG(TEXT("MAKEPOOL MONSTER"));
 	ACustomCharacter* Character = nullptr;
 
 	for (int32 i = 0; i < m_CustomCharacterArrayMaxIdx; ++i)
 	{
-		LOG(TEXT("MONSTER CONS"));
-
 		FActorSpawnParameters param;
 		param.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
 
@@ -77,7 +70,6 @@ void UMonsterPool::MakePool()
 
 		if (Character)
 		{
-			LOG(TEXT("ADD"));
 			Character->SetActive(false);
 			m_CustomCharacterArray.Add(Character);
 		}
@@ -85,12 +77,12 @@ void UMonsterPool::MakePool()
 }
 
 
-int UMonsterPool::GetSize()
+int UCharacterPool::GetSize()
 {
 	return m_CustomCharacterArray.Num();
 }
 
-ACustomCharacter* UMonsterPool::Pop(FVector Pos, FRotator Rot, UClass* Type)
+ACustomCharacter* UCharacterPool::Pop(FVector Pos, FRotator Rot, UClass* Type)
 {
 	if (this != nullptr && IsValid(this))
 	{

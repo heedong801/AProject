@@ -8,6 +8,10 @@ ACustomCharacter::ACustomCharacter()
 	m_Active = false;
 }
 
+ACustomCharacter::~ACustomCharacter()
+{
+	LOG(TEXT("CHAR DEL"));
+}
 // Sets default values
 void ACustomCharacter::SetActive(bool bOnFlag)
 {

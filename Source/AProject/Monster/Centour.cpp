@@ -24,8 +24,6 @@ ACentour::ACentour()
 
 	if (AnimAsset.Succeeded())
 		GetMesh()->SetAnimInstanceClass(AnimAsset.Class);
-	else
-		LOG(TEXT("A"));
 
 	AIControllerClass = ACentourAIController::StaticClass();
 

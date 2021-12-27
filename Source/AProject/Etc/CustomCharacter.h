@@ -16,6 +16,7 @@ private:
 public:
 	// Sets default values for this actor's properties
 	ACustomCharacter();
+	~ACustomCharacter();
 
 	virtual void SetActive(bool bOnFlag);
 	virtual bool GetActive();

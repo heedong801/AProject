@@ -7,7 +7,7 @@
 #include "GameFramework/GameModeBase.h"
 #include "AssetManager/AssetPathMain.h"
 #include "Effect/ParticlePool.h"
-#include "Monster/MonsterPool.h"
+#include "Monster/CharacterPool.h"
 #include "AProjectGameModeBase.generated.h"
 
 /**
@@ -32,7 +32,7 @@ protected:
 	UPROPERTY()
 	UParticlePool* m_ParticlePool;
 	UPROPERTY()
-	UMonsterPool* m_MonsterPool;
+	UCharacterPool* m_CharacterPool;
 public:
 	UMainHUD* GetMainHUD()	{		return m_MainHUD;	}
 
@@ -40,7 +40,7 @@ public:
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaTime) override;
 
-	UMonsterPool* GetMonsterPool();
+	UCharacterPool* GetCharacterPool();
 	UParticlePool* GetParticlePool();
 
 };

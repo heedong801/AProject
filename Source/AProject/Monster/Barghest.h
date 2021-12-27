@@ -17,7 +17,7 @@ protected:
 	virtual void BeginPlay() override;
 public:
 	ABarghest();
-	~ABarghest();
+
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
