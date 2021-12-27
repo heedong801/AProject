@@ -74,6 +74,7 @@ void UCharacterPool::MakePool()
 			m_CustomCharacterArray.Add(Character);
 		}
 	}
+	//LOG(TEXT("Size : %d"), m_CustomCharacterArray.Num());
 }
 
 
@@ -84,7 +85,8 @@ int UCharacterPool::GetSize()
 
 ACustomCharacter* UCharacterPool::Pop(FVector Pos, FRotator Rot, UClass* Type)
 {
-	if (this != nullptr && IsValid(this))
+	//LOG(TEXT("%d"), m_CustomCharacterArray.Num());
+	if (this != nullptr && IsValid(this) )
 	{
 		//LOG(TEXT("POP"));
 		int32 Start = 0, End = m_CustomCharacterArrayMaxIdx;

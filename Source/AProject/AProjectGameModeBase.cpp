@@ -19,6 +19,7 @@ AAProjectGameModeBase::AAProjectGameModeBase()
 
 	m_ParticlePool = CreateDefaultSubobject<UParticlePool>(TEXT("ParticlePool"));
 	m_CharacterPool = CreateDefaultSubobject<UCharacterPool>(TEXT("CharacterPool"));
+
 }
 
 void AAProjectGameModeBase::InitGame(const FString& MapName,
@@ -51,7 +52,7 @@ void AAProjectGameModeBase::InitGame(const FString& MapName,
 		break;
 		}
 	}*/
-
+	//m_CharacterPool = CreateDefaultSubobject<UCharacterPool>(TEXT("CharacterPool"));
 	m_ParticlePool->MakePool();
 	m_CharacterPool->MakePool();
 
@@ -63,6 +64,11 @@ void AAProjectGameModeBase::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	//m_CharacterPool = NewObject<UCharacterPool>(GetWorld(), UCharacterPool::StaticClass(), TEXT("CharacterPool"));
+
+
+
+
 	if (IsValid(m_MainHUDClass))
 	{
 		m_MainHUD = Cast<UMainHUD>(CreateWidget(GetWorld(),

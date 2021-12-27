@@ -12,7 +12,9 @@ class APROJECT_API ACustomCharacter : public ACharacter
 	GENERATED_BODY()
 
 private:
+	UPROPERTY(Transient)
 	bool m_Active;
+
 public:
 	// Sets default values for this actor's properties
 	ACustomCharacter();
