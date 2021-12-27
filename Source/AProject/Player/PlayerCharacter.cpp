@@ -422,7 +422,7 @@ void APlayerCharacter::Turn(float Scale)
 	{
 		FRotator Rot = m_Arm->GetRelativeRotation();
 
-		Rot.Pitch += Scale * 30.f * GetWorld()->GetDeltaSeconds();
+		Rot.Pitch += Scale * 10.f * GetWorld()->GetDeltaSeconds();
 
 		Rot.Pitch = FMath::Clamp(Rot.Pitch, -45.f, 0.f);
 		
