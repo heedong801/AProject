@@ -4,7 +4,6 @@
 #include "Wukong.h"
 #include "../Effect/NormalEffect.h"
 #include "../DebugClass.h"
-#include "../AProjectGameInstance.h"
 #include "PlayerAnim.h"
 #include "../Effect/HitCameraShake.h"
 #include "../AProjectGameModeBase.h"
@@ -272,8 +271,9 @@ void AWukong::HitDamage()
 					result.ImpactPoint, result.ImpactNormal.Rotation(), param);*/
 
 
-			UAProjectGameInstance* GameInst = Cast<UAProjectGameInstance>(GetWorld()->GetGameInstance());
-			ANormalEffect* Effect = Cast<ANormalEffect>(GameInst->GetParticlePool()->Pop(result.ImpactPoint, result.ImpactNormal.Rotation(), ANormalEffect::StaticClass()));
+			AAProjectGameModeBase* GameMode = Cast<AAProjectGameModeBase>(GetWorld()->GetAuthGameMode());
+
+			ANormalEffect* Effect = Cast<ANormalEffect>(GameMode->GetParticlePool()->Pop(result.ImpactPoint, result.ImpactNormal.Rotation(), ANormalEffect::StaticClass()));
 			if (Effect != nullptr)
 			{
 				if (m_FuryMode != true)
@@ -306,8 +306,9 @@ void AWukong::HitDamage()
 	{
 		FVector	MuzzleLoc = GetMesh()->GetSocketLocation(TEXT("Muzzle_01"));
 
-		UAProjectGameInstance* GameInst = Cast<UAProjectGameInstance>(GetWorld()->GetGameInstance());
-		AWukongAttackProjectile* Bullet = Cast<AWukongAttackProjectile>(GameInst->GetParticlePool()->Pop(MuzzleLoc, GetActorRotation(), AWukongAttackProjectile::StaticClass()));
+		AAProjectGameModeBase* GameMode = Cast<AAProjectGameModeBase>(GetWorld()->GetAuthGameMode());
+
+		AWukongAttackProjectile* Bullet = Cast<AWukongAttackProjectile>(GameMode->GetParticlePool()->Pop(MuzzleLoc, GetActorRotation(), AWukongAttackProjectile::StaticClass()));
 
 		if (m_ActiveComboTime)
 		{
@@ -461,8 +462,9 @@ void AWukong::LighteningBolt()
 
 		if (m_FuryMode == false)
 		{
-			UAProjectGameInstance* GameInst = Cast<UAProjectGameInstance>(GetWorld()->GetGameInstance());
-			ANormalEffect* Effect = Cast<ANormalEffect>(GameInst->GetParticlePool()->Pop(m_BoltImpactPoint + FVector(RandomX, RandomY, 0), GetActorRotation(), ANormalEffect::StaticClass()));
+			AAProjectGameModeBase* GameMode = Cast<AAProjectGameModeBase>(GetWorld()->GetAuthGameMode());
+
+			ANormalEffect* Effect = Cast<ANormalEffect>(GameMode->GetParticlePool()->Pop(m_BoltImpactPoint + FVector(RandomX, RandomY, 0), GetActorRotation(), ANormalEffect::StaticClass()));
 			if (Effect != nullptr)
 				Effect->LoadParticleAsync(TEXT("Player_Bolt"));
 
@@ -518,8 +520,9 @@ void AWukong::FuryLighteningBolt()
 		float RandomX = FMath::RandRange(-1000.f, 1000.f);
 		float RandomY = FMath::RandRange(-1000.f, 1000.f);
 
-		UAProjectGameInstance* GameInst = Cast<UAProjectGameInstance>(GetWorld()->GetGameInstance());
-		ANormalEffect* Effect = Cast<ANormalEffect>(GameInst->GetParticlePool()->Pop(GetActorLocation() + FVector(RandomX, RandomY, 0), GetActorRotation(), ANormalEffect::StaticClass()));
+		AAProjectGameModeBase* GameMode = Cast<AAProjectGameModeBase>(GetWorld()->GetAuthGameMode());
+
+		ANormalEffect* Effect = Cast<ANormalEffect>(GameMode->GetParticlePool()->Pop(GetActorLocation() + FVector(RandomX, RandomY, 0), GetActorRotation(), ANormalEffect::StaticClass()));
 		if (Effect != nullptr)
 			Effect->LoadParticleAsync(TEXT("Saga_Bolt"));
 
@@ -533,12 +536,13 @@ void AWukong::SetFuryMode()
 	{
 		m_AttackMontage = m_AttackMontageArray[1];
 		m_SkyAttackMontage = m_SkyAttackMontageArray[1];
-		UAProjectGameInstance* GameInst = Cast<UAProjectGameInstance>(GetWorld()->GetGameInstance());
-		ANormalEffect* Effect = Cast<ANormalEffect>(GameInst->GetParticlePool()->Pop(GetActorLocation() - FVector(0.f, 0.f, 90.f), GetActorRotation(), ANormalEffect::StaticClass()));
+		AAProjectGameModeBase* GameMode = Cast<AAProjectGameModeBase>(GetWorld()->GetAuthGameMode());
+
+		ANormalEffect* Effect = Cast<ANormalEffect>(GameMode->GetParticlePool()->Pop(GetActorLocation() - FVector(0.f, 0.f, 90.f), GetActorRotation(), ANormalEffect::StaticClass()));
 		if (Effect != nullptr)
 			Effect->LoadParticleAsync(TEXT("Saga_Start"));
 
-		ANormalEffect* Effect1 = Cast<ANormalEffect>(GameInst->GetParticlePool()->Pop(GetActorLocation() - FVector(0.f, 0.f, 90.f), GetActorRotation(), ANormalEffect::StaticClass()));
+		ANormalEffect* Effect1 = Cast<ANormalEffect>(GameMode->GetParticlePool()->Pop(GetActorLocation() - FVector(0.f, 0.f, 90.f), GetActorRotation(), ANormalEffect::StaticClass()));
 		if (Effect1 != nullptr)
 			Effect1->LoadParticleAsync(TEXT("Saga_Destroy"));
 		//m_FuryAuraEffect = Cast<ANormalEffect>(GameInst->GetParticlePool()->Pop(GetActorLocation() - FVector(0.f, 0.f, 90.f), GetActorRotation(), ANormalEffect::StaticClass()));
@@ -658,22 +662,23 @@ void AWukong::SlamDamage()
 
 	if (m_FuryMode == false)
 	{
-		UAProjectGameInstance* GameInst = Cast<UAProjectGameInstance>(GetWorld()->GetGameInstance());
-		ANormalEffect* Effect = Cast<ANormalEffect>(GameInst->GetParticlePool()->Pop(impactPoint, FRotator::ZeroRotator, ANormalEffect::StaticClass()));
+		AAProjectGameModeBase* GameMode = Cast<AAProjectGameModeBase>(GetWorld()->GetAuthGameMode());
+		ANormalEffect* Effect = Cast<ANormalEffect>(GameMode->GetParticlePool()->Pop(impactPoint, FRotator::ZeroRotator, ANormalEffect::StaticClass()));
 
 		Effect->LoadParticleAsync(TEXT("Slam2"));
 
-		ANormalEffect* Effect1 = Cast<ANormalEffect>(GameInst->GetParticlePool()->Pop(impactPoint, FRotator::ZeroRotator, ANormalEffect::StaticClass()));
+		ANormalEffect* Effect1 = Cast<ANormalEffect>(GameMode->GetParticlePool()->Pop(impactPoint, FRotator::ZeroRotator, ANormalEffect::StaticClass()));
 		Effect1->LoadParticleAsync(TEXT("Slam3"));
 	}
 	else
 	{
-		UAProjectGameInstance* GameInst = Cast<UAProjectGameInstance>(GetWorld()->GetGameInstance());
-		ANormalEffect* Effect = Cast<ANormalEffect>(GameInst->GetParticlePool()->Pop(impactPoint, FRotator::ZeroRotator, ANormalEffect::StaticClass()));
+		AAProjectGameModeBase* GameMode = Cast<AAProjectGameModeBase>(GetWorld()->GetAuthGameMode());
+
+		ANormalEffect* Effect = Cast<ANormalEffect>(GameMode->GetParticlePool()->Pop(impactPoint, FRotator::ZeroRotator, ANormalEffect::StaticClass()));
 
 		Effect->LoadParticleAsync(TEXT("Saga_Slam2"));
 
-		ANormalEffect* Effect1 = Cast<ANormalEffect>(GameInst->GetParticlePool()->Pop(impactPoint, FRotator::ZeroRotator, ANormalEffect::StaticClass()));
+		ANormalEffect* Effect1 = Cast<ANormalEffect>(GameMode->GetParticlePool()->Pop(impactPoint, FRotator::ZeroRotator, ANormalEffect::StaticClass()));
 		Effect1->LoadParticleAsync(TEXT("Saga_Slam3"));
 	}
 	SetLaunchPower(1.0f);

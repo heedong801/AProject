@@ -22,6 +22,8 @@ UParticlePool::UParticlePool()
 
 void UParticlePool::MakePool()
 {
+	LOG(TEXT("MAKEPOOL PARTICLE"));
+
 	ACustomActor* Effect = nullptr;
 	for (int32 i = 0; i < m_CustomActorArrayMaxIdx; ++i)
 	{

@@ -17,7 +17,8 @@ class APROJECT_API AMonster : public ACustomCharacter
 public:
 	// Sets default values for this character's properties
 	AMonster();
-
+	~AMonster();
+	
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 		FMonsterInfo m_MonsterInfo;

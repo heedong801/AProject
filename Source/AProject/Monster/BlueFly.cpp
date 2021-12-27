@@ -3,7 +3,6 @@
 
 #include "BlueFly.h"
 #include "BlueFlyAIController.h"
-#include "../AProjectGameInstance.h"
 #include "../Effect/NormalEffect.h"
 #include "../Building/Nexus.h"
 #include "../Effect/BlueFlyProjectile.h"
@@ -61,9 +60,8 @@ void ABlueFly::NormalAttack()
 {
 	// Muzzle의 위치를 얻어온다.
 	FVector	MuzzleLoc = GetMesh()->GetSocketLocation(TEXT("Muzzle_01"));
-
-	UAProjectGameInstance* GameInst = Cast<UAProjectGameInstance>(GetWorld()->GetGameInstance());
-	ABlueFlyProjectile* Bullet = Cast<ABlueFlyProjectile>(GameInst->GetParticlePool()->Pop(MuzzleLoc, GetActorRotation(), ABlueFlyProjectile::StaticClass()));
+	AAProjectGameModeBase* GameMode = Cast<AAProjectGameModeBase>(GetWorld()->GetAuthGameMode());
+	ABlueFlyProjectile* Bullet = Cast<ABlueFlyProjectile>(GameMode->GetParticlePool()->Pop(MuzzleLoc, GetActorRotation(), ABlueFlyProjectile::StaticClass()));
 
 	if (Bullet)
 	{

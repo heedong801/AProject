@@ -26,14 +26,6 @@ void AAProjectGameModeBase::InitGame(const FString& MapName,
 {
 	Super::InitGame(MapName, Options, ErrorMessage);
 
-	UAProjectGameInstance* GameInst = Cast<UAProjectGameInstance>(GetWorld()->GetGameInstance());
-
-	if (GameInst)
-	{
-		GameInst->SetParticlePool(m_ParticlePool);
-		GameInst->SetMonsterPool(m_MonsterPool);
-	}
-
 	/*UAProjectGameInstance* GameInst = Cast<UAProjectGameInstance>(GetWorld()->GetGameInstance());
 
 	if (GameInst)
@@ -69,6 +61,8 @@ void AAProjectGameModeBase::BeginPlay()
 {
 	Super::BeginPlay();
 
+	m_ParticlePool->MakePool();
+	m_MonsterPool->MakePool();
 	
 	if (IsValid(m_MainHUDClass))
 	{
@@ -88,5 +82,22 @@ void AAProjectGameModeBase::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+}
+
+
+UParticlePool* AAProjectGameModeBase::GetParticlePool()
+{
+	if (IsValid(m_ParticlePool))
+		return m_ParticlePool;
+	else
+		return nullptr;
+}
+
+UMonsterPool* AAProjectGameModeBase::GetMonsterPool()
+{
+	if (IsValid(m_MonsterPool))
+		return m_MonsterPool;
+	else
+		return nullptr;
 }
 

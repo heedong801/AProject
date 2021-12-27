@@ -65,6 +65,10 @@ AMonster::AMonster()
 	
 }
 
+AMonster::~AMonster()
+{
+	LOG(TEXT("DEL"));
+}
 // Called when the game starts or when spawned
 void AMonster::BeginPlay()
 {
@@ -139,6 +143,7 @@ void AMonster::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	LOG(TEXT("%f %f %f"), GetActorLocation().X, GetActorLocation().Y, GetActorLocation().Z);
 	//LOG(TEXT("%f %f %f"), GetActorLocation().X, GetActorLocation().Y, GetActorLocation().Z);
 
 	//if (!m_Monster)

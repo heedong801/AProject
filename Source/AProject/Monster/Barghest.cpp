@@ -3,7 +3,7 @@
 
 #include "Barghest.h"
 #include "BarghestAIController.h"
-#include "../AProjectGameInstance.h"
+#include "../AProjectGameModeBase.h"
 #include "../Effect/NormalEffect.h"
 #include "../DebugClass.h"
 #include "../Building/Nexus.h"
@@ -33,6 +33,10 @@ ABarghest::ABarghest()
 	m_DropItemNameArray.Add(TEXT("HPÆ÷¼Ç"));*/
 }
 
+ABarghest::~ABarghest()
+{
+	LOG(TEXT("DOE"));
+}
 // Called when the game starts or when spawned
 void ABarghest::BeginPlay()
 {
@@ -81,8 +85,8 @@ void ABarghest::NormalAttack()
 		param.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 
 
-		UAProjectGameInstance* GameInst = Cast<UAProjectGameInstance>(GetWorld()->GetGameInstance());
-		ANormalEffect* Effect = Cast<ANormalEffect>(GameInst->GetParticlePool()->Pop(HitResult.ImpactPoint, HitResult.ImpactNormal.Rotation(), ANormalEffect::StaticClass()));
+		AAProjectGameModeBase* GameMode = Cast<AAProjectGameModeBase>(GetWorld()->GetAuthGameMode());
+		ANormalEffect* Effect = Cast<ANormalEffect>(GameMode->GetParticlePool()->Pop(HitResult.ImpactPoint, HitResult.ImpactNormal.Rotation(), ANormalEffect::StaticClass()));
 		if (Effect != nullptr)
 			Effect->LoadParticleAsync(TEXT("Buff_Red"));
 

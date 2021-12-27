@@ -3,7 +3,7 @@
 
 #include "MonsterSpawnPoint.h"
 #include "NavigationSystem.h"
-#include "../AProjectGameInstance.h"
+#include "../AProjectGameModeBase.h"
 #include "../DebugClass.h"
 // Sets default values
 AMonsterSpawnPoint::AMonsterSpawnPoint()
@@ -44,13 +44,17 @@ void AMonsterSpawnPoint::Tick(float DeltaTime)
 
 				int random = FMath::RandRange(0, m_MonsterClassArray.Num() - 1);
 				
-				UAProjectGameInstance* GameInst = Cast<UAProjectGameInstance>(GetWorld()->GetGameInstance());
+				AAProjectGameModeBase* GameMode = Cast<AAProjectGameModeBase>(GetWorld()->GetAuthGameMode());
+
 				UClass* Type = m_MonsterClassArray[random];
 
-				AMonster* Monster = Cast<AMonster>(GameInst->GetMonsterPool()->Pop(GetActorLocation(), GetActorRotation(), m_MonsterClassArray[random]));
+				AMonster* Monster = Cast<AMonster>(GameMode->GetMonsterPool()->Pop(GetActorLocation(), GetActorRotation(), m_MonsterClassArray[random]));
 
+				LOG(TEXT("A"));
 				if (Monster)
 				{
+					LOG(TEXT("B"));
+
 					Monster->SetIsSpawned(true);
 					Monster->SetSpawnPoint(this);
 					//Monster->GetMonsterInfo().TraceDistance = 4000.f;

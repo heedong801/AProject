@@ -40,20 +40,6 @@ void UAProjectGameInstance::StartGameInstance()
 	Super::StartGameInstance();
 }
 
-void UAProjectGameInstance::SetParticlePool( UParticlePool* pParticlePool)
-{
-	m_ParticlePool = pParticlePool;
-	if (m_ParticlePool->GetSize() == 0)
-		m_ParticlePool->MakePool();
-}
-
-void UAProjectGameInstance::SetMonsterPool(UMonsterPool* pMonsterPool)
-{
-	m_MonsterPool = pMonsterPool;
-	if (m_MonsterPool->GetSize() == 0)
-		m_MonsterPool->MakePool();
-}
-
 
 const FMonsterInfo* UAProjectGameInstance::FindMonsterInfo(const FString& Name)
 {
@@ -79,20 +65,4 @@ const FQuestTableInfo* UAProjectGameInstance::FindQuestInfo(const FString& Name)
 const FMapTableInfo* UAProjectGameInstance::FindMapInfo(const FString& Name)
 {
 	return m_MapInfoTable->FindRow<FMapTableInfo>(*Name, "");
-}
-
-UParticlePool* UAProjectGameInstance::GetParticlePool() 
-{
-	if (IsValid(m_ParticlePool))
-		return m_ParticlePool;
-	else
-		return nullptr;
-}
-
-UMonsterPool* UAProjectGameInstance::GetMonsterPool()
-{
-	if (IsValid(m_MonsterPool))
-		return m_MonsterPool;
-	else
-		return nullptr;
 }

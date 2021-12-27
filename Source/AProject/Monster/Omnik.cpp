@@ -3,7 +3,7 @@
 
 #include "Omnik.h"
 #include "OmnikAIController.h"
-#include "../AProjectGameInstance.h"
+#include "../AProjectGameModeBase.h"
 #include "../Effect/NormalEffect.h"
 #include "../Building/Nexus.h"
 AOmnik::AOmnik()
@@ -79,10 +79,10 @@ void AOmnik::NormalAttack()
 		param.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 
 
-		UAProjectGameInstance* GameInst = Cast<UAProjectGameInstance>(GetWorld()->GetGameInstance());
-		if (GameInst)
+		AAProjectGameModeBase* GameMode = Cast<AAProjectGameModeBase>(GetWorld()->GetAuthGameMode());
+		if (GameMode)
 		{
-			ANormalEffect* Effect = Cast<ANormalEffect>(GameInst->GetParticlePool()->Pop(HitResult.ImpactPoint, HitResult.ImpactNormal.Rotation(), ANormalEffect::StaticClass()));
+			ANormalEffect* Effect = Cast<ANormalEffect>(GameMode->GetParticlePool()->Pop(HitResult.ImpactPoint, HitResult.ImpactNormal.Rotation(), ANormalEffect::StaticClass()));
 			if (Effect != nullptr)
 				Effect->LoadParticleAsync(TEXT("Buff_White"));
 		}

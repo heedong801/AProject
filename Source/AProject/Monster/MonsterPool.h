@@ -5,19 +5,20 @@
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "../Etc/CustomCharacter.h"
+#include "Monster.h"
 #include "MonsterPool.generated.h"
 
-/**
- * 
- */
+enum MONSTER{ Barghest, BlueFly, Centour, Golem, Omnik, Shoebill};
 UCLASS()
 class APROJECT_API UMonsterPool : public UObject
 {
 	GENERATED_BODY()
 
 protected:
-
+	UPROPERTY()
 	TArray<ACustomCharacter*> m_CustomCharacterArray;
+
+	TArray<TSubclassOf<AMonster>> m_MonsterArray;
 
 	int32 m_CustomCharacterArrayMaxIdx;
 	int32 m_MonsterNum;
@@ -30,6 +31,7 @@ protected:
 
 public:
 	UMonsterPool();
+	~UMonsterPool();
 
 	void MakePool();
 	int GetSize();

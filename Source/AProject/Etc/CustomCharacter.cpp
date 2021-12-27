@@ -17,6 +17,7 @@ void ACustomCharacter::SetActive(bool bOnFlag)
 		SetActorHiddenInGame(false);
 		SetActorEnableCollision(true);
 		SetActorTickEnabled(true);
+		
 	}
 	else
 	{

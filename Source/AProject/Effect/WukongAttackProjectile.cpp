@@ -4,7 +4,7 @@
 #include "WukongAttackProjectile.h"
 #include "NormalEffect.h"
 #include "../Monster/Monster.h"
-#include "../AProjectGameInstance.h"
+#include "../AProjectGameModeBase.h"
 #include "../DebugClass.h"
 // Sets default values
 AWukongAttackProjectile::AWukongAttackProjectile()
@@ -39,8 +39,9 @@ void AWukongAttackProjectile::StopEvent(const FHitResult& result)
 	//LOG(TEXT("%s"), *result.GetActor()->GetName());
 	Super::StopEvent(result);
 
-	UAProjectGameInstance* GameInst = Cast<UAProjectGameInstance>(GetWorld()->GetGameInstance());
-	ANormalEffect* Effect = Cast<ANormalEffect>(GameInst->GetParticlePool()->Pop(result.ImpactPoint, result.Normal.Rotation(), ANormalEffect::StaticClass()));
+	AAProjectGameModeBase* GameMode = Cast<AAProjectGameModeBase>(GetWorld()->GetAuthGameMode());
+
+	ANormalEffect* Effect = Cast<ANormalEffect>(GameMode->GetParticlePool()->Pop(result.ImpactPoint, result.Normal.Rotation(), ANormalEffect::StaticClass()));
 
 	FCollisionQueryParams params(NAME_None, false, this);
 
