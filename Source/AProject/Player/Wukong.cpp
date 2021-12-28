@@ -432,7 +432,7 @@ void AWukong::LighteningBolt()
 			, FCollisionShape::MakeSphere(500.f), params);
 		//LOG(TEXT("%f"), MonsterInfo.TraceDistance);
 
-		GetWorld()->GetFirstPlayerController()->ClientPlayCameraShake(UHitCameraShake::StaticClass());
+		GetWorld()->GetFirstPlayerController()->ClientStartCameraShake(UHitCameraShake::StaticClass());
 		m_LaunchPower = 5.0f;
 		if (Sweep)
 		{
@@ -492,7 +492,7 @@ void AWukong::FuryLighteningBolt()
 			, FCollisionShape::MakeSphere(5000.f), params);
 		//LOG(TEXT("%f"), MonsterInfo.TraceDistance);
 
-		GetWorld()->GetFirstPlayerController()->ClientPlayCameraShake(UHitCameraShake::StaticClass());
+		GetWorld()->GetFirstPlayerController()->ClientStartCameraShake(UHitCameraShake::StaticClass());
 		m_LaunchPower = 5.0f;
 		if (Sweep)
 		{
@@ -565,7 +565,7 @@ void AWukong::SetFuryMode()
 				, FCollisionShape::MakeSphere(3000.f), params);
 			//LOG(TEXT("%f"), MonsterInfo.TraceDistance);
 
-			GetWorld()->GetFirstPlayerController()->ClientPlayCameraShake(UHitCameraShake::StaticClass());
+			GetWorld()->GetFirstPlayerController()->ClientStartCameraShake(UHitCameraShake::StaticClass());
 			m_IsCritical = false;
 			m_LaunchPower = 5.0f;
 			if (Sweep)

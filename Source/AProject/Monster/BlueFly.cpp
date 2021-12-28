@@ -89,7 +89,7 @@ float ABlueFly::TakeDamage(float DamageAmount, struct FDamageEvent const& Damage
 	//AttackedDir.Z = 0.f;
 
 
-	GetWorld()->GetFirstPlayerController()->ClientPlayCameraShake(
+	GetWorld()->GetFirstPlayerController()->ClientStartCameraShake(
 		UHitCameraShake::StaticClass());
 
 	if (m_HPBarWidget->GetVisibility() == ESlateVisibility::Collapsed)

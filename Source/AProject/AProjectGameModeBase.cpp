@@ -66,9 +66,6 @@ void AAProjectGameModeBase::BeginPlay()
 	
 	//m_CharacterPool = NewObject<UCharacterPool>(GetWorld(), UCharacterPool::StaticClass(), TEXT("CharacterPool"));
 
-
-
-
 	if (IsValid(m_MainHUDClass))
 	{
 		m_MainHUD = Cast<UMainHUD>(CreateWidget(GetWorld(),

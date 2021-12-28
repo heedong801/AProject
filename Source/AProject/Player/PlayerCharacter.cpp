@@ -55,7 +55,7 @@ float APlayerCharacter::TakeDamage(float DamageAmount, struct FDamageEvent const
 	//LOG(TEXT("%f %f %f"), m_Arm->GetRelativeRotation().Vector().X, m_Arm->GetRelativeRotation().Vector().Y, m_Arm->GetRelativeRotation().Vector().Z);
 	m_PlayerInfo.HP -= Damage;
 
-	/*GetWorld()->GetFirstPlayerController()->ClientPlayCameraShake(
+	/*GetWorld()->GetFirstPlayerController()->ClientStartCameraShake(
 		UHitCameraShake::StaticClass());*/
 
 	//Á×Àº°æ¿ì

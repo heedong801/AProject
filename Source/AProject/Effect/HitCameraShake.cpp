@@ -21,7 +21,7 @@ UHitCameraShake::UHitCameraShake()
 	//LocOscillation.X.Amplitude = 25.f;
 	//LocOscillation.X.Frequency = 30.f;
 	//LocOscillation.X.InitialOffset = EInitialOscillatorOffset::EOO_OffsetZero;
-	
+
 	bSingleInstance = true;
 
 }
