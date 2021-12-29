@@ -256,11 +256,56 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 	PlayerInputComponent->BindAction(TEXT("Quest"), EInputEvent::IE_Pressed, this, &APlayerCharacter::QuestKey);
 	PlayerInputComponent->BindAction(TEXT("Quit"), EInputEvent::IE_Pressed, this, &APlayerCharacter::QuitKey);
 	PlayerInputComponent->BindAction(TEXT("Interaction"), EInputEvent::IE_Pressed, this, &APlayerCharacter::InteractionKey);
-
-
-
+	PlayerInputComponent->BindAction(TEXT("Equipment"), EInputEvent::IE_Pressed, this, &APlayerCharacter::EquipmentKey);
 }
 
+void APlayerCharacter::EquipmentKey()
+{
+	AAProjectGameModeBase* GameMode = Cast<AAProjectGameModeBase>(GetWorld()->GetAuthGameMode());
+
+	if (IsValid(GameMode))
+	{
+		UMainHUD* MainHUD = GameMode->GetMainHUD();
+
+		if (IsValid(MainHUD))
+		{
+			UEquipmentWidget* EquipmentWidget = MainHUD->GetEquipment();
+			{
+				if (IsValid(EquipmentWidget))
+				{
+					if (EquipmentWidget->GetVisibility() == ESlateVisibility::Collapsed)
+					{
+						EquipmentWidget->SetVisibility(ESlateVisibility::Visible);
+
+						APlayerController* ControllerA = GetWorld()->GetFirstPlayerController();
+
+						FInputModeGameAndUI Mode;
+
+						ControllerA->SetInputMode(Mode);
+						ControllerA->SetIgnoreLookInput(true);
+						ControllerA->bShowMouseCursor = true;
+						m_ActiveWidget = true;
+					}
+					else
+					{
+						EquipmentWidget->SetVisibility(ESlateVisibility::Collapsed);
+
+						APlayerController* ControllerA = GetWorld()->GetFirstPlayerController();
+
+						FInputModeGameOnly	Mode;
+						//FInputModeGameOnly
+						//FInputModeGameAndUI	Mode;
+
+						ControllerA->SetInputMode(Mode);
+						ControllerA->SetIgnoreLookInput(false);
+						ControllerA->bShowMouseCursor = false;
+						m_ActiveWidget = false;
+					}
+				}
+			}
+		}
+	}
+}
 void APlayerCharacter::Skill1Key()
 {
 	m_SkillIdx = 0;

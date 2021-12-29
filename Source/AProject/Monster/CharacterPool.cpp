@@ -68,9 +68,11 @@ void UCharacterPool::MakePool()
 		else if (i < m_CustomCharacterArrayMaxIdx)
 			Character = GetWorld()->SpawnActor<ABlueFly>(m_MonsterArray[MONSTER::BlueFly], FVector::ZeroVector, FRotator::ZeroRotator, param);
 
+
 		if (Character)
 		{
 			Character->SetActive(false);
+			Character->GetCharacterMovement()->GravityScale = 0.f;
 			m_CustomCharacterArray.Add(Character);
 		}
 	}
@@ -94,41 +96,41 @@ ACustomCharacter* UCharacterPool::Pop(FVector Pos, FRotator Rot, UClass* Type)
 		//LOG(TEXT("%s"), *Type->GetSuperClass()->GetName());
 		if (Type->GetSuperClass() == AGolem::StaticClass())
 		{
-			LOG(TEXT("A"));
+			//LOG(TEXT("A"));
 			Start = 0;
 			End = 20;
 		}
 		else if (Type->GetSuperClass() == AShoebill::StaticClass())
 		{
-			LOG(TEXT("B"));
+			//LOG(TEXT("B"));
 
 			Start = 20;
 			End = 40;
 		}
 		else if (Type->GetSuperClass() == AOmnik::StaticClass())
 		{
-			LOG(TEXT("C"));
+			//LOG(TEXT("C"));
 
 			Start = 40;
 			End = 60;
 		}
 		else if (Type->GetSuperClass() == ACentour::StaticClass())
 		{
-			LOG(TEXT("D"));
+			//LOG(TEXT("D"));
 
 			Start = 60;
 			End = 80;
 		}
 		else if (Type->GetSuperClass() == ABarghest::StaticClass())
 		{
-			LOG(TEXT("E"));
+			//LOG(TEXT("E"));
 
 			Start = 80;
 			End = 100;
 		}
 		else if (Type->GetSuperClass() == ABlueFly::StaticClass())
 		{
-			LOG(TEXT("F"));
+			//LOG(TEXT("F"));
 
 			Start = 100;
 			End = 120;
@@ -143,7 +145,8 @@ ACustomCharacter* UCharacterPool::Pop(FVector Pos, FRotator Rot, UClass* Type)
 					m_CustomCharacterArray[i]->SetActive(true);
 					m_CustomCharacterArray[i]->SetActorLocation(Pos);
 					m_CustomCharacterArray[i]->SetActorRotation(Rot);
-					LOG(TEXT("%d"), i);
+					m_CustomCharacterArray[i]->GetCharacterMovement()->GravityScale = 1.f;
+					//LOG(TEXT("%d"), i);
 					return m_CustomCharacterArray[i];
 				}
 			}

@@ -8,6 +8,7 @@
 #include "Loading.h"
 #include "../Quest/QuestWidget.h"
 #include "DungeonSelect.h"
+#include "EquipmentWidget.h"
 #include "MainHUD.generated.h"
 
 /**
@@ -26,10 +27,15 @@ protected:
 		UQuestWidget* m_QuestWidget;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 		UDungeonSelect* m_DungeonSelect;
-
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+		UEquipmentWidget* m_EquipmentWidget;
 	UPROPERTY(meta = (BindWidgetAnim), meta = (AllowPrivateAccess = "true"), Transient)
 		class UWidgetAnimation* m_FadeAnim;
 public:
+	UEquipmentWidget* GetEquipment()
+	{
+		return m_EquipmentWidget;
+	}
 	UDungeonSelect* GetDungeonSelect()
 	{
 		return m_DungeonSelect;

@@ -87,6 +87,7 @@ public:
 	void QuestKey();
 	void QuitKey();
 	void InteractionKey();
+	void EquipmentKey();
 
 	void Skill1Key();
 	void Skill2Key();

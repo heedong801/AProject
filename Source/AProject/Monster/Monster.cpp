@@ -18,7 +18,7 @@
 AMonster::AMonster()
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = false;
 
 	m_HPBar = CreateDefaultSubobject<UWidgetComponent>(TEXT("HPBar"));
 	m_HPBar->SetupAttachment(GetMesh());
@@ -65,10 +65,7 @@ AMonster::AMonster()
 	
 }
 
-AMonster::~AMonster()
-{
-	LOG(TEXT("DEL"));
-}
+
 // Called when the game starts or when spawned
 void AMonster::BeginPlay()
 {
@@ -142,55 +139,6 @@ void AMonster::BeginPlay()
 void AMonster::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
-	LOG(TEXT("%f %f %f"), GetActorLocation().X, GetActorLocation().Y, GetActorLocation().Z);
-	//LOG(TEXT("%f %f %f"), GetActorLocation().X, GetActorLocation().Y, GetActorLocation().Z);
-
-	//if (!m_Monster)
-	//{
-	//	m_AccTime += DeltaTime;
-
-	//	if (m_AccTime >= m_SpawnTime)
-	//	{
-	//		m_AccTime = 0.f;
-
-	//		FActorSpawnParameters	param;
-	//		param.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
-
-	//		AMonster* Monster = GetWorld()->SpawnActor<AMonster>(m_MonsterClass,
-	//			GetActorLocation(), GetActorRotation(), param);
-
-	//		Monster->SetSpawnPoint(this);
-
-	//		if (m_PatrolPointSpline)
-	//		{
-	//			Monster->SetPatrolPointSpline(m_PatrolPointSpline);
-	//			Monster->SetPatrolLength(m_PatrolPointSpline->GetSplineLength());
-
-	//			//Monster->AddPatrolPoint(GetActorLocation());
-
-	//			const TArray<FVector>& PatrolPointArray = m_PatrolPointSpline->GetPointArray();
-
-	//			for (auto& Point : PatrolPointArray)
-	//			{
-	//				Monster->AddPatrolPoint(Point);
-	//			}
-	//		}
-
-	//		else
-	//		{
-	//			Monster->AddPatrolPoint(GetActorLocation());
-
-	//			for (auto& Point : m_PatrolPointArray)
-	//			{
-	//				Monster->AddPatrolPoint(Point->GetActorLocation());
-	//			}
-	//		}
-
-
-	//		m_Monster = Monster;
-	//	}
-	//}
 
 }
 void AMonster::SetDamageUI(bool Critical, float Damage)
