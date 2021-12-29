@@ -10,7 +10,7 @@ UParticlePool::UParticlePool()
 {
 	//LOG(TEXT("N : %d"), m_CustomActorArray.Num());
 	//LOG(TEXT("M : %d"), m_CustomActorArrayMaxIdx);
-	m_NormalEffectNum = 300;
+	m_NormalEffectNum = 200;
 	m_BlueFlyBulletArrayNum = 5;
 	m_WukongBulletArrayNum = 10;
 	m_CustomActorArrayMaxIdx = m_NormalEffectNum + m_BlueFlyBulletArrayNum + m_WukongBulletArrayNum;
@@ -22,7 +22,7 @@ UParticlePool::UParticlePool()
 
 void UParticlePool::MakePool()
 {
-	LOG(TEXT("MAKEPOOL PARTICLE"));
+	//LOG(TEXT("MAKEPOOL PARTICLE"));
 
 	ACustomActor* Effect = nullptr;
 	for (int32 i = 0; i < m_CustomActorArrayMaxIdx; ++i)
@@ -58,21 +58,24 @@ ACustomActor* UParticlePool::Pop(FVector Pos, FRotator Rot, UClass* Type)
 	{
 		//LOG(TEXT("POP"));
 		int32 Start = 0, End = m_CustomActorArrayMaxIdx;
-
+		int32 ParticleIdx = -1;
 		if (Type == ANormalEffect::StaticClass())
 		{
 			Start = 0;
 			End = m_NormalEffectNum;
+			ParticleIdx = 0;
 		}
 		else if (Type == ABlueFlyProjectile::StaticClass())
 		{
 			Start = m_NormalEffectNum;
 			End = m_NormalEffectNum + m_BlueFlyBulletArrayNum;
+			ParticleIdx = 1;
 		}
 		else if (Type == AWukongAttackProjectile::StaticClass())
 		{
 			Start = m_NormalEffectNum + m_BlueFlyBulletArrayNum;
 			End = m_CustomActorArrayMaxIdx;
+			ParticleIdx = 2;
 		}
 
 		for (int32 i = Start; i < End; ++i)
@@ -84,7 +87,7 @@ ACustomActor* UParticlePool::Pop(FVector Pos, FRotator Rot, UClass* Type)
 					m_CustomActorArray[i]->SetActive(true);
 					m_CustomActorArray[i]->SetActorLocation(Pos);
 					m_CustomActorArray[i]->SetActorRotation(Rot);
-
+			
 					return m_CustomActorArray[i];
 				}
 			}

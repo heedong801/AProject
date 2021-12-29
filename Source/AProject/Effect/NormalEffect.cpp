@@ -8,7 +8,7 @@
 ANormalEffect::ANormalEffect()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = false;
 
 	m_ParticleSystem = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("ParticleSystem"));
 
@@ -59,6 +59,7 @@ void ANormalEffect::LoadSound(const FString& Path)
 void ANormalEffect::ParticleFinish(UParticleSystemComponent* Particle)
 {
 	SetActorScale3D(FVector(1.f, 1.f, 1.f));
+	m_ParticleSystem->SetVisibility(false);
 	SetActive(false);
 }
 
@@ -120,4 +121,9 @@ void ANormalEffect::LoadSoundAsyncComplete()
 
 	if (NewSound)
 		UGameplayStatics::PlaySoundAtLocation(GetWorld(), NewSound.Get(), GetActorLocation());
+}
+
+void ANormalEffect::SetObject()
+{
+	m_ParticleSystem->SetVisibility(true);
 }

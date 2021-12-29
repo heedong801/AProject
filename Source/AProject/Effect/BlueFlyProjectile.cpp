@@ -27,6 +27,7 @@ ABlueFlyProjectile::ABlueFlyProjectile()
 
 void ABlueFlyProjectile::StopEvent(const FHitResult& result)
 {
+	LOG(TEXT("AA"));
 	Super::StopEvent(result);
 
 	AAProjectGameModeBase* GameMode = Cast<AAProjectGameModeBase>(GetWorld()->GetAuthGameMode());
@@ -69,4 +70,18 @@ void ABlueFlyProjectile::SetActiveBullet(FVector HitDirection)
 	
 	m_Movement->Velocity = HitDirection * m_Movement->InitialSpeed;
 	//LOG(TEXT("%f %f %f"), m_Movement->Velocity.X, m_Movement->Velocity.Y, m_Movement->Velocity.Z);
+}
+
+void ABlueFlyProjectile::SetActive(bool bOnActive)
+{
+	if (bOnActive)
+	{
+		m_Body->SetCollisionProfileName(TEXT("EnemyAttackObj"));
+
+	}
+	else
+	{
+		m_Body->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+
+	}
 }

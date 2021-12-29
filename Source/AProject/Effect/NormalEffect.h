@@ -48,7 +48,8 @@ public:
 	void LoadParticleAsyncComplete();
 	void LoadSoundAsyncComplete();
 
+	virtual UParticleSystemComponent* GetParticle() {	return m_ParticleSystem;	}
 	UFUNCTION()
 	void ParticleFinish(UParticleSystemComponent* Particle);
-	
+	virtual void SetObject();
 };

@@ -19,6 +19,6 @@ public:
 	virtual void SetActiveBullet(FVector HitDirection);
 protected:
 	virtual void StopEvent(const FHitResult& result);
-
+	virtual void SetActive(bool bOnFlag);
 
 };

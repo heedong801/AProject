@@ -18,6 +18,7 @@ public:
 
 	virtual void SetActive(bool);
 	void SetFalse();
+
 	virtual void SetActiveBullet(FVector HitDirection);
 protected:
 	virtual void StopEvent(const FHitResult& result);

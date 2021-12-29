@@ -19,5 +19,4 @@ public:
 
 	virtual void SetActive(bool bOnFlag);
 	virtual bool GetActive();
-
 };
