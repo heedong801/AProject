@@ -10,7 +10,8 @@
 			"LoadingPhase": "Default",
 			"AdditionalDependencies": [
 				"GameplayCameras",
-				"UMG"
+				"UMG",
+				"CoreUObject"
 			]
 		}
 	],
