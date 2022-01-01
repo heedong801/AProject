@@ -37,6 +37,8 @@ enum class EItemOption : uint8
 	Armor,
 	HPMax,
 	MPMax,
+	HP,
+	MP,
 	HPRecovery,
 	MPRecovery,
 	CriticalPercent,

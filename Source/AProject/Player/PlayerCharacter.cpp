@@ -213,8 +213,8 @@ void APlayerCharacter::Recovery()
 			if (IsValid(CharacterHUD))
 			{
 				CharacterHUD->SetHPPercent(m_PlayerInfo.HP / m_PlayerInfo.HPMax);
-				CharacterHUD->SetMPPercent(m_PlayerInfo.MP / m_PlayerInfo.MPMax);
 
+				CharacterHUD->SetMPPercent(m_PlayerInfo.MP / m_PlayerInfo.MPMax);
 			}
 		}
 	}
