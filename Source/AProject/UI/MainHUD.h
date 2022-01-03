@@ -6,6 +6,7 @@
 #include "Blueprint/UserWidget.h"
 #include "CharacterHUD.h"
 #include "Loading.h"
+#include "InventoryTile.h"
 #include "../Quest/QuestWidget.h"
 #include "DungeonSelect.h"
 #include "EquipmentWidget.h"
@@ -29,9 +30,16 @@ protected:
 		UDungeonSelect* m_DungeonSelect;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 		UEquipmentWidget* m_EquipmentWidget;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+		UInventoryTile* m_InventoryWidget;
+
 	UPROPERTY(meta = (BindWidgetAnim), meta = (AllowPrivateAccess = "true"), Transient)
 		class UWidgetAnimation* m_FadeAnim;
 public:
+	UInventoryTile* GetInventory()
+	{
+		return m_InventoryWidget;
+	}
 	UEquipmentWidget* GetEquipment()
 	{
 		return m_EquipmentWidget;

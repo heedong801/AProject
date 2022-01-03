@@ -13,6 +13,7 @@ void UMainHUD::NativeConstruct()
 	m_QuestWidget = Cast<UQuestWidget>(GetWidgetFromName(TEXT("UI_Quest")));
 	m_DungeonSelect = Cast<UDungeonSelect>(GetWidgetFromName(TEXT("UI_DungeonSelect")));
 	m_EquipmentWidget = Cast<UEquipmentWidget>(GetWidgetFromName(TEXT("UI_Equipment")));
+	m_InventoryWidget = Cast<UInventoryTile>(GetWidgetFromName(TEXT("UI_Inventory")));
 
 	UAProjectGameInstance* GameInst = Cast<UAProjectGameInstance>(GetWorld()->GetGameInstance());
 	FString MapName = GameInst->GetMapName();
@@ -33,6 +34,8 @@ void UMainHUD::QuitAllWidget()
 		m_DungeonSelect->SetVisibility(ESlateVisibility::Collapsed);
 	if (IsValid(m_EquipmentWidget))
 		m_EquipmentWidget->SetVisibility(ESlateVisibility::Collapsed);
+	if (IsValid(m_InventoryWidget))
+		m_InventoryWidget->SetVisibility(ESlateVisibility::Collapsed);
 }
 
 void UMainHUD::QuitAllWidgetAnim()

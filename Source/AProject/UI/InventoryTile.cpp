@@ -2,6 +2,7 @@
 
 
 #include "InventoryTile.h"
+#include "InventoryTileData.h"
 //#include "../UEKR2GameInstance.h"
 //#include "Components/CanvasPanelSlot.h"
 //#include "InventoryTileData.h"
@@ -143,14 +144,14 @@ void UInventoryTile::ItemHovered(UObject* Data, bool Hovered)
 }
 
 
-//void UInventoryTile::AddItem(const FUIItemTableInfo* ItemInfo)
-//{
-//	UInventoryItemDataTile* Data = NewObject<UInventoryItemDataTile>(this,
-//		UInventoryItemDataTile::StaticClass());
-//
-//	Data->SetNameText(ItemInfo->Name);
-//	Data->SetIconTexture(ItemInfo->IconTexture);
-//	Data->SetIndex(m_InventoryTile->GetNumItems());
-//
-//	m_InventoryTile->AddItem(Data);
-//}
+void UInventoryTile::AddItem(const FUIItemTableInfo* ItemInfo)
+{
+	UInventoryTileData* Data = NewObject<UInventoryTileData>(this,
+		UInventoryTileData::StaticClass());
+
+	Data->SetName(ItemInfo->Name);
+	Data->SetIconTexture(ItemInfo->IconTexture);
+	Data->SetIndex(m_InventoryTile->GetNumItems());
+
+	m_InventoryTile->AddItem(Data);
+}

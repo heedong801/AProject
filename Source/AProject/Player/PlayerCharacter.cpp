@@ -257,6 +257,55 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 	PlayerInputComponent->BindAction(TEXT("Quit"), EInputEvent::IE_Pressed, this, &APlayerCharacter::QuitKey);
 	PlayerInputComponent->BindAction(TEXT("Interaction"), EInputEvent::IE_Pressed, this, &APlayerCharacter::InteractionKey);
 	PlayerInputComponent->BindAction(TEXT("Equipment"), EInputEvent::IE_Pressed, this, &APlayerCharacter::EquipmentKey);
+	PlayerInputComponent->BindAction(TEXT("Inventory"), EInputEvent::IE_Pressed, this, &APlayerCharacter::InventoryKey);
+
+}
+void APlayerCharacter::InventoryKey()
+{
+	AAProjectGameModeBase* GameMode = Cast<AAProjectGameModeBase>(GetWorld()->GetAuthGameMode());
+
+	if (IsValid(GameMode))
+	{
+		UMainHUD* MainHUD = GameMode->GetMainHUD();
+
+		if (IsValid(MainHUD))
+		{
+			UInventoryTile* InventoryWidget = MainHUD->GetInventory();
+
+			if (IsValid(InventoryWidget))
+			{
+				if (InventoryWidget->GetVisibility() == ESlateVisibility::Collapsed)
+				{
+					InventoryWidget->SetVisibility(ESlateVisibility::Visible);
+
+					APlayerController* ControllerA = GetWorld()->GetFirstPlayerController();
+
+					FInputModeGameAndUI Mode;
+
+					ControllerA->SetInputMode(Mode);
+					ControllerA->SetIgnoreLookInput(true);
+					ControllerA->bShowMouseCursor = true;
+					m_ActiveWidget = true;
+				}
+				else
+				{
+					InventoryWidget->SetVisibility(ESlateVisibility::Collapsed);
+
+					APlayerController* ControllerA = GetWorld()->GetFirstPlayerController();
+
+					FInputModeGameOnly	Mode;
+					//FInputModeGameOnly
+					//FInputModeGameAndUI	Mode;
+
+					ControllerA->SetInputMode(Mode);
+					ControllerA->SetIgnoreLookInput(false);
+					ControllerA->bShowMouseCursor = false;
+					m_ActiveWidget = false;
+				}
+			}
+
+		}
+	}
 }
 
 void APlayerCharacter::EquipmentKey()

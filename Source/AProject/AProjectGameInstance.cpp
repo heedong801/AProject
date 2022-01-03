@@ -17,7 +17,9 @@ UAProjectGameInstance::UAProjectGameInstance()
 	if (QuestInfoTableAsset.Succeeded())
 		m_QuestInfoTable = QuestInfoTableAsset.Object;
 
-
+	static ConstructorHelpers::FObjectFinder<UDataTable> UIItemInfoTableAsset(TEXT("DataTable'/Game/UI/DT_ItemInfo.DT_ItemInfo'"));
+	if (UIItemInfoTableAsset.Succeeded())
+		m_UIItemInfoTable = UIItemInfoTableAsset.Object;
 	static ConstructorHelpers::FObjectFinder<UDataTable> MapInfoTableAsset(TEXT("DataTable'/Game/Quest/DT_MapInfo.DT_MapInfo'"));
 	if (MapInfoTableAsset.Succeeded())
 		m_MapInfoTable = MapInfoTableAsset.Object;
@@ -52,11 +54,11 @@ const FPlayerInfo* UAProjectGameInstance::FindPlayerInfo(const FString& Name)
 	return m_PlayerInfoTable->FindRow<FPlayerInfo>(*Name, "");
 }
 
-//const FUIItemTableInfo* UAProjectGameInstance::FindUIItemInfo(const FString& Name)
-//{
-//	return m_UIItemInfoTable->FindRow<FUIItemTableInfo>(*Name, "");
-//}
-//
+const FUIItemTableInfo* UAProjectGameInstance::FindUIItemInfo(const FString& Name)
+{
+	return m_UIItemInfoTable->FindRow<FUIItemTableInfo>(*Name, "");
+}
+
 const FQuestTableInfo* UAProjectGameInstance::FindQuestInfo(const FString& Name)
 {
 	return m_QuestInfoTable->FindRow<FQuestTableInfo>(*Name, "");

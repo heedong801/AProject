@@ -7,6 +7,7 @@
 #include "Monster/MonsterInfo.h"
 #include "Engine/GameInstance.h"
 #include "Quest/QuestInfo.h"
+#include "UI/ItemInfo.h"
 #include "Manager/LevelManager.h"
 #include "AProjectGameInstance.generated.h"
 
@@ -69,8 +70,7 @@ public:
 
 	const FMonsterInfo* FindMonsterInfo(const FString& Name);
 	const FPlayerInfo* FindPlayerInfo(const FString& Name);
-
-	//const FUIItemTableInfo* FindUIItemInfo(const FString& Name);
+	const FUIItemTableInfo* FindUIItemInfo(const FString& Name);
 	const FQuestTableInfo* FindQuestInfo(const FString& Name);
 	const FMapTableInfo* FindMapInfo(const FString& Name);
 	ULevelManager* GetLevelManager() { return m_LevelManager; }

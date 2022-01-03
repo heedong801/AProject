@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
 #include "Components/TileView.h"
-
+#include "ItemInfo.h"
 #include "InventoryTile.generated.h"
 
 /**
@@ -34,7 +34,7 @@ public:
 		void ItemHovered(UObject* Data, bool Hovered);
 
 public:
-	//void AddItem(const FUIItemTableInfo* ItemInfo);
+	void AddItem(const FUIItemTableInfo* ItemInfo);
 protected:
 	virtual void NativeConstruct();
 	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTine);

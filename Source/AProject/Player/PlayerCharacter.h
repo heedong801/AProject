@@ -88,6 +88,7 @@ public:
 	void QuitKey();
 	void InteractionKey();
 	void EquipmentKey();
+	void InventoryKey();
 
 	void Skill1Key();
 	void Skill2Key();
