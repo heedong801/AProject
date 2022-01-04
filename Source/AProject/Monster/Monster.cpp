@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+ï»¿// Fill out your copyright notice in the Description page of Project Settings.
 
 
 #include "Monster.h"
@@ -62,7 +62,16 @@ AMonster::AMonster()
 	GetMesh()->SetWorldRotation(FRotator(0.f, -90.f, 0.f));
 	m_Player = nullptr;
 	m_SpawnPoint = nullptr;
-	
+
+	//ì•„ì´í…œ
+	m_DropItemNameArray.Add(TEXT("íƒœì–‘ì˜ë°©íŒ¨"));
+	m_DropItemNameArray.Add(TEXT("HPí¬ì…˜"));
+	m_DropItemNameArray.Add(TEXT("ë‹¨ê²€"));
+	m_DropItemNameArray.Add(TEXT("í™”ì—¼êµ¬"));
+	m_DropItemNameArray.Add(TEXT("ë¯¸ìŠ¤ë¦´ê°‘ì˜·"));
+	m_DropItemNameArray.Add(TEXT("ë¯¸ìŠ¤ë¦´ë°˜ì§€"));
+	m_DropItemNameArray.Add(TEXT("ì‚¬íŒŒì´ì–´ëª©ê±¸ì´"));
+	m_DropItemNameArray.Add(TEXT("ê³µê²©ë ¥ê°•í™”í¬ì…˜"));
 }
 
 
@@ -212,7 +221,7 @@ float AMonster::TakeDamage(float DamageAmount, struct FDamageEvent const& Damage
 		//DamageUI->SetDamage(Damage);
 		//DamageUI->AddToViewport();u
 
-		//Á×Àº°æ¿ì
+		//ì£½ì€ê²½ìš°
 		if (m_MonsterInfo.HP <= 0)
 		{
 			if( m_SpawnPoint)
@@ -241,8 +250,30 @@ float AMonster::TakeDamage(float DamageAmount, struct FDamageEvent const& Damage
 			{
 				Player->AddExp(m_MonsterInfo.Exp);
 				Player->AddGold(m_MonsterInfo.Gold);
+
+				int32	Index = FMath::RandRange(0, m_DropItemNameArray.Num() - 1);
+
+				UAProjectGameInstance* GameInst = Cast<UAProjectGameInstance>(GetWorld()->GetGameInstance());
+
+				if (GameInst)
+				{
+					const FUIItemTableInfo* ItemInfo = GameInst->FindUIItemInfo(m_DropItemNameArray[Index]);
+
+					if (ItemInfo)
+					{
+						// ì¸ë²¤í† ë¦¬ì— ì•„ì´í…œì„ ì¶”ê°€í•œë‹¤.
+						AAProjectGameModeBase* GameMode = Cast<AAProjectGameModeBase>(GetWorld()->GetAuthGameMode());
+
+						if (GameMode)
+						{
+							GameMode->GetMainHUD()->GetInventory()->AddItem(ItemInfo);
+							GameMode->GetMainHUD()->GetQuestWidget()->QuestCheck(EQuestType::Collection,
+								m_DropItemNameArray[Index]);
+						}
+					}
+				}
 			}
-			//// ¸ó½ºÅÍ°¡ Á×¾úÀ» °æ¿ì Äù½ºÆ®¿¡ ÇØ´ç ¸ó½ºÅÍ¸¦ Àâ´Â Äù½ºÆ®°¡ ÀÖ´ÂÁö ÆÇ´ÜÇÑ´Ù.
+			//// ëª¬ìŠ¤í„°ê°€ ì£½ì—ˆì„ ê²½ìš° í€˜ìŠ¤íŠ¸ì— í•´ë‹¹ ëª¬ìŠ¤í„°ë¥¼ ì¡ëŠ” í€˜ìŠ¤íŠ¸ê°€ ìˆëŠ”ì§€ íŒë‹¨í•œë‹¤.
 			AAProjectGameModeBase* GameMode = Cast<AAProjectGameModeBase>(GetWorld()->GetAuthGameMode());
 
 			if (GameMode)
@@ -270,12 +301,12 @@ float AMonster::TakeDamage(float DamageAmount, struct FDamageEvent const& Damage
 		}
 		//	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
-		//	// ¾ÆÀÌÅÛÀÌ ³ª¿Í¾ß ÇÒÁö ¸»¾Æ¾ß ÇÒÁö °áÁ¤ÇÑ´Ù.
+		//	// ì•„ì´í…œì´ ë‚˜ì™€ì•¼ í• ì§€ ë§ì•„ì•¼ í• ì§€ ê²°ì •í•œë‹¤.
 		//	float Percent = FMath::RandRange(0.f, 100.f);
 
 		//	if (Percent <= 100.f)
 		//	{
-		//		// ¾ÆÀÌÅÛÀÌ ³ª¿Í¾ß ÇÑ´Ù¸é ¾î¶² ¾ÆÀÌÅÛÀ» ³ª¿À°Ô ÇÒ°ÍÀÎÁö °áÁ¤ÇÑ´Ù.
+		//		// ì•„ì´í…œì´ ë‚˜ì™€ì•¼ í•œë‹¤ë©´ ì–´ë–¤ ì•„ì´í…œì„ ë‚˜ì˜¤ê²Œ í• ê²ƒì¸ì§€ ê²°ì •í•œë‹¤.
 		//		//Percent = FMath::RandRange(0.f, 100.f);
 		//		int32	Index = FMath::RandRange(0, m_DropItemNameArray.Num() - 1);
 
@@ -288,14 +319,14 @@ float AMonster::TakeDamage(float DamageAmount, struct FDamageEvent const& Damage
 
 		//			if (ItemInfo)
 		//			{
-		//				// ¾ÆÀÌÅÛ »óÀÚ¸¦ »ı¼ºÇÑ´Ù.
+		//				// ì•„ì´í…œ ìƒìë¥¼ ìƒì„±í•œë‹¤.
 		//				FActorSpawnParameters	param;
 		//				param.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
 
 		//				FBox	SpawnBox(GetMesh()->GetComponentLocation() - FVector(50.f, 50.f, -200.f),
 		//					GetMesh()->GetComponentLocation() + FVector(50.f, 50.f, 200.f));
 
-		//				// Ghost Trail »ı¼º
+		//				// Ghost Trail ìƒì„±
 		//				AItemBox* ItemBox = GetWorld()->SpawnActor<AItemBox>(AItemBox::StaticClass(),
 		//					FMath::RandPointInBox(SpawnBox),
 		//					GetMesh()->GetComponentRotation(), param);

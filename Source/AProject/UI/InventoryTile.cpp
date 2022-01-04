@@ -152,6 +152,6 @@ void UInventoryTile::AddItem(const FUIItemTableInfo* ItemInfo)
 	Data->SetName(ItemInfo->Name);
 	Data->SetIconTexture(ItemInfo->IconTexture);
 	Data->SetIndex(m_InventoryTile->GetNumItems());
-
+	Data->SetTier( (int)ItemInfo->ItemTier);
 	m_InventoryTile->AddItem(Data);
 }

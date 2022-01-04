@@ -24,6 +24,8 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 		int32	m_Index;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+		int32	m_Tier;
 public:
 	void SetIconTexture(UTexture2D* IconTex)
 	{
@@ -53,5 +55,15 @@ public:
 	void SetIndex(int32 Index)
 	{
 		m_Index = Index;
+	}
+
+	int32 GetTier()
+	{
+		return m_Tier;
+	}
+
+	void SetTier(int32 Tier)
+	{
+		m_Tier = Tier;
 	}
 };

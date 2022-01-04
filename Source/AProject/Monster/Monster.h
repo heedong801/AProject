@@ -51,6 +51,8 @@ protected:
 	bool m_IsSpawned;
 
 	float m_TraceDistanceOrigin;
+
+	TArray<FString> m_DropItemNameArray;
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
