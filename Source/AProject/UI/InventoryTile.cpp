@@ -3,8 +3,7 @@
 
 #include "InventoryTile.h"
 #include "InventoryTileData.h"
-//#include "../UEKR2GameInstance.h"
-//#include "Components/CanvasPanelSlot.h"
+
 //#include "InventoryTileData.h"
 void UInventoryTile::NativeConstruct()
 {
@@ -12,12 +11,21 @@ void UInventoryTile::NativeConstruct()
 
 	m_ItemCount = 0;
 
-	m_InventoryTile = Cast<UTileView>(GetWidgetFromName("InventoryTile"));
+	m_EquipTile = Cast<UTileView>(GetWidgetFromName("EquipTile"));
+	m_ConsumTile = Cast<UTileView>(GetWidgetFromName("ConsumeTile"));
+	m_QuestTile = Cast<UTileView>(GetWidgetFromName("QuestTile"));
+
+	m_EquipButton = Cast<UButton>(GetWidgetFromName("EquipButton"));
+	m_ConsumableButton = Cast<UButton>(GetWidgetFromName("ConsumableButton"));
+	m_QuestButton = Cast<UButton>(GetWidgetFromName("QuestButton"));
+
 //	m_ItemDescWidget = Cast<UItemDescWidget>(GetWidgetFromName("UI_ItemDesc"));
 
-	m_InventoryTile->SetScrollbarVisibility(ESlateVisibility::Collapsed);
+	//m_InventoryTile->SetScrollbarVisibility(ESlateVisibility::Collapsed);
 
-
+	m_EquipButton->OnClicked.AddDynamic(this, &UInventoryTile::EquipClick);
+	m_ConsumableButton->OnClicked.AddDynamic(this, &UInventoryTile::ConsumClick);
+	m_QuestButton->OnClicked.AddDynamic(this, &UInventoryTile::QuestClick);
 	/*FString ItemNameArray[3] =
 	{
 		TEXT("BF대검"),
@@ -54,11 +62,11 @@ void UInventoryTile::NativeConstruct()
 	// 클릭했을때 동작할 함수를 등록한다.
 	//m_InventoryTile->SetScrollOffset(10.f);
 
-	m_InventoryTile->OnItemClicked().AddUObject(this, &UInventoryTile::ItemClick);
+	//m_InventoryTile->OnItemClicked().AddUObject(this, &UInventoryTile::ItemClick);
 	//m_InventoryTile->OnItemScrolledIntoView(this, &UInventoryTile::ItemScroll);
 	//m_InventoryTile->OnItemSelectionChanged()
 	//m_InventoryTile->OnItemDoubleClicked()
-	m_InventoryTile->OnItemIsHoveredChanged().AddUObject(this, &UInventoryTile::ItemHovered);
+	//m_InventoryTile->OnItemIsHoveredChanged().AddUObject(this, &UInventoryTile::ItemHovered);
 }
 
 
@@ -151,7 +159,36 @@ void UInventoryTile::AddItem(const FUIItemTableInfo* ItemInfo)
 
 	Data->SetName(ItemInfo->Name);
 	Data->SetIconTexture(ItemInfo->IconTexture);
-	Data->SetIndex(m_InventoryTile->GetNumItems());
+	//Data->SetIndex(m_InventoryTile->GetNumItems());
 	Data->SetTier( (int)ItemInfo->ItemTier);
-	m_InventoryTile->AddItem(Data);
+
+	if((int)ItemInfo->ItemType == 0 )
+		m_EquipTile->AddItem(Data);
+	else if((int)ItemInfo->ItemType == 1)
+		m_ConsumTile->AddItem(Data);
+	else
+		m_QuestTile->AddItem(Data);
+
+}
+
+
+void UInventoryTile::EquipClick()
+{
+	m_EquipTile->SetVisibility(ESlateVisibility::Visible);
+	m_ConsumTile->SetVisibility(ESlateVisibility::Collapsed);
+	m_QuestTile->SetVisibility(ESlateVisibility::Collapsed);
+}
+
+void UInventoryTile::ConsumClick()
+{
+	m_EquipTile->SetVisibility(ESlateVisibility::Collapsed);
+	m_ConsumTile->SetVisibility(ESlateVisibility::Visible);
+	m_QuestTile->SetVisibility(ESlateVisibility::Collapsed);
+}
+
+void UInventoryTile::QuestClick()
+{
+	m_EquipTile->SetVisibility(ESlateVisibility::Collapsed);
+	m_ConsumTile->SetVisibility(ESlateVisibility::Collapsed);
+	m_QuestTile->SetVisibility(ESlateVisibility::Visible);
 }

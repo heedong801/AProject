@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
 #include "Components/TileView.h"
+#include "Components/Button.h"
 #include "ItemInfo.h"
 #include "InventoryTile.generated.h"
 
@@ -17,12 +18,24 @@ class APROJECT_API UInventoryTile : public UUserWidget
 	GENERATED_BODY()
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-		UTileView* m_InventoryTile;
+		UTileView* m_EquipTile;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+		UTileView* m_QuestTile;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+		UTileView* m_ConsumTile;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+		UButton* m_EquipButton;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+		UButton* m_ConsumableButton;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+		UButton* m_QuestButton;
 
 	/*UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 		UItemDescWidget* m_ItemDescWidget;*/
 	bool	m_MouseHovered;
 	int32	m_ItemCount;
+
+
 public:
 	UFUNCTION()
 		void ItemClick(UObject* Data);
@@ -33,6 +46,14 @@ public:
 	UFUNCTION()
 		void ItemHovered(UObject* Data, bool Hovered);
 
+	UFUNCTION()
+	void QuestClick();
+
+	UFUNCTION()
+		void ConsumClick();
+
+	UFUNCTION()
+		void EquipClick();
 public:
 	void AddItem(const FUIItemTableInfo* ItemInfo);
 protected:
