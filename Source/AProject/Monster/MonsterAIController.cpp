@@ -26,3 +26,19 @@ void AMonsterAIController::OnUnPossess()
 {
 	Super::OnUnPossess();
 }
+
+void AMonsterAIController::StartAI()
+{
+	if (UseBlackboard(m_AIBlackboard, Blackboard))
+	{
+		RunBehaviorTree(m_AITree);
+	}
+}
+
+void AMonsterAIController::StopAI()
+{
+	UBehaviorTreeComponent* BehaviorTreeComponent = Cast<UBehaviorTreeComponent>(BrainComponent);
+	if (nullptr == BehaviorTreeComponent) return;
+
+	BehaviorTreeComponent->StopTree(EBTStopMode::Safe);
+}

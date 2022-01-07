@@ -4,6 +4,8 @@
 #include "DungeonSelect.h"
 #include "../AProjectGameInstance.h"
 #include "../Player/PlayerCharacter.h"
+#include "../DebugClass.h"
+#include "../AProjectGameModeBase.h"
 void UDungeonSelect::NativeConstruct()
 {
 	Super::NativeConstruct();
@@ -34,6 +36,7 @@ void UDungeonSelect::RuinClick()
 
 		APlayerCharacter* Player = Cast<APlayerCharacter>(GetWorld()->GetFirstPlayerController()->GetPawn());
 		Player->SetInTown(false);
+
 	}
 }
 

@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "ItemInfo.h"
 #include "UObject/NoExportTypes.h"
 #include "InventoryTileData.generated.h"
 
@@ -22,10 +23,10 @@ protected:
 		UTexture2D* m_IconTexture;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-		int32	m_Index;
+		EItemTier	m_Tier;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-		int32	m_Tier;
+		EItemType	m_Type;
 public:
 	void SetIconTexture(UTexture2D* IconTex)
 	{
@@ -47,23 +48,23 @@ public:
 		return m_NameText;
 	}
 
-	int32 GetIndex()
-	{
-		return m_Index;
-	}
-
-	void SetIndex(int32 Index)
-	{
-		m_Index = Index;
-	}
-
-	int32 GetTier()
+	EItemTier GetTier()
 	{
 		return m_Tier;
 	}
 
-	void SetTier(int32 Tier)
+	void SetTier(EItemTier Tier)
 	{
 		m_Tier = Tier;
+	}
+
+	EItemType GetType()
+	{
+		return m_Type;
+	}
+
+	void SetType(EItemType Type)
+	{
+		m_Type = Type;
 	}
 };

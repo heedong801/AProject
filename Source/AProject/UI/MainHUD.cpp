@@ -4,6 +4,7 @@
 #include "MainHUD.h"
 #include "../DebugClass.h"
 #include "../AProjectGameInstance.h"
+
 void UMainHUD::NativeConstruct()
 {
 	Super::NativeConstruct();
@@ -42,3 +43,4 @@ void UMainHUD::QuitAllWidgetAnim()
 {
 	PlayAnimation(m_FadeAnim);
 }
+

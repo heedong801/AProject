@@ -35,7 +35,7 @@ protected:
 	UCharacterPool* m_CharacterPool;
 public:
 	UMainHUD* GetMainHUD()	{		return m_MainHUD;	}
-
+	void SetMainHUD(UMainHUD* MainHUD) {		m_MainHUD = MainHUD;	}
 	virtual void InitGame(const FString& MapName, const FString& Options, FString& ErrorMessage);
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaTime) override;

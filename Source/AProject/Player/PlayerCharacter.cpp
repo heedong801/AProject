@@ -44,56 +44,6 @@ APlayerCharacter::APlayerCharacter()
 
 }
 
-float APlayerCharacter::TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
-{
-	float Damage = Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
-	if (Damage == 0.f)
-		return 0.f;
-
-	Damage = Damage - m_PlayerInfo.Armor;
-	Damage = Damage < 1.f ? 1.f : Damage;
-	//LOG(TEXT("%f %f %f"), m_Arm->GetRelativeRotation().Vector().X, m_Arm->GetRelativeRotation().Vector().Y, m_Arm->GetRelativeRotation().Vector().Z);
-	m_PlayerInfo.HP -= Damage;
-
-	/*GetWorld()->GetFirstPlayerController()->ClientStartCameraShake(
-		UHitCameraShake::StaticClass());*/
-
-	//Á×Àº°æ¿ì
-	if (m_PlayerInfo.HP <= 0)
-	{
-		//ChangeAnimType(EPlayerAnimType::Death);
-
-		//AMonsterAIController* MonsterController = Cast<AMonsterAIController>(GetController());
-		//if (MonsterController)
-		//{
-		//	/*MonsterController->RunBehaviorTree(nullptr);
-		//	Destroy();*/
-
-		//	MonsterController->BrainComponent->StopLogic(TEXT("DEAD"));
-		//}
-		LOG(TEXT("DIE"));
-	}
-
-	AAProjectGameModeBase* GameMode = Cast<AAProjectGameModeBase>(GetWorld()->GetAuthGameMode());
-
-	if (IsValid(GameMode))
-	{
-		UMainHUD* MainHUD = GameMode->GetMainHUD();
-
-		if (IsValid(MainHUD))
-		{
-			UCharacterHUD* CharacterHUD = MainHUD->GetCharacterHUD();
-
-			if (IsValid(CharacterHUD))
-			{
-				CharacterHUD->SetHPPercent(m_PlayerInfo.HP / (float)m_PlayerInfo.HPMax);
-			}
-		}
-	}
-	return Damage;
-}
-
-
 void APlayerCharacter::PostInitializeComponents()
 {
 	Super::PostInitializeComponents();
@@ -125,6 +75,8 @@ void APlayerCharacter::PostInitializeComponents()
 			m_PlayerInfo.CriticalPercent = SavePlayerInfo.CriticalPercent;
 			m_PlayerInfo.CriticalDamage = SavePlayerInfo.CriticalDamage;
 
+			
+							
 		}
 		else if (Info)
 		{
@@ -159,9 +111,12 @@ void APlayerCharacter::BeginPlay()
 	m_AnimInst = Cast<UPlayerAnim>(GetMesh()->GetAnimInstance());
 	m_ArmRotInitYaw = m_Arm->GetRelativeRotation();
 	
+	UAProjectGameInstance* GameInst = Cast<UAProjectGameInstance>(GetWorld()->GetGameInstance());
+	if (IsValid(GameInst))
+		GameInst->LoadData();
+
 	AAProjectGameModeBase* GameMode = Cast<AAProjectGameModeBase>(GetWorld()->GetAuthGameMode());
 	UMainHUD* MainHUD = GameMode->GetMainHUD();
-
 	if (IsValid(MainHUD))
 	{
 		UCharacterHUD* CharacterHUD = MainHUD->GetCharacterHUD();
@@ -560,6 +515,7 @@ void APlayerCharacter::InteractionKey()
 }
 void APlayerCharacter::QuitKey()
 {
+	LOG(TEXT("A"));
 	AAProjectGameModeBase* GameMode = Cast<AAProjectGameModeBase>(GetWorld()->GetAuthGameMode());
 
 	if (IsValid(GameMode))
@@ -695,6 +651,55 @@ void APlayerCharacter::AddGold(int32 Gold)
 {
 	m_PlayerInfo.Gold += Gold;
 
+}
+
+float APlayerCharacter::TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
+{
+	float Damage = Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
+	if (Damage == 0.f)
+		return 0.f;
+
+	Damage = Damage - m_PlayerInfo.Armor;
+	Damage = Damage < 1.f ? 1.f : Damage;
+	//LOG(TEXT("%f %f %f"), m_Arm->GetRelativeRotation().Vector().X, m_Arm->GetRelativeRotation().Vector().Y, m_Arm->GetRelativeRotation().Vector().Z);
+	m_PlayerInfo.HP -= Damage;
+
+	/*GetWorld()->GetFirstPlayerController()->ClientStartCameraShake(
+		UHitCameraShake::StaticClass());*/
+
+		//Á×Àº°æ¿ì
+	if (m_PlayerInfo.HP <= 0)
+	{
+		//ChangeAnimType(EPlayerAnimType::Death);
+
+		//AMonsterAIController* MonsterController = Cast<AMonsterAIController>(GetController());
+		//if (MonsterController)
+		//{
+		//	/*MonsterController->RunBehaviorTree(nullptr);
+		//	Destroy();*/
+
+		//	MonsterController->BrainComponent->StopLogic(TEXT("DEAD"));
+		//}
+		LOG(TEXT("DIE"));
+	}
+
+	AAProjectGameModeBase* GameMode = Cast<AAProjectGameModeBase>(GetWorld()->GetAuthGameMode());
+
+	if (IsValid(GameMode))
+	{
+		UMainHUD* MainHUD = GameMode->GetMainHUD();
+
+		if (IsValid(MainHUD))
+		{
+			UCharacterHUD* CharacterHUD = MainHUD->GetCharacterHUD();
+
+			if (IsValid(CharacterHUD))
+			{
+				CharacterHUD->SetHPPercent(m_PlayerInfo.HP / (float)m_PlayerInfo.HPMax);
+			}
+		}
+	}
+	return Damage;
 }
 //struct FPlayerTraceInfo APlayerCharacter::FootTrace(float fTraceDistance, FName sSocket)
 //{

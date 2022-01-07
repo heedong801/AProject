@@ -64,6 +64,7 @@ public:
 
 	virtual void NormalAttack() {}
 	virtual void Death() {}
+	virtual void SetActive(bool bOnActive);
 	FVector NextPatrolPoint();
 	FVector GetPatrolPoint();
 

@@ -36,6 +36,7 @@ protected:
 	UPROPERTY(meta = (BindWidgetAnim), meta = (AllowPrivateAccess = "true"), Transient)
 		class UWidgetAnimation* m_FadeAnim;
 public:
+
 	UInventoryTile* GetInventory()
 	{
 		return m_InventoryWidget;

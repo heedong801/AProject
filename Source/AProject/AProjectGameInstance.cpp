@@ -3,6 +3,8 @@
 
 #include "AProjectGameInstance.h"
 #include "DebugClass.h"
+#include "UI/InventoryTile.h"
+#include "AProjectGameModeBase.h"
 UAProjectGameInstance::UAProjectGameInstance()
 {
 	static ConstructorHelpers::FObjectFinder<UDataTable> MonsterInfoTableAsset(TEXT("DataTable'/Game/Monster/DT_MonsterInfo.DT_MonsterInfo'"));
@@ -67,4 +69,41 @@ const FQuestTableInfo* UAProjectGameInstance::FindQuestInfo(const FString& Name)
 const FMapTableInfo* UAProjectGameInstance::FindMapInfo(const FString& Name)
 {
 	return m_MapInfoTable->FindRow<FMapTableInfo>(*Name, "");
+}
+
+void UAProjectGameInstance::LoadData()
+{
+	AAProjectGameModeBase* GameMode = Cast<AAProjectGameModeBase>(GetWorld()->GetAuthGameMode());
+	if (IsValid(GameMode))
+	{
+		UMainHUD* MainHUD = GameMode->GetMainHUD();
+
+		if (IsValid(MainHUD))
+		{
+			UInventoryTile* InventoryTile = MainHUD->GetInventory();
+
+			if (IsValid(InventoryTile))
+				InventoryTile->LoadData(m_EquipItemList, m_QuestItemList, m_ConsumItemList);
+		}
+	}
+}
+void UAProjectGameInstance::SaveData()
+{
+	AAProjectGameModeBase* GameMode = Cast<AAProjectGameModeBase>(GetWorld()->GetAuthGameMode());
+	if (IsValid(GameMode))
+	{
+		UMainHUD* MainHUD = GameMode->GetMainHUD();
+		
+		if (IsValid(MainHUD)) 
+		{
+			UInventoryTile* InventoryTile = MainHUD->GetInventory(); 
+
+			if (IsValid(InventoryTile))
+			{
+				m_EquipItemList = InventoryTile->GetEquipItemList();
+				m_QuestItemList = InventoryTile->GeQuestItemList();
+				m_ConsumItemList = InventoryTile->GetConsumItemList();
+			}
+		}
+	}
 }

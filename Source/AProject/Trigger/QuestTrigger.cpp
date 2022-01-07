@@ -76,43 +76,6 @@ void AQuestTrigger::TriggerBegin()
 				else
 					break;
 
-				//Info = GameInst->FindQuestInfo(TEXT("Meadow2"));
-				//if (Info)
-				//{
-				//	//LOG(TEXT("C"));
-
-				//	Data.Name = Info->Name;
-				//	Data.QuestDesc = Info->QuestDesc;
-				//	Data.CompleteArray.RemoveAll([](FQuestDataInfo v) {return true; });
-				//	Data.CompensationArray.RemoveAll([](FQuestCompensationInfo v) {return true; });
-
-
-				//	for (auto& CompleteData : Info->InfoArray)
-				//	{
-				//		FQuestDataInfo	DataInfo;
-
-				//		DataInfo.Type = CompleteData.Type;
-				//		DataInfo.DestName = CompleteData.DestName;
-				//		DataInfo.MaxCount = CompleteData.Count;
-				//		DataInfo.Count = 0;
-				//		DataInfo.Complete = false;
-
-				//		Data.CompleteArray.Add(DataInfo);
-				//	}
-
-				//	for (auto& CompensationData : Info->CompensationArray)
-				//	{
-				//		FQuestCompensationInfo	DataInfo;
-
-				//		DataInfo.Type = CompensationData.Type;
-				//		DataInfo.Compensation = CompensationData.Compensation;
-
-				//		Data.CompensationArray.Add(DataInfo);
-				//	}
-
-				//	Data.Complete = false;
-				//	QuestMap->Add(TEXT("Meadow2"), Data);
-				//}
 			}
 		}
 	}

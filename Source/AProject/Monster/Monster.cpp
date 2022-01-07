@@ -388,3 +388,15 @@ FVector AMonster::GetPatrolPoint()
 	return m_PatrolArray[m_PatrolIdx];
 }
 
+void AMonster::SetActive(bool bOnActive)
+{
+	Super::SetActive(bOnActive);
+
+	AMonsterAIController* MonsterController = Cast<AMonsterAIController>(GetController());
+
+	if (!bOnActive)
+		MonsterController->StopAI();
+	else
+		MonsterController->StartAI();
+
+}

@@ -9,6 +9,7 @@
 #include "Quest/QuestInfo.h"
 #include "UI/ItemInfo.h"
 #include "Manager/LevelManager.h"
+#include "Components/TileView.h"
 #include "AProjectGameInstance.generated.h"
 
 /**
@@ -47,23 +48,34 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 		FPlayerInfo	m_PlayerInfo;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+		class UEquipmentWidget* m_Equipment;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+		TArray<UObject*> m_EquipItemList;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+		TArray<UObject*> m_QuestItemList;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+		TArray<UObject*> m_ConsumItemList;
+
 	UPROPERTY()
 	ULevelManager* m_LevelManager;
 public:
-	const TMap<FString, FQuestData>& GetQuestData()
-	{
-		return m_QuestDataMap;
-	}
+	void LoadData();
+	void SaveData();
 
-	const FQuestData* FindQuestData(const FString& Name)
-	{
-		return m_QuestDataMap.Find(Name);
-	}
+	void SetEquipmentWidget(class UEquipmentWidget* EquipmentWidget)	{		m_Equipment = EquipmentWidget;	}
+	class UEquipmentWidget* GetEquipmentWidget()	{		return m_Equipment;	}
 
-	TMap<FString, FQuestData>* GetMap()
-	{
-		return &m_QuestDataMap;
-	}
+	//void SetInventoryTile(class UInventoryTile* InventoryUI);
+	//TArray<UObject*>& GetEquipItemList() { return m_EquipItemList; }
+	//TArray<UObject*>& GetQuestItemList() { return m_QuestItemList; }
+	//TArray<UObject*>& GetConsumItemList() { return m_ConsumItemList; }
+
+	const TMap<FString, FQuestData>& GetQuestData()	{		return m_QuestDataMap;	}
+	const FQuestData* FindQuestData(const FString& Name)	{		return m_QuestDataMap.Find(Name);	}
+
+	TMap<FString, FQuestData>* GetMap()	{		return &m_QuestDataMap;	}
 	virtual void Init();
 	virtual void StartGameInstance();
 	FPlayerInfo& GetPlayerInfo() { return m_PlayerInfo; }

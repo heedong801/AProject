@@ -50,11 +50,8 @@ void AMonsterSpawnPoint::Tick(float DeltaTime)
 
 				AMonster* Monster = Cast<AMonster>(GameMode->GetCharacterPool()->Pop(GetActorLocation(), GetActorRotation(), m_MonsterClassArray[random]));
 
-				LOG(TEXT("A"));
 				if (Monster)
 				{
-					LOG(TEXT("B"));
-
 					Monster->SetIsSpawned(true);
 					Monster->SetSpawnPoint(this);
 					//Monster->GetMonsterInfo().TraceDistance = 4000.f;

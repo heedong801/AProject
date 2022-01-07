@@ -3,8 +3,9 @@
 
 #include "InventoryTile.h"
 #include "InventoryTileData.h"
-
+#include "../AProjectGameInstance.h"
 //#include "InventoryTileData.h"
+#include "../DebugClass.h"
 void UInventoryTile::NativeConstruct()
 {
 	Super::NativeConstruct();
@@ -62,11 +63,13 @@ void UInventoryTile::NativeConstruct()
 	// 클릭했을때 동작할 함수를 등록한다.
 	//m_InventoryTile->SetScrollOffset(10.f);
 
-	//m_InventoryTile->OnItemClicked().AddUObject(this, &UInventoryTile::ItemClick);
+	m_EquipTile->OnItemClicked().AddUObject(this, &UInventoryTile::EquipItemClick);
+	m_ConsumTile->OnItemClicked().AddUObject(this, &UInventoryTile::ConsumItemClick);
 	//m_InventoryTile->OnItemScrolledIntoView(this, &UInventoryTile::ItemScroll);
 	//m_InventoryTile->OnItemSelectionChanged()
 	//m_InventoryTile->OnItemDoubleClicked()
 	//m_InventoryTile->OnItemIsHoveredChanged().AddUObject(this, &UInventoryTile::ItemHovered);
+
 }
 
 
@@ -110,20 +113,6 @@ void UInventoryTile::NativeTick(const FGeometry& MyGeometry, float InDeltaTine)
 	Super::NativeTick(MyGeometry, InDeltaTine);
 }
 
-void UInventoryTile::ItemClick(UObject* Data)
-{
-	/*UInventoryItemDataTile* Item = Cast<UInventoryItemDataTile>(Data);
-
-	if (Item)
-	{
-		m_InventoryTile->RemoveItem(Data);
-		m_InventorySlot->RemoveItem(m_SlotArray[Item->GetIndex()]);
-
-		if (m_SlotArray.Num() > 20)
-			m_SlotArray.RemoveAt(Item->GetIndex());
-	}*/
-}
-
 
 void UInventoryTile::ItemScroll(UObject* Data, UUserWidget* Widget)
 {
@@ -160,11 +149,12 @@ void UInventoryTile::AddItem(const FUIItemTableInfo* ItemInfo)
 	Data->SetName(ItemInfo->Name);
 	Data->SetIconTexture(ItemInfo->IconTexture);
 	//Data->SetIndex(m_InventoryTile->GetNumItems());
-	Data->SetTier( (int)ItemInfo->ItemTier);
+	Data->SetTier(ItemInfo->ItemTier);
+	Data->SetType(ItemInfo->ItemType);
 
-	if((int)ItemInfo->ItemType == 0 )
+	if(ItemInfo->ItemType == EItemType::Equipment )
 		m_EquipTile->AddItem(Data);
-	else if((int)ItemInfo->ItemType == 1)
+	else if(ItemInfo->ItemType == EItemType::Consumable)
 		m_ConsumTile->AddItem(Data);
 	else
 		m_QuestTile->AddItem(Data);
@@ -191,4 +181,35 @@ void UInventoryTile::QuestClick()
 	m_EquipTile->SetVisibility(ESlateVisibility::Collapsed);
 	m_ConsumTile->SetVisibility(ESlateVisibility::Collapsed);
 	m_QuestTile->SetVisibility(ESlateVisibility::Visible);
+}
+
+void UInventoryTile::LoadData(TArray<UObject*> EquipItemList, TArray<UObject*> ConsumeItemList, TArray<UObject*> QuestItemList)
+{
+	m_EquipTile->SetListItems(EquipItemList);
+	m_ConsumTile->SetListItems(ConsumeItemList);
+	m_QuestTile->SetListItems(QuestItemList);
+}
+
+void UInventoryTile::ConsumItemClick(UObject* Data)
+{
+	UInventoryTileData* Item = Cast<UInventoryTileData>(Data);
+
+	if (Item->GetType() == EItemType::Equipment)
+		m_EquipTile->RemoveItem(Data);
+	else if (Item->GetType() == EItemType::Consumable)
+		m_ConsumTile->RemoveItem(Data);
+	else
+		m_QuestTile->RemoveItem(Data);
+}
+
+void UInventoryTile::EquipItemClick(UObject* Data)
+{
+	UInventoryTileData* Item = Cast<UInventoryTileData>(Data);
+
+	if (Item->GetType() == EItemType::Equipment)
+		m_EquipTile->RemoveItem(Data);
+	else if (Item->GetType() == EItemType::Consumable)
+		m_ConsumTile->RemoveItem(Data);
+	else
+		m_QuestTile->RemoveItem(Data);
 }

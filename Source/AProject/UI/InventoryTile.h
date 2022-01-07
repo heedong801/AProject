@@ -37,8 +37,12 @@ protected:
 
 
 public:
-	UFUNCTION()
-		void ItemClick(UObject* Data);
+	void LoadData(TArray<UObject*> EquipItemList, TArray<UObject*> ConsumeItemList, TArray<UObject*> QuestItemList);
+
+	TArray<UObject*> GetEquipItemList() { return m_EquipTile->GetListItems(); }
+	TArray<UObject*> GeQuestItemList() { return m_QuestTile->GetListItems(); }
+	TArray<UObject*> GetConsumItemList() { return m_ConsumTile->GetListItems();}
+
 
 	UFUNCTION()
 		void ItemScroll(UObject* Data, UUserWidget* Widget);
@@ -54,6 +58,13 @@ public:
 
 	UFUNCTION()
 		void EquipClick();
+
+
+	UFUNCTION()
+		void ConsumItemClick(UObject* Data);
+
+	UFUNCTION()
+		void EquipItemClick(UObject* Data);
 public:
 	void AddItem(const FUIItemTableInfo* ItemInfo);
 protected:

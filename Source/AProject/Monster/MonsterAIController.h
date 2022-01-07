@@ -29,4 +29,7 @@ protected:
 
 	virtual void OnPossess(APawn* InPawn);
 	virtual void OnUnPossess();
+public:
+	virtual void StartAI();
+	virtual void StopAI();
 };

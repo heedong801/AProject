@@ -21,7 +21,7 @@ void UCharacterHUD::NativeConstruct()
 	if (Player)
 	{
 		SetLevelText(Player->GetPlayerInfo().Level);
-		SetEXPPercent(0.f);
+		SetEXPPercent(Player->GetPlayerInfo().Exp);
 	}
 }
 
