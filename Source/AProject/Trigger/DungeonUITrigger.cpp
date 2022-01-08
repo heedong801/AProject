@@ -45,35 +45,19 @@ void ADungeonUITrigger::Interaction()
 				{
 					DungeonSelect->SetVisibility(ESlateVisibility::Visible);
 
-					APlayerController* ControllerA = GetWorld()->GetFirstPlayerController();
-
-					FInputModeGameAndUI Mode;
-
-					ControllerA->SetInputMode(Mode);
-					ControllerA->SetIgnoreLookInput(true);
-					ControllerA->bShowMouseCursor = true;
 					APlayerCharacter* Player = Cast<APlayerCharacter>(GetWorld()->GetFirstPlayerController()->GetPawn());
 
 					if (Player)
-						Player->SetActiveWidget(true);
+						Player->CursorUISet(true);
 				}
 				else
 				{
 					DungeonSelect->SetVisibility(ESlateVisibility::Collapsed);
-
-					APlayerController* ControllerA = GetWorld()->GetFirstPlayerController();
-
-					FInputModeGameOnly	Mode;
-					//FInputModeGameOnly
-					//FInputModeGameAndUI	Mode;
-
-					ControllerA->SetInputMode(Mode);
-					ControllerA->SetIgnoreLookInput(false);
-					ControllerA->bShowMouseCursor = false;
+			
 					APlayerCharacter* Player = Cast<APlayerCharacter>(GetWorld()->GetFirstPlayerController()->GetPawn());
 
 					if (Player)
-						Player->SetActiveWidget(false);
+						Player->CursorUISet(false);
 				}
 			}
 		}

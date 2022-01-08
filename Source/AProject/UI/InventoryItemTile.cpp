@@ -32,19 +32,19 @@ void UInventoryItemTile::SetData(UObject* Data)
 
 		switch (InvenData->GetTier())
 		{
-		case 0:
+		case EItemTier::Magic:
 			break;
-		case 1:
+		case EItemTier::Normal:
 			m_MagicTierImage->SetVisibility(ESlateVisibility::Visible);
 			m_RareTierImage->SetVisibility(ESlateVisibility::Collapsed);
 			m_UniqueTierImage->SetVisibility(ESlateVisibility::Collapsed);
 			break;
-		case 2:
+		case EItemTier::Rare:
 			m_MagicTierImage->SetVisibility(ESlateVisibility::Collapsed);
 			m_RareTierImage->SetVisibility(ESlateVisibility::Visible);
 			m_UniqueTierImage->SetVisibility(ESlateVisibility::Collapsed);
 			break;
-		case 3:
+		case EItemTier::Unique:
 			m_MagicTierImage->SetVisibility(ESlateVisibility::Collapsed);
 			m_RareTierImage->SetVisibility(ESlateVisibility::Collapsed);
 			m_UniqueTierImage->SetVisibility(ESlateVisibility::Visible);

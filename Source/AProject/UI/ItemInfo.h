@@ -31,6 +31,13 @@ enum class EItemTier : uint8
 };
 
 UENUM(BlueprintType)
+enum class EItemPart : uint8
+{
+	NONE, HEADBAND, HEAD, EYE, NECK, FACE, SHOULDER, ARMOR, CHEST, BODY, MAINHAND, MAINWRIST, BELT, OFFWRIST, OFFHAND,
+	HAND, TROUSERS, RING, FEET
+};
+
+UENUM(BlueprintType)
 enum class EItemOption : uint8
 {
 	Attack,
@@ -74,6 +81,9 @@ struct FUIItemTableInfo :
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 		EItemTier	ItemTier;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+		EItemPart	ItemPart;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 		UTexture2D* IconTexture;

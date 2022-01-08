@@ -6,6 +6,8 @@
 #include "../AProjectGameInstance.h"
 //#include "InventoryTileData.h"
 #include "../DebugClass.h"
+#include "EquipmentWidget.h"
+#include "../AProjectGameModeBase.h"
 void UInventoryTile::NativeConstruct()
 {
 	Super::NativeConstruct();
@@ -22,47 +24,16 @@ void UInventoryTile::NativeConstruct()
 
 //	m_ItemDescWidget = Cast<UItemDescWidget>(GetWidgetFromName("UI_ItemDesc"));
 
-	//m_InventoryTile->SetScrollbarVisibility(ESlateVisibility::Collapsed);
-
 	m_EquipButton->OnClicked.AddDynamic(this, &UInventoryTile::EquipClick);
 	m_ConsumableButton->OnClicked.AddDynamic(this, &UInventoryTile::ConsumClick);
 	m_QuestButton->OnClicked.AddDynamic(this, &UInventoryTile::QuestClick);
-	/*FString ItemNameArray[3] =
-	{
-		TEXT("BF대검"),
-		TEXT("블클"),
-		TEXT("HP포션")
-	};*/
 
-	/*for (int32 i = 0; i < 100; ++i)
-	{
-		int32 Idx = FMath::RandRange(0, 2);
-
-		const FUIItemTableInfo* Info = GameInst->FindUIItemInfo(ItemNameArray[Idx]);
-
-		UInventoryItemDataTile* Data = NewObject<UInventoryItemDataTile>(this, UInventoryItemDataTile::StaticClass());
-
-
-		Data->SetIconTexture(Info->IconTexture);
-		Data->SetIndex(i);
-		Data->SetName(Info->Name);
-		m_InventoryTile->AddItem(Data);
-
-		if (i >= 20)
-		{
-			UInventoryTileData* DataSlot = NewObject<UInventoryTileData>(this, UInventoryTileData::StaticClass());
-			m_InventorySlot->AddItem(DataSlot);
-
-			m_SlotArray.Add(Data);
-
-		}
-	}*/
 
 	m_ItemCount = 100;
 	m_MouseHovered = false;
 	// 클릭했을때 동작할 함수를 등록한다.
 	//m_InventoryTile->SetScrollOffset(10.f);
-
+	
 	m_EquipTile->OnItemClicked().AddUObject(this, &UInventoryTile::EquipItemClick);
 	m_ConsumTile->OnItemClicked().AddUObject(this, &UInventoryTile::ConsumItemClick);
 	//m_InventoryTile->OnItemScrolledIntoView(this, &UInventoryTile::ItemScroll);
@@ -151,6 +122,8 @@ void UInventoryTile::AddItem(const FUIItemTableInfo* ItemInfo)
 	//Data->SetIndex(m_InventoryTile->GetNumItems());
 	Data->SetTier(ItemInfo->ItemTier);
 	Data->SetType(ItemInfo->ItemType);
+	Data->SetPart(ItemInfo->ItemPart);
+
 
 	if(ItemInfo->ItemType == EItemType::Equipment )
 		m_EquipTile->AddItem(Data);
@@ -212,4 +185,22 @@ void UInventoryTile::EquipItemClick(UObject* Data)
 		m_ConsumTile->RemoveItem(Data);
 	else
 		m_QuestTile->RemoveItem(Data);
+
+
+	AAProjectGameModeBase* GameMode = Cast<AAProjectGameModeBase>(GetWorld()->GetAuthGameMode());
+
+	if (IsValid(GameMode))
+	{
+		UMainHUD* MainHUD = GameMode->GetMainHUD();
+
+		if (IsValid(MainHUD))
+		{
+			UEquipmentWidget* Equipment = MainHUD->GetEquipment();
+			if (IsValid(Equipment))
+			{
+				Equipment->SetPart(Item->GetPart(), Item->GetIconTexture());
+			}
+		}
+	}
+
 }

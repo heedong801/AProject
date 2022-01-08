@@ -18,7 +18,7 @@ void ULoading::NativeConstruct()
 	//FInputModeUIOnly	Mode;
 	//FInputModeGameOnly Mode;
 	FInputModeGameAndUI	Mode;
-	PlayerController->SetActiveWidget(true);
+	PlayerController->CursorUISet(true);
 	Controller->SetInputMode(Mode);
 	Controller->bShowMouseCursor = true;
 	Controller->SetIgnoreLookInput(true);
@@ -59,7 +59,7 @@ void ULoading::UnSetLoadngUI()
 	//FInputModeGameOnly Mode;
 
 	FInputModeGameOnly	Mode;
-	PlayerController->SetActiveWidget(false);
+	PlayerController->CursorUISet(false);
 
 	Controller->SetInputMode(Mode);
 	Controller->bShowMouseCursor = false;

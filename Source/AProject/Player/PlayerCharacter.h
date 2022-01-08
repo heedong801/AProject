@@ -38,7 +38,7 @@ protected:
 
 	int32 MaxExp;
 
-	bool m_ActiveWidget;
+	int32 m_ActiveWidgetCnt;
 	bool m_Movable;
 
 	FString m_PlayerInfoName;
@@ -94,9 +94,10 @@ public:
 	void Skill2Key();
 	void Skill3Key();
 
+	void CursorUISet(bool bOnActive);
 	void ResetCombo() { m_ActiveComboTime = false; m_ComboCnt = 0; }
 	void Recovery();
-	void SetActiveWidget(bool ActiveWidget) { m_ActiveWidget = ActiveWidget; }
+	
 	void SetTimeDillation();
 	FPlayerInfo& GetPlayerInfo()	{ return m_PlayerInfo;}
 
@@ -122,11 +123,10 @@ public:
 	void SetInTown(bool InTown) { m_IsInTown = InTown; }
 	bool GetInDungeonTrigger() { return m_IsInDungeonTrigger; }
 	void SetInDungeonTrigger(bool InDungeonTrigger) { m_IsInDungeonTrigger = InDungeonTrigger; }
+
+public:
 	UFUNCTION()
 	void SetTimeDefaultTimeDilation();
 	//struct FPlayerTraceInfo APlayerCharacter::FootTrace(float fTraceDistance, FName sSocket);
-
-	//UFUNCTION()
-	//void OnAttackMontageEnded(UAnimMontage* Montage, bool bInterrupted);
 };
 

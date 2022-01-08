@@ -28,8 +28,8 @@ void UEquipmentWidget::NativeConstruct()
 
 }
 
-void UEquipmentWidget::SetPart(int32 Idx, UTexture2D* Icon)
+void UEquipmentWidget::SetPart(EItemPart Part, UTexture2D* Icon)
 {
-	m_EquipmentImgArray[Idx]->SetBrushFromTexture(Icon);
-	m_EquipmentImgArray[Idx]->SetVisibility(ESlateVisibility::Visible);
+	/*m_EquipmentImgArray[Idx]->SetBrushFromTexture(Icon);
+	m_EquipmentImgArray[Idx]->SetVisibility(ESlateVisibility::Visible);*/
 }

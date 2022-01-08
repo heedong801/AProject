@@ -31,7 +31,7 @@ APlayerCharacter::APlayerCharacter()
 	GetCharacterMovement()->JumpZVelocity = 800.f;
 	GetCapsuleComponent()->SetCollisionProfileName(TEXT("Player"));
 
-	m_ActiveWidget = false;
+	m_ActiveWidgetCnt = 0;
 	m_LaunchPower = 1.f;
 	m_Movable = true;
 	MaxExp = 100;
@@ -232,30 +232,12 @@ void APlayerCharacter::InventoryKey()
 				if (InventoryWidget->GetVisibility() == ESlateVisibility::Collapsed)
 				{
 					InventoryWidget->SetVisibility(ESlateVisibility::Visible);
-
-					APlayerController* ControllerA = GetWorld()->GetFirstPlayerController();
-
-					FInputModeGameAndUI Mode;
-
-					ControllerA->SetInputMode(Mode);
-					ControllerA->SetIgnoreLookInput(true);
-					ControllerA->bShowMouseCursor = true;
-					m_ActiveWidget = true;
+					CursorUISet(true);
 				}
 				else
 				{
 					InventoryWidget->SetVisibility(ESlateVisibility::Collapsed);
-
-					APlayerController* ControllerA = GetWorld()->GetFirstPlayerController();
-
-					FInputModeGameOnly	Mode;
-					//FInputModeGameOnly
-					//FInputModeGameAndUI	Mode;
-
-					ControllerA->SetInputMode(Mode);
-					ControllerA->SetIgnoreLookInput(false);
-					ControllerA->bShowMouseCursor = false;
-					m_ActiveWidget = false;
+					CursorUISet(false);
 				}
 			}
 
@@ -280,30 +262,14 @@ void APlayerCharacter::EquipmentKey()
 					if (EquipmentWidget->GetVisibility() == ESlateVisibility::Collapsed)
 					{
 						EquipmentWidget->SetVisibility(ESlateVisibility::Visible);
-
-						APlayerController* ControllerA = GetWorld()->GetFirstPlayerController();
-
-						FInputModeGameAndUI Mode;
-
-						ControllerA->SetInputMode(Mode);
-						ControllerA->SetIgnoreLookInput(true);
-						ControllerA->bShowMouseCursor = true;
-						m_ActiveWidget = true;
+						CursorUISet(true);
+					
 					}
 					else
 					{
 						EquipmentWidget->SetVisibility(ESlateVisibility::Collapsed);
+						CursorUISet(false);
 
-						APlayerController* ControllerA = GetWorld()->GetFirstPlayerController();
-
-						FInputModeGameOnly	Mode;
-						//FInputModeGameOnly
-						//FInputModeGameAndUI	Mode;
-
-						ControllerA->SetInputMode(Mode);
-						ControllerA->SetIgnoreLookInput(false);
-						ControllerA->bShowMouseCursor = false;
-						m_ActiveWidget = false;
 					}
 				}
 			}
@@ -386,30 +352,13 @@ void APlayerCharacter::QuestKey()
 					if (QuestWidget->GetVisibility() == ESlateVisibility::Collapsed)
 					{
 						QuestWidget->SetVisibility(ESlateVisibility::Visible);
-
-						APlayerController* ControllerA = GetWorld()->GetFirstPlayerController();
-
-						FInputModeGameAndUI Mode;
-
-						ControllerA->SetInputMode(Mode);
-						ControllerA->SetIgnoreLookInput(true);
-						ControllerA->bShowMouseCursor = true;
-						m_ActiveWidget = true;
+						CursorUISet(true);
 					}
 					else
 					{
 						QuestWidget->SetVisibility(ESlateVisibility::Collapsed);
+						CursorUISet(false);
 
-						APlayerController* ControllerA = GetWorld()->GetFirstPlayerController();
-
-						FInputModeGameOnly	Mode;
-						//FInputModeGameOnly
-						//FInputModeGameAndUI	Mode;
-
-						ControllerA->SetInputMode(Mode);
-						ControllerA->SetIgnoreLookInput(false);
-						ControllerA->bShowMouseCursor = false;
-						m_ActiveWidget = false;
 					}
 				}
 			}
@@ -432,22 +381,24 @@ void APlayerCharacter::SetDirection()
 }
 void APlayerCharacter::MoveForward(float Scale)
 {
-	if(!m_ActiveWidget && m_Movable )
+	if(!m_ActiveWidgetCnt && m_Movable )
 		AddMovementInput(GetActorForwardVector(), Scale);
 }
 
 void APlayerCharacter::MoveRight(float Scale)
 {
-	if (!m_ActiveWidget && m_Movable && !m_IsSprint)
+	if (!m_ActiveWidgetCnt && m_Movable && !m_IsSprint)
 		AddMovementInput(GetActorRightVector(), Scale);
 }
 
 void APlayerCharacter::LookUp(float Scale)
 {
-	if (!m_ActiveWidget)
+	if (!m_ActiveWidgetCnt)
 	{
 		if (m_Movable)
+		{
 			AddControllerYawInput(Scale * 0.3f);
+		}
 		else
 		{
 			FRotator Rot = m_Arm->GetRelativeRotation();
@@ -467,7 +418,7 @@ void APlayerCharacter::CameraArmYawReset()
 
 void APlayerCharacter::Turn(float Scale)
 {
-	if (!m_ActiveWidget)
+	if (!m_ActiveWidgetCnt)
 	{
 		FRotator Rot = m_Arm->GetRelativeRotation();
 
@@ -515,7 +466,6 @@ void APlayerCharacter::InteractionKey()
 }
 void APlayerCharacter::QuitKey()
 {
-	LOG(TEXT("A"));
 	AAProjectGameModeBase* GameMode = Cast<AAProjectGameModeBase>(GetWorld()->GetAuthGameMode());
 
 	if (IsValid(GameMode))
@@ -535,7 +485,7 @@ void APlayerCharacter::QuitKey()
 			ControllerA->SetInputMode(Mode);
 			ControllerA->SetIgnoreLookInput(false);
 			ControllerA->bShowMouseCursor = false;
-			m_ActiveWidget = false;
+			m_ActiveWidgetCnt = 0;
 		}
 	}
 }
@@ -701,6 +651,38 @@ float APlayerCharacter::TakeDamage(float DamageAmount, struct FDamageEvent const
 	}
 	return Damage;
 }
+
+void APlayerCharacter::CursorUISet(bool bOnActive)
+{
+	APlayerController* ControllerA = GetWorld()->GetFirstPlayerController();
+
+	if (bOnActive)
+	{
+		FInputModeGameAndUI Mode;
+
+		ControllerA->SetInputMode(Mode);
+		ControllerA->SetIgnoreLookInput(true);
+		ControllerA->bShowMouseCursor = true;
+		m_ActiveWidgetCnt++;
+	}
+	else
+	{
+		m_ActiveWidgetCnt--;
+		ControllerA->SetIgnoreLookInput(false);
+		if (m_ActiveWidgetCnt == 0)
+		{
+			LOG(TEXT("A"));
+			FInputModeGameOnly	Mode;
+
+			ControllerA->SetInputMode(Mode);
+			//ControllerA->SetIgnoreLookInput(false);
+			ControllerA->bShowMouseCursor = false;
+		}
+	}
+
+}
+
+
 //struct FPlayerTraceInfo APlayerCharacter::FootTrace(float fTraceDistance, FName sSocket)
 //{
 //	struct FPlayerTraceInfo pFPlayerTraceInfo;

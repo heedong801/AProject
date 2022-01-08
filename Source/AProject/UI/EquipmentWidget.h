@@ -5,10 +5,12 @@
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
 #include "Components/Image.h"
+#include "ItemInfo.h"
 #include "EquipmentWidget.generated.h"
 
 enum  PART { HEADBAND, HEAD, EYE, NECK, FACE, SHOULDER, ARMOR, CHEST, BODY, MAINHAND, MAINWRIST, BELT, OFFWRIST, OFFHAND,
 	RIGHTHAND,TROUSERS, LEFTHAND, RIGHTRING, FEET, LEFTRING};
+
 UCLASS()
 class APROJECT_API UEquipmentWidget : public UUserWidget
 {
@@ -22,6 +24,6 @@ protected:
 	virtual void NativeConstruct();
 
 public:
-	void SetPart(int32 Idx, UTexture2D* Icon);
+	void SetPart(EItemPart Part, UTexture2D* Icon);
 
 };

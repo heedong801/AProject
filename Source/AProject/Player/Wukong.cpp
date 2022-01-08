@@ -141,7 +141,7 @@ void AWukong::Attack()
 		m_BoltDecal->Destroy();
 		m_BoltDecal = nullptr;
 		m_OnSkillBolt = false;
-		m_ActiveWidget = false;
+		m_ActiveWidgetCnt = 0;
 		GetWorld()->GetTimerManager().SetTimer(m_BoltTimerHandler,
 			this, &AWukong::LighteningBolt, 0.1f, true, 0.f);
 		m_BoltCnt = 0;
@@ -154,7 +154,7 @@ void AWukong::Attack()
 		//	OnGhostTrail();
 		//}
 	}
-	if (!m_ActiveWidget)
+	if (!m_ActiveWidgetCnt)
 	{
 		if (m_AnimInst->GetCanAttack())
 		{
@@ -356,7 +356,7 @@ void AWukong::UseSkill(int32 Idx)
 			if (!m_OnSkillBolt)
 			{
 				m_OnSkillBolt = true;
-				m_ActiveWidget = true;
+				m_ActiveWidgetCnt++;
 				FActorSpawnParameters param;
 
 				if (m_BoltDecal == nullptr)

@@ -27,6 +27,9 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 		EItemType	m_Type;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+		EItemPart	m_Part;
 public:
 	void SetIconTexture(UTexture2D* IconTex)
 	{
@@ -46,6 +49,16 @@ public:
 	FString GetName()
 	{
 		return m_NameText;
+	}
+
+	EItemPart GetPart()
+	{
+		return m_Part;
+	}
+
+	void SetPart(EItemPart Part)
+	{
+		m_Part = Part;
 	}
 
 	EItemTier GetTier()
