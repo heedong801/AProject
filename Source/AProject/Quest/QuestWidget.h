@@ -51,7 +51,7 @@ protected:
 	}
 public:
 	UFUNCTION()
-		void QuestClick(UObject* Data);
+		void CurrentEquipClick(UObject* Data);
 
 	UFUNCTION()
 		void QuestSelect(UObject* Data);

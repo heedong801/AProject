@@ -22,7 +22,7 @@ void UQuestWidget::NativeConstruct()
 	m_MapNameText = Cast<UTextBlock>(GetWidgetFromName(TEXT("MapNameText")));
 	m_ImgBackBorder = Cast<UBorder>(GetWidgetFromName(TEXT("ImageBack")));
 
-	m_QuestList->OnItemClicked().AddUObject(this, &UQuestWidget::QuestClick);
+	m_QuestList->OnItemClicked().AddUObject(this, &UQuestWidget::CurrentEquipClick);
 	m_QuestList->OnItemSelectionChanged().AddUObject(this, &UQuestWidget::QuestSelect);
 	m_QuestList->OnItemIsHoveredChanged().AddUObject(this, &UQuestWidget::QuestMouseOn);
 
@@ -75,7 +75,7 @@ void UQuestWidget::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 	Super::NativeTick(MyGeometry, InDeltaTime);
 }
 
-void UQuestWidget::QuestClick(UObject* Data)
+void UQuestWidget::CurrentEquipClick(UObject* Data)
 {
 	UQuestListItemData* Info = Cast<UQuestListItemData>(Data);
 

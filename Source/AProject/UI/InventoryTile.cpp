@@ -16,17 +16,17 @@ void UInventoryTile::NativeConstruct()
 
 	m_EquipTile = Cast<UTileView>(GetWidgetFromName("EquipTile"));
 	m_ConsumTile = Cast<UTileView>(GetWidgetFromName("ConsumeTile"));
-	m_QuestTile = Cast<UTileView>(GetWidgetFromName("QuestTile"));
+	m_CurrentEquipTile = Cast<UTileView>(GetWidgetFromName("CurrentEquipTile"));
 
 	m_EquipButton = Cast<UButton>(GetWidgetFromName("EquipButton"));
 	m_ConsumableButton = Cast<UButton>(GetWidgetFromName("ConsumableButton"));
-	m_QuestButton = Cast<UButton>(GetWidgetFromName("QuestButton"));
+	m_CurrentEquipButton = Cast<UButton>(GetWidgetFromName("CurrentEquipButton"));
 
 //	m_ItemDescWidget = Cast<UItemDescWidget>(GetWidgetFromName("UI_ItemDesc"));
 
 	m_EquipButton->OnClicked.AddDynamic(this, &UInventoryTile::EquipClick);
 	m_ConsumableButton->OnClicked.AddDynamic(this, &UInventoryTile::ConsumClick);
-	m_QuestButton->OnClicked.AddDynamic(this, &UInventoryTile::QuestClick);
+	m_CurrentEquipButton->OnClicked.AddDynamic(this, &UInventoryTile::CurrentEquipClick);
 
 
 	m_ItemCount = 100;
@@ -36,6 +36,8 @@ void UInventoryTile::NativeConstruct()
 	
 	m_EquipTile->OnItemClicked().AddUObject(this, &UInventoryTile::EquipItemClick);
 	m_ConsumTile->OnItemClicked().AddUObject(this, &UInventoryTile::ConsumItemClick);
+	m_CurrentEquipTile->OnItemClicked().AddUObject(this, &UInventoryTile::CurrentEquipItemClick);
+
 	//m_InventoryTile->OnItemScrolledIntoView(this, &UInventoryTile::ItemScroll);
 	//m_InventoryTile->OnItemSelectionChanged()
 	//m_InventoryTile->OnItemDoubleClicked()
@@ -130,7 +132,7 @@ void UInventoryTile::AddItem(const FUIItemTableInfo* ItemInfo)
 	else if(ItemInfo->ItemType == EItemType::Consumable)
 		m_ConsumTile->AddItem(Data);
 	else
-		m_QuestTile->AddItem(Data);
+		m_CurrentEquipTile->AddItem(Data);
 
 }
 
@@ -139,53 +141,43 @@ void UInventoryTile::EquipClick()
 {
 	m_EquipTile->SetVisibility(ESlateVisibility::Visible);
 	m_ConsumTile->SetVisibility(ESlateVisibility::Collapsed);
-	m_QuestTile->SetVisibility(ESlateVisibility::Collapsed);
+	m_CurrentEquipTile->SetVisibility(ESlateVisibility::Collapsed);
 }
 
 void UInventoryTile::ConsumClick()
 {
 	m_EquipTile->SetVisibility(ESlateVisibility::Collapsed);
 	m_ConsumTile->SetVisibility(ESlateVisibility::Visible);
-	m_QuestTile->SetVisibility(ESlateVisibility::Collapsed);
+	m_CurrentEquipTile->SetVisibility(ESlateVisibility::Collapsed);
 }
 
-void UInventoryTile::QuestClick()
+void UInventoryTile::CurrentEquipClick()
 {
 	m_EquipTile->SetVisibility(ESlateVisibility::Collapsed);
 	m_ConsumTile->SetVisibility(ESlateVisibility::Collapsed);
-	m_QuestTile->SetVisibility(ESlateVisibility::Visible);
+	m_CurrentEquipTile->SetVisibility(ESlateVisibility::Visible);
 }
 
 void UInventoryTile::LoadData(TArray<UObject*> EquipItemList, TArray<UObject*> ConsumeItemList, TArray<UObject*> QuestItemList)
 {
 	m_EquipTile->SetListItems(EquipItemList);
 	m_ConsumTile->SetListItems(ConsumeItemList);
-	m_QuestTile->SetListItems(QuestItemList);
+	m_CurrentEquipTile->SetListItems(QuestItemList);
 }
 
 void UInventoryTile::ConsumItemClick(UObject* Data)
 {
 	UInventoryTileData* Item = Cast<UInventoryTileData>(Data);
 
-	if (Item->GetType() == EItemType::Equipment)
-		m_EquipTile->RemoveItem(Data);
-	else if (Item->GetType() == EItemType::Consumable)
-		m_ConsumTile->RemoveItem(Data);
-	else
-		m_QuestTile->RemoveItem(Data);
+	m_ConsumTile->RemoveItem(Data);
 }
 
 void UInventoryTile::EquipItemClick(UObject* Data)
 {
 	UInventoryTileData* Item = Cast<UInventoryTileData>(Data);
-
-	if (Item->GetType() == EItemType::Equipment)
-		m_EquipTile->RemoveItem(Data);
-	else if (Item->GetType() == EItemType::Consumable)
-		m_ConsumTile->RemoveItem(Data);
-	else
-		m_QuestTile->RemoveItem(Data);
-
+	
+	m_EquipTile->RemoveItem(Data);
+	m_CurrentEquipTile->AddItem(Data);
 
 	AAProjectGameModeBase* GameMode = Cast<AAProjectGameModeBase>(GetWorld()->GetAuthGameMode());
 
@@ -198,9 +190,33 @@ void UInventoryTile::EquipItemClick(UObject* Data)
 			UEquipmentWidget* Equipment = MainHUD->GetEquipment();
 			if (IsValid(Equipment))
 			{
-				Equipment->SetPart(Item->GetPart(), Item->GetIconTexture());
+				Equipment->SetPart(Item, Item->GetPart(), Item->GetIconTexture());
 			}
 		}
 	}
 
+}
+
+void UInventoryTile::CurrentEquipItemClick(UObject* Data)
+{
+	UInventoryTileData* Item = Cast<UInventoryTileData>(Data);
+
+	m_CurrentEquipTile->RemoveItem(Data);
+	m_EquipTile->AddItem(Data);
+
+	AAProjectGameModeBase* GameMode = Cast<AAProjectGameModeBase>(GetWorld()->GetAuthGameMode());
+
+	if (IsValid(GameMode))
+	{
+		UMainHUD* MainHUD = GameMode->GetMainHUD();
+
+		if (IsValid(MainHUD))
+		{
+			UEquipmentWidget* Equipment = MainHUD->GetEquipment();
+			if (IsValid(Equipment))
+			{
+				Equipment->UnsetPart(Item);
+			}
+		}
+	}
 }

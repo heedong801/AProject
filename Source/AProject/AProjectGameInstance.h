@@ -54,7 +54,7 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 		TArray<UObject*> m_EquipItemList;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-		TArray<UObject*> m_QuestItemList;
+		TArray<UObject*> m_CurrentEquipList;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 		TArray<UObject*> m_ConsumItemList;
 
@@ -69,7 +69,7 @@ public:
 
 	//void SetInventoryTile(class UInventoryTile* InventoryUI);
 	//TArray<UObject*>& GetEquipItemList() { return m_EquipItemList; }
-	//TArray<UObject*>& GetQuestItemList() { return m_QuestItemList; }
+	//TArray<UObject*>& GetQuestItemList() { return m_CurrentEquipList; }
 	//TArray<UObject*>& GetConsumItemList() { return m_ConsumItemList; }
 
 	const TMap<FString, FQuestData>& GetQuestData()	{		return m_QuestDataMap;	}

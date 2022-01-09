@@ -20,7 +20,7 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 		UTileView* m_EquipTile;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-		UTileView* m_QuestTile;
+		UTileView* m_CurrentEquipTile;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 		UTileView* m_ConsumTile;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
@@ -28,7 +28,7 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 		UButton* m_ConsumableButton;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-		UButton* m_QuestButton;
+		UButton* m_CurrentEquipButton;
 
 	/*UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 		UItemDescWidget* m_ItemDescWidget;*/
@@ -40,10 +40,10 @@ public:
 	void LoadData(TArray<UObject*> EquipItemList, TArray<UObject*> ConsumeItemList, TArray<UObject*> QuestItemList);
 
 	TArray<UObject*> GetEquipItemList() { return m_EquipTile->GetListItems(); }
-	TArray<UObject*> GeQuestItemList() { return m_QuestTile->GetListItems(); }
+	TArray<UObject*> GetCurrentEquipItemList() { return m_CurrentEquipTile->GetListItems(); }
 	TArray<UObject*> GetConsumItemList() { return m_ConsumTile->GetListItems();}
 
-
+	UTileView* GetEquipTile() { return m_EquipTile; }
 	UFUNCTION()
 		void ItemScroll(UObject* Data, UUserWidget* Widget);
 
@@ -51,7 +51,7 @@ public:
 		void ItemHovered(UObject* Data, bool Hovered);
 
 	UFUNCTION()
-	void QuestClick();
+	void CurrentEquipClick();
 
 	UFUNCTION()
 		void ConsumClick();
@@ -65,6 +65,9 @@ public:
 
 	UFUNCTION()
 		void EquipItemClick(UObject* Data);
+	UFUNCTION()
+		void CurrentEquipItemClick(UObject* Data);
+
 public:
 	void AddItem(const FUIItemTableInfo* ItemInfo);
 protected:

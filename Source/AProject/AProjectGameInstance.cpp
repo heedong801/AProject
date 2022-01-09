@@ -83,7 +83,7 @@ void UAProjectGameInstance::LoadData()
 			UInventoryTile* InventoryTile = MainHUD->GetInventory();
 
 			if (IsValid(InventoryTile))
-				InventoryTile->LoadData(m_EquipItemList, m_QuestItemList, m_ConsumItemList);
+				InventoryTile->LoadData(m_EquipItemList, m_CurrentEquipList, m_ConsumItemList);
 		}
 	}
 }
@@ -101,7 +101,7 @@ void UAProjectGameInstance::SaveData()
 			if (IsValid(InventoryTile))
 			{
 				m_EquipItemList = InventoryTile->GetEquipItemList();
-				m_QuestItemList = InventoryTile->GeQuestItemList();
+				m_CurrentEquipList = InventoryTile->GetCurrentEquipItemList();
 				m_ConsumItemList = InventoryTile->GetConsumItemList();
 			}
 		}
