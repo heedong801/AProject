@@ -125,14 +125,14 @@ void UInventoryTile::AddItem(const FUIItemTableInfo* ItemInfo)
 	Data->SetTier(ItemInfo->ItemTier);
 	Data->SetType(ItemInfo->ItemType);
 	Data->SetPart(ItemInfo->ItemPart);
+	Data->SetOption(ItemInfo->OptionArray);
 
 
 	if(ItemInfo->ItemType == EItemType::Equipment )
 		m_EquipTile->AddItem(Data);
 	else if(ItemInfo->ItemType == EItemType::Consumable)
 		m_ConsumTile->AddItem(Data);
-	else
-		m_CurrentEquipTile->AddItem(Data);
+
 
 }
 
@@ -170,6 +170,22 @@ void UInventoryTile::ConsumItemClick(UObject* Data)
 	UInventoryTileData* Item = Cast<UInventoryTileData>(Data);
 
 	m_ConsumTile->RemoveItem(Data);
+
+	AAProjectGameModeBase* GameMode = Cast<AAProjectGameModeBase>(GetWorld()->GetAuthGameMode());
+
+	if (IsValid(GameMode))
+	{
+		UMainHUD* MainHUD = GameMode->GetMainHUD();
+
+		if (IsValid(MainHUD))
+		{
+			UEquipmentWidget* Equipment = MainHUD->GetEquipment();
+			if (IsValid(Equipment))
+			{
+				Equipment->SetPart(Item, Item->GetPart(), Item->GetIconTexture());
+			}
+		}
+	}
 }
 
 void UInventoryTile::EquipItemClick(UObject* Data)

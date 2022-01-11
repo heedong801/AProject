@@ -74,8 +74,8 @@ void APlayerCharacter::PostInitializeComponents()
 			m_PlayerInfo.SkillTree = SavePlayerInfo.SkillTree;
 			m_PlayerInfo.CriticalPercent = SavePlayerInfo.CriticalPercent;
 			m_PlayerInfo.CriticalDamage = SavePlayerInfo.CriticalDamage;
-
-			
+			m_PlayerInfo.HPRecovery = SavePlayerInfo.HPRecovery;
+			m_PlayerInfo.MPRecovery = SavePlayerInfo.MPRecovery;
 							
 		}
 		else if (Info)
@@ -96,7 +96,8 @@ void APlayerCharacter::PostInitializeComponents()
 			m_PlayerInfo.SkillTree = Info->SkillTree;
 			m_PlayerInfo.CriticalPercent = Info->CriticalPercent;
 			m_PlayerInfo.CriticalDamage = Info->CriticalDamage;
-
+			m_PlayerInfo.HPRecovery = Info->HPRecovery;
+			m_PlayerInfo.MPRecovery = Info->MPRecovery;
 		}
 
 	}
@@ -146,12 +147,12 @@ void APlayerCharacter::Recovery()
 	//LOG(TEXT("%f"), m_PlayerInfo.HP);
 
 	if (m_PlayerInfo.HP < m_PlayerInfo.HPMax)
-		m_PlayerInfo.HP += 1.2f;
+		m_PlayerInfo.HP += m_PlayerInfo.HPRecovery;
 	else
 		m_PlayerInfo.HP = m_PlayerInfo.HPMax;
 
 	if (m_PlayerInfo.MP < m_PlayerInfo.MPMax)
-		m_PlayerInfo.MP += 1.f;
+		m_PlayerInfo.MP += m_PlayerInfo.MPRecovery;
 	else
 		m_PlayerInfo.MP = m_PlayerInfo.MPMax;
 

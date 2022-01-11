@@ -10,6 +10,7 @@
 /**
  * 
  */
+
 UCLASS()
 class APROJECT_API UInventoryTileData : public UObject
 {
@@ -30,6 +31,9 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 		EItemPart	m_Part;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+		TArray<FItemOption>	m_OptionArray;
 public:
 	void SetIconTexture(UTexture2D* IconTex)
 	{
@@ -49,6 +53,16 @@ public:
 	FString GetName()
 	{
 		return m_NameText;
+	}
+
+	TArray<FItemOption> GetOption()
+	{
+		return m_OptionArray;
+	}
+
+	void SetOption(TArray<FItemOption> OptArray)
+	{
+		m_OptionArray = OptArray;
 	}
 
 	EItemPart GetPart()

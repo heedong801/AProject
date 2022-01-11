@@ -48,7 +48,8 @@ void ULevelManager::OpenDelayLevel()
 			SavePlayerInfo.SkillTree = PlayerInfo.SkillTree;
 			SavePlayerInfo.CriticalPercent = PlayerInfo.CriticalPercent;
 			SavePlayerInfo.CriticalDamage = PlayerInfo.CriticalDamage;
-
+			SavePlayerInfo.HPRecovery = PlayerInfo.HPRecovery;
+			SavePlayerInfo.MPRecovery = PlayerInfo.MPRecovery;
 		}
 
 	}
