@@ -10,6 +10,7 @@
 #include "../UI/SkillImageWidget.h"
 #include "../AProjectGameModeBase.h"
 #include "../Trigger/DungeonUITrigger.h"
+#include "../UI/EquipmentWidget.h"
 
 //#include "../Effect/HitCameraShake.h"
 
@@ -557,21 +558,7 @@ void APlayerCharacter::AddExp(int32 Exp)
 			{
 				if (m_PlayerInfo.Exp >= MaxExp)
 				{
-					m_PlayerInfo.Exp = 0;
-					m_PlayerInfo.Level++;
-
-					int LevelUpDamage = 2;
-					int LevelUpArmor = 5;
-					int LevelUpHp = 25;
-					int LevelUpMp = 15;
-
-					m_PlayerInfo.Attack += LevelUpDamage;
-					m_PlayerInfo.Armor += LevelUpArmor;
-					m_PlayerInfo.HPMax += LevelUpHp;
-					m_PlayerInfo.MPMax += LevelUpMp;
-
-					MaxExp *= 2;
-					CharacterHUD->SetLevelText(m_PlayerInfo.Level);
+					LevelUp();
 
 					TArray<USkillImageWidget*> SkillArray = CharacterHUD->GetSkillArray();
 
@@ -584,9 +571,45 @@ void APlayerCharacter::AddExp(int32 Exp)
 							SkillArray[i]->SetVisibility(ESlateVisibility::Visible);
 						}
 					}
+
+					CharacterHUD->SetLevelText(m_PlayerInfo.Level);
 				}
-				
 				CharacterHUD->SetEXPPercent(m_PlayerInfo.Exp / (float)MaxExp);
+			}
+		}
+	}
+
+}
+
+void APlayerCharacter::LevelUp()
+{
+	m_PlayerInfo.Exp = 0;
+	m_PlayerInfo.Level++;
+
+	int LevelUpDamage = 2;
+	int LevelUpArmor = 5;
+	int LevelUpHp = 25;
+	int LevelUpMp = 15;
+
+	m_PlayerInfo.Attack += LevelUpDamage;
+	m_PlayerInfo.Armor += LevelUpArmor;
+	m_PlayerInfo.HPMax += LevelUpHp;
+	m_PlayerInfo.MPMax += LevelUpMp;
+
+	MaxExp *= 2;
+	
+	AAProjectGameModeBase* GameMode = Cast<AAProjectGameModeBase>(GetWorld()->GetAuthGameMode());
+
+	if (IsValid(GameMode))
+	{
+		UMainHUD* MainHUD = GameMode->GetMainHUD();
+
+		if (IsValid(MainHUD))
+		{
+			UEquipmentWidget* EquipmentWidget = MainHUD->GetEquipment();
+			if (IsValid(EquipmentWidget))
+			{
+				EquipmentWidget->SetStatText();
 			}
 		}
 	}

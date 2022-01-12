@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
 #include "Components/Image.h"
+#include "Components/TextBlock.h"
 #include "ItemInfo.h"
 #include "EquipmentWidget.generated.h"
 
@@ -22,10 +23,36 @@ private:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 		TArray<class UInventoryTileData*> m_EquipmentItemArray;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+		UTextBlock* m_AttackText;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+		UTextBlock* m_ArmorText;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+		UTextBlock* m_MaxHPText;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+		UTextBlock* m_MaxMPText;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+		UTextBlock* m_HPRecoveryText;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+		UTextBlock* m_MPRecoveryText;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+		UTextBlock* m_CriPerText;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+		UTextBlock* m_CriDmgText;
 protected:
 	virtual void NativeConstruct();
 
 public:
 	void SetPart(UInventoryTileData* Item, EItemPart Part, UTexture2D* Icon);
 	void UnsetPart(class UInventoryTileData* Item);
+	void SetStatText();
+	void SetStat(UInventoryTileData* Item, bool bOnPlus);
 };
