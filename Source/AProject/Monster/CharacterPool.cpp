@@ -143,7 +143,7 @@ ACustomCharacter* UCharacterPool::Pop(FVector Pos, FRotator Rot, UClass* Type)
 				if (m_CustomCharacterArray[i]->GetActive() == false)
 				{
 					m_CustomCharacterArray[i]->SetActive(true);
-					m_CustomCharacterArray[i]->SetActorLocation(Pos);
+					m_CustomCharacterArray[i]->SetActorLocation(Pos + FVector(0.f, 0.f, 100.f));
 					m_CustomCharacterArray[i]->SetActorRotation(Rot);
 					m_CustomCharacterArray[i]->GetCharacterMovement()->GravityScale = 1.f;
 					//LOG(TEXT("%d"), i);

@@ -86,7 +86,7 @@ void AMonster::BeginPlay()
 	while( m_PatrolArray.Num() < 4 )
 	{
 		FNavLocation NextPatrol;
-		if (NavSystem->GetRandomPointInNavigableRadius(GetActorLocation(), 500.0f, NextPatrol))
+		if (NavSystem->GetRandomPointInNavigableRadius(GetActorLocation(), 200.0f, NextPatrol))
 		{
 			//LOG(TEXT("%f %f %f"), NextPatrol.Location.X, NextPatrol.Location.Y, NextPatrol.Location.Z);
 			m_PatrolArray.Add(NextPatrol);
