@@ -74,7 +74,7 @@ public:
 	//void SetPatrolEnable(bool Enable)	{		m_PatrolEnable = Enable;	}
 	bool GetAttackEnd()	{		return m_AttackEnd;		}
 	void SetAttackEnd(bool AttackEnd)	{m_AttackEnd = AttackEnd;	}
-	TArray<FVector> GetPatrolArray() { return m_PatrolArray; }
+	TArray<FVector>& GetPatrolArray() { return m_PatrolArray; }
 
 	bool GetIsSpawned() { return m_IsSpawned; }
 	void SetIsSpawned(bool Spawned) {		m_IsSpawned = Spawned;	}

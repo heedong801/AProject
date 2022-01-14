@@ -49,7 +49,7 @@ void AMonsterSpawnPoint::Tick(float DeltaTime)
 				UClass* Type = m_MonsterClassArray[random];
 
 				AMonster* Monster = Cast<AMonster>(GameMode->GetCharacterPool()->Pop(GetActorLocation(), GetActorRotation(), m_MonsterClassArray[random]));
-
+				
 				if (Monster)
 				{
 					Monster->SetIsSpawned(true);
@@ -58,6 +58,21 @@ void AMonsterSpawnPoint::Tick(float DeltaTime)
 					m_Monster = Monster;
 				}
 
+				UNavigationSystemV1* NavSystem = UNavigationSystemV1::GetNavigationSystem(GetWorld());
+				Monster->GetPatrolArray().RemoveAll([](FVector v) {return true; });
+				//LOG(TEXT("%d"), Monster->GetPatrolArray().Num());
+				while (Monster->GetPatrolArray().Num() < 4)
+				{
+					//LOG(TEXT("B"));
+					FNavLocation NextPatrol;
+					if (NavSystem->GetRandomPointInNavigableRadius(GetActorLocation(), 500.0f, NextPatrol))
+					{
+						//LOG(TEXT("%f %f %f"), NextPatrol.Location.X, NextPatrol.Location.Y, NextPatrol.Location.Z);
+						Monster->GetPatrolArray().Add(NextPatrol);
+					}
+
+					//LOG(TEXT("%f %f %f"), ranVec.X, ranVec.Y, ranVec.Z);
+				}
 			}
 		}
 	}

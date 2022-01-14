@@ -81,20 +81,21 @@ void AMonster::BeginPlay()
 	Super::BeginPlay();
 
 	//LOG(TEXT("%f %f %f"), GetActorLocation().X, GetActorLocation().Y, GetActorLocation().Z);
+	
 	UNavigationSystemV1* NavSystem = UNavigationSystemV1::GetNavigationSystem(GetWorld());
 
-	while( m_PatrolArray.Num() < 4 )
+	while (m_PatrolArray.Num() < 4)
 	{
 		FNavLocation NextPatrol;
-		if (NavSystem->GetRandomPointInNavigableRadius(GetActorLocation(), 200.0f, NextPatrol))
+		if (NavSystem->GetRandomPointInNavigableRadius(GetActorLocation(), 500.0f, NextPatrol))
 		{
 			//LOG(TEXT("%f %f %f"), NextPatrol.Location.X, NextPatrol.Location.Y, NextPatrol.Location.Z);
 			m_PatrolArray.Add(NextPatrol);
 		}
-		
+
 		//LOG(TEXT("%f %f %f"), ranVec.X, ranVec.Y, ranVec.Z);
 	}
-
+	
 	UAProjectGameInstance* GameInst = Cast<UAProjectGameInstance>(GetWorld()->GetGameInstance());
 
 

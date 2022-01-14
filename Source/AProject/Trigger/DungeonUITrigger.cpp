@@ -4,9 +4,11 @@
 #include "DungeonUITrigger.h"
 #include "../Player/PlayerCharacter.h"
 #include "../AProjectGameModeBase.h"
+#include "../DebugClass.h"
 ADungeonUITrigger::ADungeonUITrigger()
 {
 	PrimaryActorTick.bCanEverTick = false;
+
 
 	m_Trigger->SetCollisionProfileName(TEXT("NPC"));
 }

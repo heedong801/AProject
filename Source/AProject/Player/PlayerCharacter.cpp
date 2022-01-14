@@ -695,7 +695,6 @@ void APlayerCharacter::CursorUISet(bool bOnActive)
 		ControllerA->SetIgnoreLookInput(false);
 		if (m_ActiveWidgetCnt == 0)
 		{
-			LOG(TEXT("A"));
 			FInputModeGameOnly	Mode;
 
 			ControllerA->SetInputMode(Mode);

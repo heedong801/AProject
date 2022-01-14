@@ -10,6 +10,7 @@
 #include "UI/ItemInfo.h"
 #include "Manager/LevelManager.h"
 #include "Components/TileView.h"
+#include "Components/Image.h"
 #include "AProjectGameInstance.generated.h"
 
 /**
@@ -48,9 +49,7 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 		FPlayerInfo	m_PlayerInfo;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-		class UEquipmentWidget* m_Equipment;
-
+	//Inventory
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 		TArray<UObject*> m_EquipItemList;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
@@ -58,14 +57,20 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 		TArray<UObject*> m_ConsumItemList;
 
+	//EquipmentWidget
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+		TArray<UImage*> m_EquipmentImgArray;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+		TArray<class UInventoryTileData*> m_EquipmentItemArray;
+
 	UPROPERTY()
 	ULevelManager* m_LevelManager;
 public:
 	void LoadData();
 	void SaveData();
 
-	void SetEquipmentWidget(class UEquipmentWidget* EquipmentWidget)	{		m_Equipment = EquipmentWidget;	}
-	class UEquipmentWidget* GetEquipmentWidget()	{		return m_Equipment;	}
+	//void SetEquipmentWidget(class UEquipmentWidget* EquipmentWidget)	{		m_Equipment = EquipmentWidget;	}
+	//class UEquipmentWidget* GetEquipmentWidget()	{		return m_Equipment;	}
 
 	//void SetInventoryTile(class UInventoryTile* InventoryUI);
 	//TArray<UObject*>& GetEquipItemList() { return m_EquipItemList; }

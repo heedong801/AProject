@@ -248,3 +248,11 @@ void UEquipmentWidget::SetStat(UInventoryTileData* Item, bool bOnPlus)
 	}
 
 }
+
+void UEquipmentWidget::LoadData(TArray<UImage*> ImgArray, TArray<class UInventoryTileData*> ItemArray)
+{
+	if(ImgArray.Num() != 0)
+		m_EquipmentImgArray = ImgArray;
+	if (ItemArray.Num() != 0 )
+		m_EquipmentItemArray = ItemArray;
+}

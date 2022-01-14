@@ -84,6 +84,10 @@ void UAProjectGameInstance::LoadData()
 
 			if (IsValid(InventoryTile))
 				InventoryTile->LoadData(m_EquipItemList, m_CurrentEquipList, m_ConsumItemList);
+
+			UEquipmentWidget* EquipmentWidget = MainHUD->GetEquipment(); 
+			if (IsValid(EquipmentWidget))
+				EquipmentWidget->LoadData(m_EquipmentImgArray, m_EquipmentItemArray);
 		}
 	}
 }
@@ -103,6 +107,14 @@ void UAProjectGameInstance::SaveData()
 				m_EquipItemList = InventoryTile->GetEquipItemList();
 				m_CurrentEquipList = InventoryTile->GetCurrentEquipItemList();
 				m_ConsumItemList = InventoryTile->GetConsumItemList();
+			}
+
+			UEquipmentWidget* EquipmentWidget = MainHUD->GetEquipment();
+
+			if (IsValid(EquipmentWidget))
+			{
+				m_EquipmentItemArray = EquipmentWidget->GetItemArray();
+				m_EquipmentImgArray = EquipmentWidget->GetImgArray();
 			}
 		}
 	}
