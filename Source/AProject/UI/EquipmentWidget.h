@@ -57,8 +57,7 @@ public:
 	void SetStat(UInventoryTileData* Item, bool bOnPlus);
 
 	TArray<class UInventoryTileData*> GetItemArray() {		return m_EquipmentItemArray;	}
-	TArray<UImage*> GetImgArray() { return m_EquipmentImgArray; }
 
-	void LoadData(TArray<UImage*> ImgArray, TArray<class UInventoryTileData*> ItemArray);
+	void LoadData(const TArray<class UInventoryTileData*>& ItemArray);
 
 };

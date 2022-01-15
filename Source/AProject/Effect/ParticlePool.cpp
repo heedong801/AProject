@@ -80,7 +80,7 @@ ACustomActor* UParticlePool::Pop(FVector Pos, FRotator Rot, UClass* Type)
 
 		for (int32 i = Start; i < End; ++i)
 		{
-			if (m_CustomActorArray[i] != nullptr)
+			if (m_CustomActorArray[i] != nullptr && IsValid(m_CustomActorArray[i]))
 			{
 				if (m_CustomActorArray[i]->GetActive() == false)
 				{

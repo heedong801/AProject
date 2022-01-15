@@ -249,10 +249,17 @@ void UEquipmentWidget::SetStat(UInventoryTileData* Item, bool bOnPlus)
 
 }
 
-void UEquipmentWidget::LoadData(TArray<UImage*> ImgArray, TArray<class UInventoryTileData*> ItemArray)
+void UEquipmentWidget::LoadData(const TArray<class UInventoryTileData*>& ItemArray)
 {
-	if(ImgArray.Num() != 0)
-		m_EquipmentImgArray = ImgArray;
 	if (ItemArray.Num() != 0 )
 		m_EquipmentItemArray = ItemArray;
+
+	for (int32 i = 0; i < m_EquipmentItemArray.Num(); ++i)
+	{
+		if (m_EquipmentItemArray[i] != nullptr)
+		{
+			m_EquipmentImgArray[i]->SetBrushFromTexture(m_EquipmentItemArray[i]->GetIconTexture());
+			m_EquipmentImgArray[i]->SetVisibility(ESlateVisibility::Visible);
+		}
+	}
 }
