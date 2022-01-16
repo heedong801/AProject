@@ -127,3 +127,8 @@ void ANormalEffect::SetObject()
 {
 	m_ParticleSystem->SetVisibility(true);
 }
+
+void ANormalEffect::SetActive(bool bOnActive)
+{
+	Super::SetActive(bOnActive);
+}

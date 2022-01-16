@@ -8,9 +8,16 @@ ACustomActor::ACustomActor()
 	m_Active = false;
 }
 
+ACustomActor::~ACustomActor()
+{
+	LOG(TEXT("ACTOR DEL"));
+}
+
 // Sets default values
 void ACustomActor::SetActive(bool bOnFlag)
 {
+	LOG(TEXT("ACustomActor SetActive"));
+
 	m_Active = bOnFlag;
 	if (bOnFlag)
 	{
@@ -27,7 +34,7 @@ void ACustomActor::SetActive(bool bOnFlag)
 }
 bool ACustomActor::GetActive()
 {
-	if (this == nullptr)
+	if (this == nullptr || !IsValid(this))
 		return true;
 
 	return m_Active;

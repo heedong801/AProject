@@ -60,5 +60,5 @@ public:
 
 protected:
 	virtual void StopEvent(const FHitResult& result);
-
+	virtual void SetActive(bool bOnActive);
 };

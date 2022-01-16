@@ -74,6 +74,8 @@ void ABlueFlyProjectile::SetActiveBullet(FVector HitDirection)
 
 void ABlueFlyProjectile::SetActive(bool bOnActive)
 {
+	Super::SetActive(bOnActive);
+	/*LOG(TEXT("Blue SetActive"));
 	if (bOnActive)
 	{
 		m_Body->SetCollisionProfileName(TEXT("EnemyAttackObj"));
@@ -83,5 +85,5 @@ void ABlueFlyProjectile::SetActive(bool bOnActive)
 	{
 		m_Body->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
-	}
+	}*/
 }

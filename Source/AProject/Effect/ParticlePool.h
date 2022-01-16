@@ -26,7 +26,7 @@ protected:
 	int32 m_WukongBulletArrayNum;
 public:
 	UParticlePool();
-
+	~UParticlePool();
 	void MakePool();
 	int GetSize();
 	

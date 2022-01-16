@@ -8,6 +8,7 @@
 
 AAProjectGameModeBase::AAProjectGameModeBase()
 {
+	PrimaryActorTick.bCanEverTick = false;
 	static ConstructorHelpers::FClassFinder<UMainHUD>	MainHUDClass(TEXT("WidgetBlueprint'/Game/UI/UI_MainHUD.UI_MainHUD_C'"));
 
 	if (MainHUDClass.Succeeded())
@@ -75,7 +76,7 @@ void AAProjectGameModeBase::BeginPlay()
 			m_MainHUD->AddToViewport();
 	}
 
-	
+
 	APlayerController* Controller = GetWorld()->GetFirstPlayerController();
 	Controller->bShowMouseCursor = false;
 }

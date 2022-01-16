@@ -162,6 +162,12 @@ void APlayerCharacter::Recovery()
 	if (IsValid(GameMode))
 	{
 		UMainHUD* MainHUD = GameMode->GetMainHUD();
+		UParticlePool* ParticlePool = GameMode->GetParticlePool();
+
+		if (IsValid(ParticlePool))
+		{
+			ParticlePool->GetSize();
+		}
 		//LOG(TEXT("BB"));
 		if (IsValid(MainHUD))
 		{

@@ -18,7 +18,10 @@ UParticlePool::UParticlePool()
 	
 }
 
-
+UParticlePool::~UParticlePool()
+{
+	LOG(TEXT("DELETE"));
+}
 
 void UParticlePool::MakePool()
 {
@@ -44,11 +47,35 @@ void UParticlePool::MakePool()
 		}
 	}
 
+	for (int32 i = 0; i < 215; ++i)
+	{
+		if (m_CustomActorArray[i] != nullptr && IsValid(m_CustomActorArray[i]))
+		{
+			LOG(TEXT("AAA"));
+			if (m_CustomActorArray[i]->GetActive() == false)
+			{
+				LOG(TEXT("BBB"));
+			}
+		}
+	}
 }
 
 
 int UParticlePool::GetSize()
 {
+	for (int32 i = 0; i < 215; ++i)
+	{
+		if (m_CustomActorArray[i] != nullptr && IsValid(m_CustomActorArray[i]))
+		{
+			LOG(TEXT("AAA"));
+			if (m_CustomActorArray[i]->GetActive() == false)
+			{
+				LOG(TEXT("BBB"));
+			}
+		}
+	}
+
+
 	return m_CustomActorArray.Num(); 
 }
 
@@ -56,34 +83,37 @@ ACustomActor* UParticlePool::Pop(FVector Pos, FRotator Rot, UClass* Type)
 {
 	if (this != nullptr && IsValid(this))
 	{
-		//LOG(TEXT("POP"));
+		LOG(TEXT("POP"));
 		int32 Start = 0, End = m_CustomActorArrayMaxIdx;
-		int32 ParticleIdx = -1;
+		//int32 ParticleIdx = -1;
 		if (Type == ANormalEffect::StaticClass())
 		{
 			Start = 0;
 			End = m_NormalEffectNum;
-			ParticleIdx = 0;
+			//ParticleIdx = 0;
 		}
 		else if (Type == ABlueFlyProjectile::StaticClass())
 		{
 			Start = m_NormalEffectNum;
 			End = m_NormalEffectNum + m_BlueFlyBulletArrayNum;
-			ParticleIdx = 1;
+			//ParticleIdx = 1;
 		}
 		else if (Type == AWukongAttackProjectile::StaticClass())
 		{
 			Start = m_NormalEffectNum + m_BlueFlyBulletArrayNum;
 			End = m_CustomActorArrayMaxIdx;
-			ParticleIdx = 2;
+			//ParticleIdx = 2;
 		}
 
 		for (int32 i = Start; i < End; ++i)
 		{
+			LOG(TEXT("ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ"));
 			if (m_CustomActorArray[i] != nullptr && IsValid(m_CustomActorArray[i]))
 			{
+				LOG(TEXT("AAA"));
 				if (m_CustomActorArray[i]->GetActive() == false)
 				{
+					LOG(TEXT("GOOD : %d"), i);
 					m_CustomActorArray[i]->SetActive(true);
 					m_CustomActorArray[i]->SetActorLocation(Pos);
 					m_CustomActorArray[i]->SetActorRotation(Rot);
@@ -93,9 +123,9 @@ ACustomActor* UParticlePool::Pop(FVector Pos, FRotator Rot, UClass* Type)
 			}
 
 		}
-
-		return nullptr;
 	}
+	LOG(TEXT("BAD"));
+
 	return nullptr;
 
 }

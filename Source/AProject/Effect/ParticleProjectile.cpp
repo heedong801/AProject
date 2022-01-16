@@ -48,6 +48,12 @@ void AParticleProjectile::StopEvent(const FHitResult& result)
 {
 }
 
+void AParticleProjectile::SetActive(bool bOnActive)
+{
+	Super::SetActive(bOnActive);
+	SetLifeSpan(3.0f);
+}
+
 void AParticleProjectile::SetActiveBullet(FVector Dir)
 {
 }

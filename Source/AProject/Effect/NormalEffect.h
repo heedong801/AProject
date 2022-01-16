@@ -52,4 +52,5 @@ public:
 	UFUNCTION()
 	void ParticleFinish(UParticleSystemComponent* Particle);
 	virtual void SetObject();
+	virtual void SetActive(bool bOnActive);
 };

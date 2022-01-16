@@ -16,8 +16,8 @@ class APROJECT_API AWukongAttackProjectile : public AParticleProjectile
 public:
 	AWukongAttackProjectile();
 
-	virtual void SetActive(bool);
-	void SetFalse();
+	virtual void SetActive(bool bOnActive);
+	//void SetFalse();
 
 	virtual void SetActiveBullet(FVector HitDirection);
 protected:
