@@ -35,6 +35,9 @@ protected:
 	int32	m_Attack;
 	ACharacter* m_Owner;
 
+
+	FTimerHandle m_SetFalseTimerHandle;
+
 public:
 	virtual void SetActiveBullet(FVector Dir);
 	void SetAttack(int32 Attack)
@@ -61,4 +64,7 @@ public:
 protected:
 	virtual void StopEvent(const FHitResult& result);
 	virtual void SetActive(bool bOnActive);
+
+	virtual void SetFalse();
+
 };

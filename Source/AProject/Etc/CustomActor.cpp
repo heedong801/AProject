@@ -6,17 +6,18 @@
 ACustomActor::ACustomActor()
 {
 	m_Active = false;
+
 }
 
 ACustomActor::~ACustomActor()
 {
-	LOG(TEXT("ACTOR DEL"));
+
 }
 
 // Sets default values
 void ACustomActor::SetActive(bool bOnFlag)
 {
-	LOG(TEXT("ACustomActor SetActive"));
+	
 
 	m_Active = bOnFlag;
 	if (bOnFlag)

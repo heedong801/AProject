@@ -122,7 +122,7 @@ void APlayerCharacter::BeginPlay()
 	if (IsValid(MainHUD))
 	{
 		UCharacterHUD* CharacterHUD = MainHUD->GetCharacterHUD();
-
+		
 		if (IsValid(CharacterHUD))
 		{
 			TArray<USkillImageWidget*> SkillArray = CharacterHUD->GetSkillArray();
@@ -162,12 +162,7 @@ void APlayerCharacter::Recovery()
 	if (IsValid(GameMode))
 	{
 		UMainHUD* MainHUD = GameMode->GetMainHUD();
-		UParticlePool* ParticlePool = GameMode->GetParticlePool();
 
-		if (IsValid(ParticlePool))
-		{
-			ParticlePool->GetSize();
-		}
 		//LOG(TEXT("BB"));
 		if (IsValid(MainHUD))
 		{
@@ -260,7 +255,7 @@ void APlayerCharacter::EquipmentKey()
 	if (IsValid(GameMode))
 	{
 		UMainHUD* MainHUD = GameMode->GetMainHUD();
-
+	
 		if (IsValid(MainHUD))
 		{
 			UEquipmentWidget* EquipmentWidget = MainHUD->GetEquipment();

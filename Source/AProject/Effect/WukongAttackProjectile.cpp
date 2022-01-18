@@ -30,17 +30,17 @@ AWukongAttackProjectile::AWukongAttackProjectile()
 void AWukongAttackProjectile::SetActive(bool bOnFlag)
 {
 	Super::SetActive(bOnFlag);
-	SetLifeSpan(3.0f);
+
 	//GetWorld()->GetTimerManager().SetTimer(SetFalseTimerHandle, this, &AWukongAttackProjectile::SetFalse, 3.0f, false, -1.f);
 
-	/*if (bOnFlag) 
+	if (bOnFlag) 
 	{
 		m_Body->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 	}
 	else
 	{
 		m_Body->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-	}*/
+	}
 
 }
 void AWukongAttackProjectile::StopEvent(const FHitResult& result)

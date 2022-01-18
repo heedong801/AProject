@@ -20,7 +20,6 @@ UParticlePool::UParticlePool()
 
 UParticlePool::~UParticlePool()
 {
-	LOG(TEXT("DELETE"));
 }
 
 void UParticlePool::MakePool()
@@ -47,35 +46,12 @@ void UParticlePool::MakePool()
 		}
 	}
 
-	for (int32 i = 0; i < 215; ++i)
-	{
-		if (m_CustomActorArray[i] != nullptr && IsValid(m_CustomActorArray[i]))
-		{
-			LOG(TEXT("AAA"));
-			if (m_CustomActorArray[i]->GetActive() == false)
-			{
-				LOG(TEXT("BBB"));
-			}
-		}
-	}
+	
 }
 
 
 int UParticlePool::GetSize()
 {
-	for (int32 i = 0; i < 215; ++i)
-	{
-		if (m_CustomActorArray[i] != nullptr && IsValid(m_CustomActorArray[i]))
-		{
-			LOG(TEXT("AAA"));
-			if (m_CustomActorArray[i]->GetActive() == false)
-			{
-				LOG(TEXT("BBB"));
-			}
-		}
-	}
-
-
 	return m_CustomActorArray.Num(); 
 }
 
@@ -107,25 +83,22 @@ ACustomActor* UParticlePool::Pop(FVector Pos, FRotator Rot, UClass* Type)
 
 		for (int32 i = Start; i < End; ++i)
 		{
-			LOG(TEXT("ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ"));
 			if (m_CustomActorArray[i] != nullptr && IsValid(m_CustomActorArray[i]))
 			{
-				LOG(TEXT("AAA"));
 				if (m_CustomActorArray[i]->GetActive() == false)
 				{
-					LOG(TEXT("GOOD : %d"), i);
 					m_CustomActorArray[i]->SetActive(true);
 					m_CustomActorArray[i]->SetActorLocation(Pos);
 					m_CustomActorArray[i]->SetActorRotation(Rot);
-			
+					
+					LOG(TEXT("GOOD : %d"), i);
 					return m_CustomActorArray[i];
 				}
 			}
 
 		}
 	}
-	LOG(TEXT("BAD"));
-
+	LOG(TEXT("FALSS"));
 	return nullptr;
 
 }

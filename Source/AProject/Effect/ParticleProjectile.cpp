@@ -1,6 +1,5 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
 #include "ParticleProjectile.h"
 #include "../DebugClass.h"
 // Sets default values
@@ -51,9 +50,21 @@ void AParticleProjectile::StopEvent(const FHitResult& result)
 void AParticleProjectile::SetActive(bool bOnActive)
 {
 	Super::SetActive(bOnActive);
-	SetLifeSpan(3.0f);
+
+	if (bOnActive)
+	{
+		//m_SetFalseTimerDelegate.BindUFunction(this, FName("SetActive"), bOnActive);
+		GetWorld()->GetTimerManager().SetTimer(m_SetFalseTimerHandle, this,
+			&AParticleProjectile::SetFalse, 3.f, false, -1.f);
+
+	}
 }
 
 void AParticleProjectile::SetActiveBullet(FVector Dir)
 {
+}
+
+void AParticleProjectile::SetFalse()
+{
+	SetActive(false);
 }

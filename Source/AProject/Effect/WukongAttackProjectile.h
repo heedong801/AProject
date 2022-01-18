@@ -17,12 +17,7 @@ public:
 	AWukongAttackProjectile();
 
 	virtual void SetActive(bool bOnActive);
-	//void SetFalse();
-
 	virtual void SetActiveBullet(FVector HitDirection);
 protected:
 	virtual void StopEvent(const FHitResult& result);
-
-private:
-	FTimerHandle SetFalseTimerHandle;
 };
