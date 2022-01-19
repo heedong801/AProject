@@ -23,7 +23,14 @@ ABlueFlyProjectile::ABlueFlyProjectile()
 	m_Body->SetCollisionProfileName(TEXT("EnemyAttackObj"));
 
 	m_Particle->bAutoActivate = false;
+	m_Movement->ProjectileGravityScale = 0.f;
 }
+
+ABlueFlyProjectile::~ABlueFlyProjectile()
+{
+
+}
+
 
 void ABlueFlyProjectile::StopEvent(const FHitResult& result)
 {
@@ -78,7 +85,8 @@ void ABlueFlyProjectile::SetActive(bool bOnActive)
 	//LOG(TEXT("Blue SetActive"));
 	if (bOnActive)
 	{
-		m_Body->SetCollisionProfileName(TEXT("EnemyAttackObj"));
+		m_Body->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+		m_Movement->ProjectileGravityScale = 1.f;
 
 	}
 	else

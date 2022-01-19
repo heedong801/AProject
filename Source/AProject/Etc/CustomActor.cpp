@@ -11,7 +11,7 @@ ACustomActor::ACustomActor()
 
 ACustomActor::~ACustomActor()
 {
-
+	LOG(TEXT("DELETE"));
 }
 
 // Sets default values

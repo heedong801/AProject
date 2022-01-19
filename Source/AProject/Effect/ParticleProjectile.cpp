@@ -19,8 +19,6 @@ AParticleProjectile::AParticleProjectile()
 	m_Movement->SetUpdatedComponent(m_Body);
 
 	//m_Movement->InitialSpeed = 1000.f;
-	//m_Movement->ProjectileGravityScale = 0.f;
-
 
 }
 
@@ -66,5 +64,5 @@ void AParticleProjectile::SetActiveBullet(FVector Dir)
 
 void AParticleProjectile::SetFalse()
 {
-	SetActive(false);
+	Super::SetActive(false);
 }

@@ -52,17 +52,17 @@ void AWukongAttackProjectile::StopEvent(const FHitResult& result)
 
 	ANormalEffect* Effect = Cast<ANormalEffect>(GameMode->GetParticlePool()->Pop(result.ImpactPoint, result.Normal.Rotation(), ANormalEffect::StaticClass()));
 
-	FCollisionQueryParams params(NAME_None, false, this);
-
-	TArray<FHitResult> HitResultArray;
-	bool Sweep = GetWorld()->SweepMultiByChannel(HitResultArray, GetActorLocation(), GetActorLocation(), FQuat::Identity, ECollisionChannel::ECC_GameTraceChannel3
-		, FCollisionShape::MakeSphere(500.f), params);
-
 	//LOG(TEXT("%s"), *result.GetActor()->GetName());
 	if (Effect != nullptr)
 	{
 		Effect->LoadParticleAsync(TEXT("Saga_Fire"));
 	}
+
+	FCollisionQueryParams params(NAME_None, false, this);
+
+	TArray<FHitResult> HitResultArray;
+	bool Sweep = GetWorld()->SweepMultiByChannel(HitResultArray, GetActorLocation(), GetActorLocation(), FQuat::Identity, ECollisionChannel::ECC_GameTraceChannel3
+		, FCollisionShape::MakeSphere(500.f), params);
 
 	//m_Movement->InitialSpeed = 0.f;
 	//LOG(TEXT("S :%f %f %f"), m_Movement->Velocity.X, m_Movement->Velocity.Y, m_Movement->Velocity.Z);

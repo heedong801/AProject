@@ -15,10 +15,10 @@ class APROJECT_API ABlueFlyProjectile : public AParticleProjectile
 	GENERATED_BODY()
 public:
 	ABlueFlyProjectile();
+	~ABlueFlyProjectile();
 
 	virtual void SetActiveBullet(FVector HitDirection);
+	virtual void SetActive(bool bOnFlag);
 protected:
 	virtual void StopEvent(const FHitResult& result);
-	virtual void SetActive(bool bOnFlag);
-
 };

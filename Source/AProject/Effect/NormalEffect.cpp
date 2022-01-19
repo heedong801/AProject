@@ -102,8 +102,6 @@ void ANormalEffect::LoadParticleAsync(const FString& Name)
 
 void ANormalEffect::LoadParticleAsyncComplete()
 {
-	m_AsyncParticleLoadHandle->ReleaseHandle();
-
 	TAssetPtr<UParticleSystem> NewParticle(m_AsyncParticlePath);
 
 	if (NewParticle)
@@ -112,15 +110,17 @@ void ANormalEffect::LoadParticleAsyncComplete()
 		//m_ParticleSystem->OnSystemFinished.AddDynamic(this, &ANormalEffect::ParticleFinish);
 
 	}
+	m_AsyncParticleLoadHandle->ReleaseHandle();
 }
 void ANormalEffect::LoadSoundAsyncComplete()
 {
-	m_AsyncSoundLoadHandle->ReleaseHandle();
 
 	TAssetPtr<USoundBase> NewSound(m_AsyncSoundPath);
 
 	if (NewSound)
 		UGameplayStatics::PlaySoundAtLocation(GetWorld(), NewSound.Get(), GetActorLocation());
+
+	m_AsyncSoundLoadHandle->ReleaseHandle();
 }
 
 void ANormalEffect::SetObject()

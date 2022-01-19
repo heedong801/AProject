@@ -245,7 +245,7 @@ float ANexus::TakeDamageForNexus(float DamageAmount, struct FDamageEvent const& 
 	if (Hp <= 0)
 	{
 		IsExployed = true;
-		m_Effect->SetLifeSpan(0.1f);
+		//m_Effect->SetLifeSpan(0.1f);
 		m_FirstDamagedParticle->SetVisibility(false);
 		m_SecondDamagedParticle->SetVisibility(false);
 		m_ThirdDamagedParticle->SetVisibility(false);
