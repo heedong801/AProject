@@ -157,26 +157,8 @@ void APlayerCharacter::Recovery()
 	else
 		m_PlayerInfo.MP = m_PlayerInfo.MPMax;
 
-	AAProjectGameModeBase* GameMode = Cast<AAProjectGameModeBase>(GetWorld()->GetAuthGameMode());
-	//LOG(TEXT("AA"));
-	if (IsValid(GameMode))
-	{
-		UMainHUD* MainHUD = GameMode->GetMainHUD();
-
-		//LOG(TEXT("BB"));
-		if (IsValid(MainHUD))
-		{
-			UCharacterHUD* CharacterHUD = MainHUD->GetCharacterHUD();
-			//LOG(TEXT("CC"));
-			if (IsValid(CharacterHUD))
-			{
-				CharacterHUD->SetHPPercent(m_PlayerInfo.HP / m_PlayerInfo.HPMax);
-
-				CharacterHUD->SetMPPercent(m_PlayerInfo.MP / m_PlayerInfo.MPMax);
-			}
-		}
-	}
-
+	SetHPPercent();
+	SetMPPercent();
 }
 // Called every frame
 void APlayerCharacter::Tick(float DeltaTime)
@@ -657,7 +639,13 @@ float APlayerCharacter::TakeDamage(float DamageAmount, struct FDamageEvent const
 		//}
 		LOG(TEXT("DIE"));
 	}
+	SetHPPercent();
+	
+	return Damage;
+}
 
+void APlayerCharacter::SetHPPercent()
+{
 	AAProjectGameModeBase* GameMode = Cast<AAProjectGameModeBase>(GetWorld()->GetAuthGameMode());
 
 	if (IsValid(GameMode))
@@ -674,9 +662,27 @@ float APlayerCharacter::TakeDamage(float DamageAmount, struct FDamageEvent const
 			}
 		}
 	}
-	return Damage;
 }
 
+void APlayerCharacter::SetMPPercent()
+{
+	AAProjectGameModeBase* GameMode = Cast<AAProjectGameModeBase>(GetWorld()->GetAuthGameMode());
+
+	if (IsValid(GameMode))
+	{
+		UMainHUD* MainHUD = GameMode->GetMainHUD();
+
+		if (IsValid(MainHUD))
+		{
+			UCharacterHUD* CharacterHUD = MainHUD->GetCharacterHUD();
+
+			if (IsValid(CharacterHUD))
+			{
+				CharacterHUD->SetMPPercent(m_PlayerInfo.MP / (float)m_PlayerInfo.MPMax);
+			}
+		}
+	}
+}
 void APlayerCharacter::CursorUISet(bool bOnActive)
 {
 	APlayerController* ControllerA = GetWorld()->GetFirstPlayerController();

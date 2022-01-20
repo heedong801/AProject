@@ -98,6 +98,8 @@ public:
 	void ResetCombo() { m_ActiveComboTime = false; m_ComboCnt = 0; }
 	void Recovery();
 	void LevelUp();
+	void SetHPPercent();
+	void SetMPPercent();
 
 	void SetTimeDillation();
 	FPlayerInfo& GetPlayerInfo()	{ return m_PlayerInfo;}

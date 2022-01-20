@@ -186,9 +186,11 @@ void UEquipmentWidget::SetStat(UInventoryTileData* Item, bool bOnPlus)
 					break;
 				case EItemOption::HP:
 					Info.HP += OptionValue;
+					Player->SetHPPercent();
 					break;
 				case EItemOption::MP:
 					Info.MP += OptionValue;
+					Player->SetMPPercent();
 					break;
 				case EItemOption::HPRecovery:
 					Info.HPRecovery += OptionValue;

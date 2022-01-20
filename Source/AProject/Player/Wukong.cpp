@@ -391,24 +391,7 @@ void AWukong::UseSkill(int32 Idx)
 	break;
 	}
 
-	AAProjectGameModeBase* GameMode = Cast<AAProjectGameModeBase>(GetWorld()->GetAuthGameMode());
-
-	if (IsValid(GameMode))
-	{
-		UMainHUD* MainHUD = GameMode->GetMainHUD();
-
-		if (IsValid(MainHUD))
-		{
-			UCharacterHUD* CharacterHUD = MainHUD->GetCharacterHUD();
-
-			if (IsValid(CharacterHUD))
-			{
-				//LOG(TEXT("AAAAAAAAAAAAA"));
-				m_PlayerInfo.MP -= 20;
-				CharacterHUD->SetMPPercent(m_PlayerInfo.MP / (float)m_PlayerInfo.MPMax);
-			}
-		}
-	}
+	SetMPPercent();
 
 }
 
