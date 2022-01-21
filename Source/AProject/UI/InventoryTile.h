@@ -44,6 +44,7 @@ public:
 	TArray<UObject*> GetConsumItemList() { return m_ConsumTile->GetListItems();}
 
 	UTileView* GetEquipTile() { return m_EquipTile; }
+
 	UFUNCTION()
 		void ItemScroll(UObject* Data, UUserWidget* Widget);
 

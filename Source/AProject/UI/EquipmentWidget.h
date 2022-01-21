@@ -47,6 +47,9 @@ private:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 		UTextBlock* m_CriDmgText;
+
+	FTimerDelegate m_ItemDurationDelegate;
+	FTimerHandle m_ItemDurationTimerHandle;
 protected:
 	virtual void NativeConstruct();
 
@@ -54,10 +57,15 @@ public:
 	void SetPart(UInventoryTileData* Item, EItemPart Part, UTexture2D* Icon);
 	void UnsetPart(class UInventoryTileData* Item);
 	void SetStatText();
-	void SetStat(UInventoryTileData* Item, bool bOnPlus);
+	UInventoryTileData* AlreadyPartSet(int PartIdx);
+	int PartToIdx(const EItemPart& Part);
+
 
 	TArray<class UInventoryTileData*> GetItemArray() {		return m_EquipmentItemArray;	}
 
 	void LoadData(const TArray<class UInventoryTileData*>& ItemArray);
+
+	UFUNCTION()
+		void SetStat(UInventoryTileData* Item, bool bOnPlus);
 
 };

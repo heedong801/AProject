@@ -5,6 +5,7 @@
 #include "InventoryTileData.h"
 #include "../AProjectGameModeBase.h"
 #include "../Player/PlayerCharacter.h"
+#include "../DebugClass.h"
 void UEquipmentWidget::NativeConstruct()
 {
 	m_EquipmentImgArray.Add(Cast<UImage>(GetWidgetFromName(TEXT("headband"))));
@@ -56,8 +57,51 @@ void UEquipmentWidget::NativeConstruct()
 
 void UEquipmentWidget::SetPart(UInventoryTileData* Item, EItemPart Part, UTexture2D* Icon)
 {
-	int32 Idx = -1;
+	int Idx = PartToIdx(Part);
+
+	if (Idx != -1)
+	{
+		if (m_EquipmentImgArray[Idx]->GetVisibility() != ESlateVisibility::Visible)
+		{
+			m_EquipmentImgArray[Idx]->SetBrushFromTexture(Icon);
+			m_EquipmentImgArray[Idx]->SetVisibility(ESlateVisibility::Visible);
+
+			m_EquipmentItemArray[Idx] = Item;
+		}
+		else
+		{
+			UnsetPart(m_EquipmentItemArray[Idx]);
+
+			m_EquipmentImgArray[Idx]->SetBrushFromTexture(Icon);
+			m_EquipmentImgArray[Idx]->SetVisibility(ESlateVisibility::Visible);
+
+			m_EquipmentItemArray[Idx] = Item;
+		}
+	}
+
+	SetStat(Item, true);
+}
+
+void UEquipmentWidget::UnsetPart(UInventoryTileData* Item)
+{
+	for (int32 i = 0; i < m_EquipmentItemArray.Num(); ++i)
+	{
+		if (m_EquipmentItemArray[i] == Item)
+		{
+			m_EquipmentImgArray[i]->SetVisibility(ESlateVisibility::Collapsed);
+
+			SetStat(Item, false);
+			break;
+		}
+	}
+
 	
+}
+
+int32 UEquipmentWidget::PartToIdx(const EItemPart& Part)
+{
+	int Idx = -1;
+
 	switch (Part)
 	{
 	case EItemPart::HEADBAND:
@@ -83,60 +127,32 @@ void UEquipmentWidget::SetPart(UInventoryTileData* Item, EItemPart Part, UTextur
 		else
 			Idx = 16;
 	}
-		break;
+	break;
 	case EItemPart::TROUSERS:
 		Idx = 15;
 		break;
-	case EItemPart::RING: 
+	case EItemPart::RING:
 	{
 		if (m_EquipmentImgArray[17]->GetVisibility() == ESlateVisibility::Collapsed)
 			Idx = 17;
 		else
 			Idx = 19;
 	}
-		break;
+	break;
 	case EItemPart::FEET:
 		Idx = 18;
 		break;
 	}
-	if (Idx != -1)
-	{
-		if (m_EquipmentImgArray[Idx]->GetVisibility() != ESlateVisibility::Visible)
-		{
-			m_EquipmentImgArray[Idx]->SetBrushFromTexture(Icon);
-			m_EquipmentImgArray[Idx]->SetVisibility(ESlateVisibility::Visible);
 
-			m_EquipmentItemArray[Idx] = Item;
-		}
-		else
-		{
-			UnsetPart(m_EquipmentItemArray[Idx]);
-
-			m_EquipmentImgArray[Idx]->SetBrushFromTexture(Icon);
-			m_EquipmentImgArray[Idx]->SetVisibility(ESlateVisibility::Visible);
-
-			m_EquipmentItemArray[Idx] = Item;
-		}
-	}
-
-	SetStat(Item, true);
-	SetStatText();
+	return Idx;
 }
 
-void UEquipmentWidget::UnsetPart(UInventoryTileData* Item)
+UInventoryTileData* UEquipmentWidget::AlreadyPartSet(int PartIdx)
 {
-	for (int32 i = 0; i < m_EquipmentItemArray.Num(); ++i)
-	{
-		if (m_EquipmentItemArray[i] == Item)
-		{
-			m_EquipmentImgArray[i]->SetVisibility(ESlateVisibility::Collapsed);
-
-			SetStat(Item, false);
-			break;
-		}
-	}
-	SetStatText();
-	
+	if (m_EquipmentImgArray[PartIdx]->GetVisibility() != ESlateVisibility::Visible)
+		return nullptr;
+	else
+		return m_EquipmentItemArray[PartIdx];
 }
 
 void UEquipmentWidget::SetStatText()
@@ -174,36 +190,42 @@ void UEquipmentWidget::SetStat(UInventoryTileData* Item, bool bOnPlus)
 				{
 				case EItemOption::Attack:
 					Info.Attack += OptionValue;
-					break;
+					if (Item->GetType() == EItemType::Consumable)
+					{
+						m_ItemDurationDelegate.BindUFunction(this, FName("SetStat"), Item, false);
+						GetWorld()->GetTimerManager().SetTimer(m_ItemDurationTimerHandle,
+							m_ItemDurationDelegate, 0.1f, false, 3.f);
+					}
+					continue;
 				case EItemOption::Armor:
 					Info.Armor += OptionValue;
-					break;
+					continue;
 				case EItemOption::HPMax:
 					Info.HPMax += OptionValue;
-					break;
+					continue;
 				case EItemOption::MPMax:
 					Info.MPMax += OptionValue;
-					break;
+					continue;
 				case EItemOption::HP:
 					Info.HP += OptionValue;
 					Player->SetHPPercent();
-					break;
+					continue;
 				case EItemOption::MP:
 					Info.MP += OptionValue;
 					Player->SetMPPercent();
-					break;
+					continue;
 				case EItemOption::HPRecovery:
 					Info.HPRecovery += OptionValue;
-					break;
+					continue;
 				case EItemOption::MPRecovery:
 					Info.MPRecovery += OptionValue;
-					break;
+					continue;
 				case EItemOption::CriticalPercent:
 					Info.CriticalPercent += OptionValue;
-					break;
+					continue;
 				case EItemOption::CriticalDamage:
 					Info.CriticalDamage += OptionValue;
-					break;
+					continue;
 				}
 			}
 		}
@@ -217,38 +239,38 @@ void UEquipmentWidget::SetStat(UInventoryTileData* Item, bool bOnPlus)
 				{
 				case EItemOption::Attack:
 					Info.Attack -= OptionValue;
-					break;
+					continue;
 				case EItemOption::Armor:
 					Info.Armor -= OptionValue;
-					break;
+					continue;
 				case EItemOption::HPMax:
 					Info.HPMax -= OptionValue;
-					break;
+					continue;
 				case EItemOption::MPMax:
 					Info.MPMax -= OptionValue;
-					break;
+					continue;
 				case EItemOption::HP:
-					break;
+					continue;
 				case EItemOption::MP:
-					break;
+					continue;
 				case EItemOption::HPRecovery:
 					Info.HPRecovery -= OptionValue;
-					break;
+					continue;
 				case EItemOption::MPRecovery:
 					Info.MPRecovery -= OptionValue;
-					break;
+					continue;
 				case EItemOption::CriticalPercent:
 					Info.CriticalPercent -= OptionValue;
-					break;
+					continue;
 				case EItemOption::CriticalDamage:
 					Info.CriticalDamage -= OptionValue;
-					break;
+					continue;
 				}
 			}
 		}
 		Player->SetPlayerInfo(Info);
 	}
-
+	SetStatText();
 }
 
 void UEquipmentWidget::LoadData(const TArray<class UInventoryTileData*>& ItemArray)
