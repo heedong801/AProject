@@ -71,7 +71,7 @@ void UEquipmentWidget::SetPart(UInventoryTileData* Item, EItemPart Part, UTextur
 		else
 		{
 			UnsetPart(m_EquipmentItemArray[Idx]);
-
+			LOG(TEXT("UNSET1"))
 			m_EquipmentImgArray[Idx]->SetBrushFromTexture(Icon);
 			m_EquipmentImgArray[Idx]->SetVisibility(ESlateVisibility::Visible);
 
@@ -89,7 +89,7 @@ void UEquipmentWidget::UnsetPart(UInventoryTileData* Item)
 		if (m_EquipmentItemArray[i] == Item)
 		{
 			m_EquipmentImgArray[i]->SetVisibility(ESlateVisibility::Collapsed);
-
+			LOG(TEXT("UNSET2"));
 			SetStat(Item, false);
 			break;
 		}

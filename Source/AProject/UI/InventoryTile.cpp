@@ -207,14 +207,13 @@ void UInventoryTile::EquipItemClick(UObject* Data)
 			if (IsValid(Equipment))
 			{
 				int Idx = Equipment->PartToIdx(Item->GetPart());
-				Equipment->SetPart(Item, Item->GetPart(), Item->GetIconTexture());
-
 				UInventoryTileData* ChangeItem = Equipment->AlreadyPartSet(Idx);
 				if (ChangeItem != nullptr)
 				{
 					m_EquipTile->AddItem(ChangeItem);
 					m_CurrentEquipTile->RemoveItem(ChangeItem);
 				}
+				Equipment->SetPart(Item, Item->GetPart(), Item->GetIconTexture());
 
 			}
 		}
