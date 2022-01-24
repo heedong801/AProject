@@ -5,7 +5,7 @@
 #include "InventoryTileData.h"
 #include "../AProjectGameModeBase.h"
 #include "../Player/PlayerCharacter.h"
-#include "../DebugClass.h"
+//#include "../DebugClass.h"
 void UEquipmentWidget::NativeConstruct()
 {
 	m_EquipmentImgArray.Add(Cast<UImage>(GetWidgetFromName(TEXT("headband"))));
@@ -38,7 +38,7 @@ void UEquipmentWidget::NativeConstruct()
 	m_CriPerText = Cast<UTextBlock>(GetWidgetFromName(TEXT("CriticalPerText")));
 	m_CriDmgText = Cast<UTextBlock>(GetWidgetFromName(TEXT("CriticalDmgText")));
 
-	m_EquipmentItemArray.Init(nullptr, 19);
+	m_EquipmentItemArray.Init(nullptr, 20);
 
 	APlayerCharacter* Player = Cast<APlayerCharacter>(GetWorld()->GetFirstPlayerController()->GetPawn());
 
@@ -71,7 +71,6 @@ void UEquipmentWidget::SetPart(UInventoryTileData* Item, EItemPart Part, UTextur
 		else
 		{
 			UnsetPart(m_EquipmentItemArray[Idx]);
-			LOG(TEXT("UNSET1"))
 			m_EquipmentImgArray[Idx]->SetBrushFromTexture(Icon);
 			m_EquipmentImgArray[Idx]->SetVisibility(ESlateVisibility::Visible);
 
@@ -89,7 +88,6 @@ void UEquipmentWidget::UnsetPart(UInventoryTileData* Item)
 		if (m_EquipmentItemArray[i] == Item)
 		{
 			m_EquipmentImgArray[i]->SetVisibility(ESlateVisibility::Collapsed);
-			LOG(TEXT("UNSET2"));
 			SetStat(Item, false);
 			break;
 		}

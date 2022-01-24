@@ -224,6 +224,7 @@ void UInventoryTile::EquipItemClick(UObject* Data)
 void UInventoryTile::CurrentEquipItemClick(UObject* Data)
 {
 	UInventoryTileData* Item = Cast<UInventoryTileData>(Data);
+	LOG(TEXT("%s"), *Item->GetName());
 
 	m_CurrentEquipTile->RemoveItem(Data);
 	m_EquipTile->AddItem(Data);

@@ -3,6 +3,7 @@
 
 #include "InventoryItemTile.h"
 #include "InventoryTileData.h"
+#include "../DebugClass.h"
 void UInventoryItemTile::NativeConstruct()
 {
 	Super::NativeConstruct();
@@ -24,6 +25,7 @@ void UInventoryItemTile::SetData(UObject* Data)
 {
 	UInventoryTileData* InvenData = Cast<UInventoryTileData>(Data);
 
+	LOG(TEXT("%s"), *InvenData->GetName());
 	UTexture2D* IconTexture = InvenData->GetIconTexture();
 
 	if (IconTexture)
@@ -33,6 +35,9 @@ void UInventoryItemTile::SetData(UObject* Data)
 		switch (InvenData->GetTier())
 		{
 		case EItemTier::Magic:
+			m_MagicTierImage->SetVisibility(ESlateVisibility::Collapsed);
+			m_RareTierImage->SetVisibility(ESlateVisibility::Collapsed);
+			m_UniqueTierImage->SetVisibility(ESlateVisibility::Collapsed);
 			break;
 		case EItemTier::Normal:
 			m_MagicTierImage->SetVisibility(ESlateVisibility::Visible);
