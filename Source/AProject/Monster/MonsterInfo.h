@@ -81,3 +81,18 @@ enum class EMonsterAnimType : uint8
 	Skill
 };
 
+UENUM(BlueprintType)
+enum class EBossAnimType : uint8
+{
+	Idle,
+	Montage,
+	Run,
+	Attack1,
+	Attack2,
+	Attack3,
+	Death,
+	Skill1,
+	Skill2,
+	Skill3,
+};
+
